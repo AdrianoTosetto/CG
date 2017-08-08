@@ -13,3 +13,13 @@ int Point2D::getX() {
 int Point2D::getY() {
 	return this->y;
 }
+ 
+Point2D* Point2D::transformToViewport(int xwmin, int xwmax, int xvpmin, int xvpmax,
+						   		 	  int ywmin, int ywmax, int yvpmin, int yvpmax) {
+	int newX = ((this->x - xwmin)/(xwmax - xwmin))*(xvpmax - xvpmin);
+	int newY = (1-((this->y - ywmin)/(ywmax - ywmin)))*(yvpmax - yvpmin);
+
+	Point2D* newPoint = new Point2D(newX, newY);
+
+	return newPoint;
+}

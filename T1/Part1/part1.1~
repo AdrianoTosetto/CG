@@ -2,18 +2,19 @@
 <!-- Generated with glade 3.16.1 -->
 <interface>
   <requires lib="gtk+" version="3.10"/>
-  <object class="GtkWindow" id="window1">
+  <object class="GtkWindow" id="main_window">
     <property name="can_focus">False</property>
     <child>
       <object class="GtkPaned" id="paned1">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <child>
-          <object class="GtkButton" id="button1">
+          <object class="GtkButton" id="btn_ok">
             <property name="label" translatable="yes">button</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+            <signal name="clicked" handler="btn_ok_clicked_cb" swapped="no"/>
           </object>
           <packing>
             <property name="resize">False</property>
@@ -42,7 +43,7 @@
                         <property name="label_xalign">0</property>
                         <property name="shadow_type">none</property>
                         <child>
-                          <object class="GtkDrawingArea" id="drawingarea1">
+                          <object class="GtkDrawingArea" id="drawing_area">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                           </object>

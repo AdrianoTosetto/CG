@@ -11,8 +11,10 @@ class Object {
  	Object();
  	Object(std::string name, uint32_t id);
  	~Object();
- 	uint32_t getId();
  	std::string getName();
+ 	uint32_t getId();
+ 	virtual Object* transformToViewport(int xwmin, int xwmax, int xvpmin, int xvpmax,
+						  			    int ywmin, int ywmax, int yvpmin, int yvpmax);
 };
 
 #endif

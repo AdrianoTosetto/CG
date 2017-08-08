@@ -14,6 +14,8 @@ public:
 	~Straight();
 	Point2D getA();
 	Point2D getB();
+	Straight* transformToViewport(int xwmin, int xwmax, int xvpmin, int xvpmax,
+			      	 	     	  int ywmin, int ywmax, int yvpmin, int yvpmax);
 };
 
 #endif

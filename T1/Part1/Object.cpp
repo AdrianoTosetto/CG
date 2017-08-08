@@ -21,3 +21,5 @@ Object::Object() {
 Object:: ~Object() {
 
 }
+Object* Object::transformToViewport(int xwmin, int xwmax, int xvpmin, int xvpmax,
+						  		 	int ywmin, int ywmax, int yvpmin, int yvpmax) { };

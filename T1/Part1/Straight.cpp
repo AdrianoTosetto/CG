@@ -16,3 +16,9 @@ Point2D Straight::getB() {
 Straight::~Straight() {
 
 }
+
+Straight* Straight::transformToViewport(int xwmin, int xwmax, int xvpmin, int xvpmax,
+			  						 	int ywmin, int ywmax, int yvpmin, int yvpmax) {
+
+
+}

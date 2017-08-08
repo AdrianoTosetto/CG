@@ -1,6 +1,9 @@
 #include <gtk/gtk.h>
 #include <iostream>
 #include <vector>
+#include "Object.h"
+#include "Straight.h"
+#include "Point2D.h"
 
 static cairo_surface_t *surface = NULL;
 GtkWidget *drawing_area;
@@ -40,22 +43,22 @@ static gboolean draw_cb (GtkWidget *widget, cairo_t   *cr,  gpointer   data){
 }
 
 /*Function that will be called when the ok button is pressed*/
- extern "C" G_MODULE_EXPORT void btn_ok_clicked_cb(){
+extern "C" G_MODULE_EXPORT void btn_ok_clicked_cb(){
   cairo_t *cr;
   cr = cairo_create (surface);
   cairo_move_to(cr, 200, 100);
   cairo_line_to(cr, 300, 50);
   cairo_stroke(cr);
   gtk_widget_queue_draw (window_widget);
-  printf("meu cu\n");
- } 
+  printf("Heil Aldo\n");
+} 
 
 int main(int argc, char *argv[]){
-  GtkBuilder  *gtkBuilder;
+  /*GtkBuilder  *gtkBuilder;
   gtk_init(&argc, &argv);
 
   gtkBuilder = gtk_builder_new();
-  gtk_builder_add_from_file(gtkBuilder, "part1.1.glade", NULL);
+  gtk_builder_add_from_file(gtkBuilder, "part1.1", NULL);
 
   window_widget = GTK_WIDGET( gtk_builder_get_object( GTK_BUILDER(gtkBuilder), "main_window") );
   drawing_area = GTK_WIDGET( gtk_builder_get_object( GTK_BUILDER(gtkBuilder), "drawing_area") );
@@ -63,7 +66,9 @@ int main(int argc, char *argv[]){
   g_signal_connect (drawing_area,"configure-event", G_CALLBACK (configure_event_cb), NULL);
   gtk_builder_connect_signals(gtkBuilder, NULL);
   gtk_widget_show_all(window_widget);
-  gtk_main ();
+  gtk_main ();*/
+
+  
   return 0;
 }
  
