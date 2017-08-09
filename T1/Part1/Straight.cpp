@@ -1,24 +1,28 @@
 #include "Straight.h"
 
-Straight::Straight(Point2D _a, Point2D _b): Object(), a(_a.getX(), _a.getY()), b(_b.getX(), _b.getY()) {
+Straight::Straight(Coordinate _a, Coordinate _b): Object(), a(_a), b(_b) {
 	this->a = a;
 	this->b = b;
 }
-Straight::Straight(Point2D a, Point2D b, int id, std::string name) : Object(name, id), a(0,0), b(0,0) {
+Straight::Straight(Coordinate a, Coordinate b, int id, std::string name) : Object(name, id), a(0,0), b(0,0) {
 
 }
-Point2D Straight::getA() {
+Coordinate Straight::getA() {
 	return this->a;
 }
-Point2D Straight::getB() {
+Coordinate Straight::getB() {
 	return this->b;
 }
 Straight::~Straight() {
 
 }
 
-Straight* Straight::transformToViewport(int xwmin, int xwmax, int xvpmin, int xvpmax,
-			  						 	int ywmin, int ywmax, int yvpmin, int yvpmax) {
+Straight* Straight::transformToViewport(Coordinate wor, Coordinate wli, Coordinate vpor, Coordinate vpli) {
 
+	Coordinate* newA = this->a.transformCoordinate(wor, wli, vpor, vpli);
+	Coordinate* newB = this->b.transformCoordinate(wor, wli, vpor, vpli);
 
+	Straight* newStraight = new Straight(*newA, *newB, this->id, this->name);
+
+	return newStraight;
 }

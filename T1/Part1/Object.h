@@ -2,6 +2,7 @@
 #define OBJECT_H
 #include <inttypes.h>
 #include <string>
+#include "Coordinate.h"
 
 class Object {
  protected:
@@ -13,8 +14,7 @@ class Object {
  	~Object();
  	std::string getName();
  	uint32_t getId();
- 	virtual Object* transformToViewport(int xwmin, int xwmax, int xvpmin, int xvpmax,
-						  			    int ywmin, int ywmax, int yvpmin, int yvpmax);
+ 	virtual Object* transformToViewport(Coordinate wor, Coordinate wli, Coordinate vpor, Coordinate vpli);
 };
 
 #endif

@@ -21,5 +21,4 @@ Object::Object() {
 Object:: ~Object() {
 
 }
-Object* Object::transformToViewport(int xwmin, int xwmax, int xvpmin, int xvpmax,
-						  		 	int ywmin, int ywmax, int yvpmin, int yvpmax) { };
+Object* Object::transformToViewport(Coordinate wor, Coordinate wli, Coordinate vpor, Coordinate vpli) { };

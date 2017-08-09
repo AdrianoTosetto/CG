@@ -1,25 +1,21 @@
 #include "Point2D.h"
 
 
-Point2D::Point2D(int _x, int _y) : Object(), x(_x), y(_y) {
+Point2D::Point2D(Coordinate _coord) : Object(), coord(_coord) {
 
 }
-Point2D::Point2D(int _x, int _y, int id, std::string name) : Object(name, id), x(_x), y(_y) {
+Point2D::Point2D(Coordinate _coord, int id, std::string name) : Object(name, id), coord(_coord) {
 
 }
-int Point2D::getX() {
-	return this->x;
-}
-int Point2D::getY() {
-	return this->y;
+Coordinate Point2D::getCoordinate() {
+	return this->coord;
 }
  
-Point2D* Point2D::transformToViewport(int xwmin, int xwmax, int xvpmin, int xvpmax,
-						   		 	  int ywmin, int ywmax, int yvpmin, int yvpmax) {
-	int newX = ((this->x - xwmin)/(xwmax - xwmin))*(xvpmax - xvpmin);
-	int newY = (1-((this->y - ywmin)/(ywmax - ywmin)))*(yvpmax - yvpmin);
+Point2D* Point2D::transformToViewport(Coordinate wor, Coordinate wli, Coordinate vpor, Coordinate vpli) {
 
-	Point2D* newPoint = new Point2D(newX, newY);
+	Coordinate *newCoord = this->coord.transformCoordinate(wor, wli, vpor, vpli);
+
+	Point2D* newPoint = new Point2D(*newCoord, this->id, this->name);
 
 	return newPoint;
 }

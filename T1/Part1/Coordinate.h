@@ -8,9 +8,10 @@ private:
 	double y;
 
  public:
- 	Coordinate(double x, double y);
+ 	Coordinate(double _x, double _y);
  	double getX();
  	double getY();
+ 	Coordinate* transformCoordinate(Coordinate wor, Coordinate wli, Coordinate vpor, Coordinate vpli);
 };
 
 #endif

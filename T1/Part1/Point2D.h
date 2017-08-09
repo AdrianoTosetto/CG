@@ -2,19 +2,17 @@
 #define POINT2D_H
 #include <string>
 #include "Object.h"
+#include "Coordinate.h"
 
 class Point2D : public Object{
  private:
- 	int x;
- 	int y;
+ 	Coordinate coord;
 
  public:
- 	Point2D(int x, int y);
- 	Point2D(int x, int y, int id, std::string name);
- 	int getX();
- 	int getY();
- 	Point2D* transformToViewport(int xwmin, int xwmax, int xvpmin, int xvpmax,
-						   	     int ywmin, int ywmax, int yvpmin, int yvpmax);
+ 	Point2D(Coordinate coord);
+ 	Point2D(Coordinate coord, int id, std::string name);
+ 	Coordinate getCoordinate();
+ 	Point2D* transformToViewport(Coordinate wor, Coordinate wli, Coordinate vpor, Coordinate vpli);
 };
 
 
