@@ -1,10 +1,11 @@
 #include "Straight.h"
+#include <iostream>
 
 Straight::Straight(Coordinate _a, Coordinate _b): Object(), a(_a), b(_b) {
 	this->a = a;
 	this->b = b;
 }
-Straight::Straight(Coordinate a, Coordinate b, int id, std::string name) : Object(name, id), a(0,0), b(0,0) {
+Straight::Straight(Coordinate _a, Coordinate _b, int id, std::string name) : Object(name, id), a(_a), b(_b) {
 
 }
 Coordinate Straight::getA() {
@@ -23,6 +24,8 @@ Straight* Straight::transformToViewport(Coordinate wor, Coordinate wli, Coordina
 	Coordinate* newB = this->b.transformCoordinate(wor, wli, vpor, vpli);
 
 	Straight* newStraight = new Straight(*newA, *newB, this->id, this->name);
+
+	std::cout << newA->getY() << std::endl;
 
 	return newStraight;
 }

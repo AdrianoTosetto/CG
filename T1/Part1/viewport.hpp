@@ -29,43 +29,38 @@ class Viewport {
 		gtk_main ();
  	}*/
  	Viewport(Coordinate _origin, Coordinate _limit, Window _window) : origin(_origin), limit(_limit), window(_window ) {
-	  GtkBuilder  *gtkBuilder;
+	  //GtkBuilder  *gtkBuilder;
 	//  gtk_init(&argc, &argv);
-
-	 /* gtkBuilder = gtk_builder_new();
-	  gtk_builder_add_from_file(gtkBuilder, "window.glade", NULL);
-
-	  window_widget = GTK_WIDGET( gtk_builder_get_object( GTK_BUILDER(gtkBuilder), "main_window") );
-	  drawing_area = GTK_WIDGET( gtk_builder_get_object( GTK_BUILDER(gtkBuilder), "drawing_area") );
-	  g_signal_connect (drawing_area, "draw", G_CALLBACK (draw_cb), NULL);
-	  g_signal_connect (drawing_area,"configure-event", G_CALLBACK (configure_event_cb), NULL);
-	  gtk_builder_connect_signals(gtkBuilder, NULL);
-	  gtk_widget_show_all(window_widget);
-	  gtk_main ();*/
 
  	}
 
 
- 	void drawStraight(Straight* straight) {
-
+ 	void drawStraight(Straight* straight, cairo_t *c, cairo_surface_t *surface) {
  		Straight toDraw = *straight->transformToViewport(window.getOrigin(), window.getLimit(), this->origin, this->limit);
 
     double ax = toDraw.getA().getX();
     double ay = toDraw.getA().getY();
     double bx = toDraw.getB().getX();
     double by = toDraw.getB().getY();
-    printf("haha");
+    std::cout << "haha " << ax << std::endl;
+    std::cout << "haha " << ay << std::endl;
+    std::cout << "haha " << bx << std::endl;
+    std::cout << "haha " << by << std::endl;
+
+    c = cairo_create (surface);
+    cairo_move_to(c, ax, ay);
+    cairo_line_to(c, bx, by);
+    cairo_stroke(c);
  	}
   void drawSomething(cairo_t *c) {
-      myCairo = c;
-      cairo_set_source_rgb(myCairo, 0, 0, 0);
-      cairo_set_line_width(myCairo, 1);
-      cairo_move_to(myCairo, 50, 50);
-      cairo_line_to(myCairo, 100, 150);
-      cairo_stroke(myCairo);
+    cairo_set_source_rgb(c, 0, 0, 0);
+    cairo_set_line_width(c, 1);
+    cairo_move_to(c, 50, 50);
+    cairo_line_to(c, 100, 150);
+    cairo_stroke(c);
   }
 
-  void drawPoint(Point2D* point) {
+  void drawPoint(Point2D* point, cairo_t *c) {
     Point2D toDraw = *point->transformToViewport(window.getOrigin(), window.getLimit(), this->origin, this->limit);
     //cairo = cairo_create (surface);
     double pointx = toDraw.getCoordinate().getX();
