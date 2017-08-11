@@ -15,7 +15,21 @@ class Viewport {
 
 
  public:
- 	/*Viewport(Coordinate _origin, Coordinate _limit) : origin(_origin), limit(_limit) {
+    Coordinate getOrigin() {
+      return this->origin;
+    }
+
+    Coordinate getLimit() {
+      return this->limit;
+    }
+    void setOrigin(Coordinate coor) {
+      this->origin = coor;
+    }
+    void setLimit(Coordinate coor) {
+      this->limit = coor;
+    }
+
+  	/*Viewport(Coordinate _origin, Coordinate _limit) : origin(_origin), limit(_limit) {
  		GtkBuilder  *gtkBuilder;
 		gtk_init(&argc, &argv);
 

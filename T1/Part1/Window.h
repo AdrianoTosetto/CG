@@ -16,6 +16,9 @@ class Window {
 	~Window();
 	Coordinate getOrigin();
 	Coordinate getLimit();	
+	void setOrigin(Coordinate coor);
+	void setLimit(Coordinate coor);
+	GtkWidget* getMainWindow();
 };
 
 #endif

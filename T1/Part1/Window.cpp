@@ -19,3 +19,13 @@ Coordinate Window::getOrigin() {
 Coordinate Window::getLimit() {
 	return this->limit;
 }
+void Window::setOrigin(Coordinate coor) {
+  this->origin = coor;
+}
+void Window::setLimit(Coordinate coor) {
+  this->limit = coor;
+}
+
+GtkWidget* Window::getMainWindow() {
+  return this->_mainWindow;
+}
