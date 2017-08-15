@@ -12,6 +12,7 @@ class Point2D : public Object{
  	Point2D(Coordinate coord);
  	Point2D(Coordinate coord, int id, std::string name);
  	Coordinate getCoordinate();
+ 	void setCoordinate(Coordinate _coord);
  	Point2D* transformToViewport(Coordinate wor, Coordinate wli, Coordinate vpor, Coordinate vpli);
 };
 

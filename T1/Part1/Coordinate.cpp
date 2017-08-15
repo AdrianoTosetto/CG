@@ -11,6 +11,12 @@ double Coordinate::getX() {
 double Coordinate::getY() {
 	return this->y;
 }
+void Coordinate::setX(double xToSet) {
+	this->x = xToSet;
+}
+void Coordinate::setY(double yToSet) {
+	this->y = yToSet;
+}
 
 Coordinate* Coordinate::transformCoordinate(Coordinate wor, Coordinate wli, Coordinate vpor, Coordinate vpli) {
 	double xwmin = wor.getX();
@@ -24,7 +30,7 @@ Coordinate* Coordinate::transformCoordinate(Coordinate wor, Coordinate wli, Coor
 
 	double newX = ((this->x - xwmin)/(xwmax - xwmin))*(xvpmax - xvpmin);
 	double newY = (1-((this->y - ywmin)/(ywmax - ywmin)))*(yvpmax - yvpmin);
-	std::cout << newY << std::endl;
+	//std::cout << newY << std::endl;
 
 	Coordinate* newCoord = new Coordinate(newX, newY);
 

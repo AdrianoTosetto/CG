@@ -5,27 +5,40 @@
 #include "Coordinate.h"
 #include "ListaEnc.hpp"
 #include "Object.h"
+#include "Polygon.hpp"
 #include "InfoLog.hpp"
-#define USING
-#ifdef USING
+
+#include <stdlib.h>
+
+Coordinate a(0, 0);
+Coordinate b(1000, 1000);
+Coordinate c(500, 500);
 
 static cairo_surface_t *surface = NULL;
 GtkWidget *drawing_area;
 GtkWidget *window_widget;
-GtkBuilder* builder = NULL;
+GtkBuilder* builder;
 int objectID = 0;
-ListaEnc<Object*> *displayFile;
+auto displayFile = new ListaEnc<Object*>();
 Viewport *v;
 Window *w;
 cairo_t *cr; 
 InfoLog *log;
 double i = 0;
-auto steste =  new Straight(Coordinate(200,200), Coordinate(300, 300));
+//double steppedX = 0;
+//double steppedY = 0;
+//double steppedZoom = 0;
+GtkTreeModel* main_model;
+GtkTreeSelection* main_selection;
+GtkTreeView* tree;
+GtkListStore *list_store;
+GtkTreeIter iter;
+std::vector<Coordinate> pollyVector;
+//Polygon* polly = nullptr;
+//auto steste =  new Straight(Coordinate(200,200), Coordinate(300, 300));
 
 /*Clear the surface, removing the scribbles*/
 static void clear_surface (){
-  cairo_t *cr;
-
   cr = cairo_create (surface);
 
   cairo_set_source_rgb (cr, 1, 1, 1);
@@ -41,10 +54,10 @@ static gboolean configure_event_cb (GtkWidget *widget, GdkEventConfigure *event,
 
   surface = gdk_window_create_similar_surface (gtk_widget_get_window (widget),
                                        CAIRO_CONTENT_COLOR,
-                                       //gtk_widget_get_allocated_width (widget),
-                                       //gtk_widget_get_allocated_height (widget));
-                                       w->getLimit().getX() - w->getOrigin().getX(),
-                                       w->getLimit().getY() - w->getOrigin().getY());
+                                       gtk_widget_get_allocated_width (widget),
+                                       gtk_widget_get_allocated_height (widget));
+                                       //w->getLimit().getX() - w->getOrigin().getX(),
+                                       //w->getLimit().getY() - w->getOrigin().getY());
   clear_surface ();
   return TRUE;
 }
@@ -75,6 +88,47 @@ extern "C" {
  		cairo_stroke(cr);
  		gtk_widget_queue_draw (window_widget);
 	}
+	void erase() {
+		cr = cairo_create (surface);
+		cairo_set_source_rgb (cr, 1, 1, 1);
+		cairo_paint (cr);
+
+		 //cairo_destroy (cr);
+	}
+	void redraw() {
+		erase();
+		Object* objToDraw;
+		Point2D* pntToDraw;
+		Straight* strToDraw;
+		Polygon* pgnToDraw;
+		std::vector<Coordinate> newCoords;
+		for(int i = 0; i < displayFile->getSize(); i++) {
+			objToDraw = displayFile->consultaDaPosicao(i);
+			switch (objToDraw->getType()) {
+				case TPOINT:
+					std::cout << "mugi best girl" << std::endl;
+					pntToDraw = dynamic_cast<Point2D*>(objToDraw);
+					v->drawPoint(pntToDraw, cr, surface, w);
+					gtk_widget_queue_draw (window_widget);
+					break;
+				case TSTRAIGHT:
+					std::cout << "ayano best girl" << std::endl;
+					strToDraw = dynamic_cast<Straight*>(objToDraw);
+					v->drawStraight(strToDraw, cr, surface, w);
+					gtk_widget_queue_draw (window_widget);
+					break;
+				case TPOLYGON:
+					std::cout << "ursula best girl" << std::endl;
+					pgnToDraw = dynamic_cast<Polygon*>(objToDraw);
+					v->drawPolygon(pgnToDraw, cr, surface, w);
+					gtk_widget_queue_draw (window_widget);
+					break;
+				default:
+					std::cout << "¯|_(ツ)_|¯" << std::endl;
+
+			}
+		}
+	}
 	void addObjectDialog() {
 		GtkWidget *dialog;
 		dialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog3"));
@@ -95,91 +149,144 @@ extern "C" {
 		gtk_widget_hide(objDialog);
 		dialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog2"));
 		gtk_dialog_run(GTK_DIALOG(dialog));
-		//std::cout << "sd" << std::endl;
+	}
+	void addPolygonDialog() {
+		GtkWidget *dialog;
+		GtkWidget *objDialog;
+		objDialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog3"));
+		gtk_widget_hide(objDialog);
+		dialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog5"));
+		gtk_dialog_run(GTK_DIALOG(dialog));
+	}
+	void addList(std::string name, std::string type, int objID) {
+    	gtk_list_store_append(list_store, &iter);
+   		gtk_list_store_set(list_store, &iter, 0, name.c_str(), 1, type.c_str(), 2, objID,-1);
 	}
 	void addPoint() { //GtkButton *button, GtkWidget *dialog
 		std::string nameEntry = gtk_entry_get_text(GTK_ENTRY(GTK_WIDGET(gtk_builder_get_object(builder, "entry2"))));
+		if (nameEntry == "") return;
 		double pointX = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton6"))));
 		double pointY = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton7"))));
 		Coordinate pointCoord(pointX, pointY);
 		Point2D *toAdd = new Point2D(pointCoord, objectID, nameEntry);
-		v->drawPoint(toAdd, cr);
+		v->drawPoint(toAdd, cr, surface, w);
+		gtk_widget_queue_draw (window_widget);
 		displayFile->adiciona(toAdd);
-		objectID++;
 		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialog1")));
+		addList(nameEntry, "Point", objectID);
+		objectID++;
 	}
 	void addStraight() {
-		std::string nameEntry = gtk_entry_get_text(GTK_ENTRY(GTK_WIDGET(gtk_builder_get_object(builder, "entry3"))) );
-		//std::cout << nameEntry;
+		std::string nameEntry = gtk_entry_get_text(GTK_ENTRY(GTK_WIDGET(gtk_builder_get_object(builder, "entry3"))));
+		if (nameEntry == "") return;
 		double straightXA = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton8"))));
 		double straightYA = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton9"))));
 		double straightXB = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton10"))));
 		double straightYB = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton11"))));
-		
 		Coordinate straightCoordA(straightXA, straightYA);
 		Coordinate straightCoordB(straightXB, straightYB);
 		Straight *toAdd = new Straight(straightCoordA, straightCoordB, objectID, nameEntry);
-		v->drawStraight(toAdd, cr, surface);
+		v->drawStraight(toAdd, cr, surface, w);
 		gtk_widget_queue_draw (window_widget);
 		displayFile->adiciona(toAdd);
-		objectID++;
 		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialog2")));
+		addList(nameEntry, "Straight", objectID);
+		objectID += 0x1;
+	}
+	void addPolygonName() {
+		std::string nameEntry = gtk_entry_get_text(GTK_ENTRY(GTK_WIDGET(gtk_builder_get_object(builder, "entry5"))));
+		if (nameEntry == "") return;
+		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialog2")));
+		GtkWidget *dialog;
+		GtkWidget *objDialog;
+		objDialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog5"));
+		gtk_widget_hide(objDialog);
+		dialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog6"));
+		gtk_dialog_run(GTK_DIALOG(dialog));
+	}
+	void addPolygonCoordinate() {
+		double coordX = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton12"))));
+		double coordY =  gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton13"))));
+		Coordinate *newCoord = new Coordinate(coordX, coordY);
+		pollyVector.push_back(*newCoord);
+		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialog5")));
+	}
+	void finishPolygon() {
+		Polygon *p = new Polygon("poligono", objectID, pollyVector);
+		if(p->getCoordinates().begin() == p->getCoordinates().end()) return;
+		displayFile->adiciona(dynamic_cast<Object*>(p));
+		addList(p->getName(), "Polygon", objectID);
+		objectID++;
+		v->drawPolygon(p, cr, surface, w);
+		gtk_widget_queue_draw (window_widget);
+		objectID += 0x10;
+		pollyVector.clear();
+		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialog6")));
 	}
 	void stepUp() {
-		std::cout << "hsjhdsdsad" << std::endl;
 		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
-		std::cout << step << std::endl;
-		Coordinate *originCoord = new Coordinate(w->getOrigin().getX(), w->getOrigin().getY() - 100);
-		Coordinate *limitCoord = new Coordinate(w->getLimit().getX(), w->getLimit().getY() - 100);
-		w->setOrigin(*originCoord);
-		w->setLimit(*limitCoord);
-		std::cout << w->getOrigin().getX() << " " << w->getLimit().getX() << std::endl;
-		std::cout << w->getOrigin().getY() << " " << w->getLimit().getY() << std::endl;
-		gtk_widget_queue_draw (window_widget);
-		//GtkWidget *_w = GTK_WIDGET( gtk_builder_get_object( GTK_BUILDER(builder), "world_window") );
-
-
-		//displayFile->get
-		//v->drawStraight(s, cr, surface);
-
-
-		//gtk_window_set_default_size(GTK_WINDOW(window_widget), w->getLimit().getX() - w->getOrigin().getX(),
-  		//								 w->getLimit().getY() - w->getOrigin().getY());
+		w->setOrigin(Coordinate(w->getOrigin().getX(), w->getOrigin().getY() + step));
+		w->setLimit(Coordinate(w->getLimit().getX(), w->getLimit().getY() + step));
+		redraw();
 	}
 	void stepLeft() {
 		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
-		Coordinate *originCoord = new Coordinate(w->getOrigin().getX() - step, w->getOrigin().getY());
-		Coordinate *limitCoord = new Coordinate(w->getLimit().getX() - step, w->getLimit().getY());
-		w->setOrigin(*originCoord);
-		w->setLimit(*limitCoord);
-		gtk_widget_queue_draw (window_widget);
+		w->setOrigin(Coordinate(w->getOrigin().getX() - step, w->getOrigin().getY()));
+		w->setLimit(Coordinate(w->getLimit().getX() - step, w->getLimit().getY()));
+		redraw();
 	}
 	void stepRight() {
 		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
-
-		Coordinate *originCoord = new Coordinate(w->getOrigin().getX() + step, w->getOrigin().getY());
-		Coordinate *limitCoord = new Coordinate(w->getLimit().getX() + step, w->getLimit().getY());
-		w->setOrigin(*originCoord);
-		w->setLimit(*limitCoord);
-		gtk_widget_queue_draw (window_widget);
+		w->setOrigin(Coordinate(w->getOrigin().getX() + step, w->getOrigin().getY()));
+		w->setLimit(Coordinate(w->getLimit().getX() + step, w->getLimit().getY()));
+		redraw();
 	}
 	void stepDown() {
 		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
-		Coordinate *originCoord = new Coordinate(w->getOrigin().getX(), w->getOrigin().getY() + step);
-		Coordinate *limitCoord = new Coordinate(w->getLimit().getX(), w->getLimit().getY() + step);
-		w->setOrigin(*originCoord);
-		w->setLimit(*limitCoord);
-		std::cout << "hahaha nao funciona :(" << std::endl;
-		gtk_widget_queue_draw (window_widget);
+		w->setOrigin(Coordinate(w->getOrigin().getX(), w->getOrigin().getY() - step));
+		w->setLimit(Coordinate(w->getLimit().getX(), w->getLimit().getY() - step));
+		redraw();
 	}
 	void zoomIn() {
 		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
-		step /= 2;
-		Coordinate *originCoord = new Coordinate(w->getOrigin().getX() + step, w->getOrigin().getY() + step);
-		Coordinate *limitCoord = new Coordinate(w->getLimit().getX() - step, w->getLimit().getY() - step);
-		w->setOrigin(*originCoord);
-		w->setLimit(*limitCoord);
-		gtk_widget_queue_draw (window_widget);
+		//step /= 2;
+		w->setOrigin(Coordinate(w->getOrigin().getX() + step, w->getOrigin().getY() + step));
+		w->setLimit(Coordinate(w->getLimit().getX() - step, w->getLimit().getY() - step));
+		redraw();
+	}
+	void zoomOut() {
+		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
+		//step /= 2;
+		w->setOrigin(Coordinate(w->getOrigin().getX() - step, w->getOrigin().getY() - step));
+		w->setLimit(Coordinate(w->getLimit().getX() + step, w->getLimit().getY() + step));
+		redraw();
+	}
+	void emptyDisplayFileDialog() {
+		/*GtkWidget *dialog;
+		dialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog7"));
+		gtk_dialog_run(GTK_DIALOG(dialog));*/
+	}
+	void removeObjectDialog() {
+		/*if (displayFile->getSize() < 1) {
+			emptyDisplayFileDialog();
+			return;
+		}
+		GtkWidget *dialog;
+		dialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog4"));
+		gtk_dialog_run(GTK_DIALOG(dialog));*/
+	}
+	void removeObject() {
+		/*GtkWidget *objDialog;
+		int id = atoi(gtk_entry_get_text(GTK_ENTRY(GTK_WIDGET(gtk_builder_get_object(builder, "entry1")))));
+		for(Elemento<Object*>* T = displayFile->getHead(); T != nullptr; T = T->getProximo()) {
+			if (T->getInfo()->getId() == id) {
+				displayFile->retiraEspecifico(T->getInfo());
+
+				objDialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog4"));
+				gtk_widget_hide(objDialog);
+				return;
+			}
+		}*/
 	}
 	void btn_ok_clicked_cb(){
   		cr = cairo_create (surface);
@@ -190,27 +297,34 @@ extern "C" {
 	}
 }
 
-#endif
 
 int main(int argc, char *argv[]) {
-  displayFile = new ListaEnc<Object*>();
-  Coordinate a(0, 0);
-  Coordinate b(1000, 1000);
-  Coordinate c(500, 500);
-  gtk_init(&argc, &argv);
+  gtk_init(&argc, &argv);  
+  cr = cairo_create (surface);
+  cairo_set_source_rgb(cr, 0, 0, 0);
+  cairo_set_line_width(cr, 1);
+  cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+  
+  //displayFile->adiciona(steste);
+
+  //auto str = dynamic_cast<Straight*>(displayFile->getHead()->getInfo());
+
+  //std::cout << str->getA().getX() << std::endl;
 
   builder = gtk_builder_new();
   gtk_builder_add_from_file(builder, "part1.1", NULL);
 
   window_widget = GTK_WIDGET( gtk_builder_get_object( GTK_BUILDER(builder), "main_window") );
   drawing_area = GTK_WIDGET( gtk_builder_get_object( GTK_BUILDER(builder), "drawingarea1") );
+  tree = GTK_TREE_VIEW( gtk_builder_get_object( GTK_BUILDER(builder), "treeview2" ) );
+  main_model = gtk_tree_view_get_model(tree);
+  main_selection = gtk_tree_view_get_selection(tree);
+  list_store = GTK_LIST_STORE(main_model);
   g_signal_connect (drawing_area, "draw", G_CALLBACK (draw_cb), NULL);
   g_signal_connect (drawing_area,"configure-event", G_CALLBACK (configure_event_cb), NULL);
   gtk_builder_connect_signals(builder, NULL);
   w = new Window(builder, a, b, window_widget, drawing_area);
- // gtk_window_set_default_size(GTK_WINDOW(window_widget), w->getLimit().getX() - w->getOrigin().getX(),
-  //										 w->getLimit().getY() - w->getOrigin().getY());
-  v = new Viewport(a, c, *w);
+  v = new Viewport(a, c);
   log = new InfoLog("actionLog", builder);
   gtk_widget_show_all(window_widget);
   gtk_main ();
@@ -225,10 +339,3 @@ int main(int argc, char *argv[]) {
 
   return 0;
 }
-
-//int main(int argc, char *argv[]) {
-
-//}
-
- 
-

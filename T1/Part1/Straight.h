@@ -14,6 +14,8 @@ public:
 	~Straight();
 	Coordinate getA();
 	Coordinate getB();
+	void setA(Coordinate newA);
+	void setB(Coordinate newB);
 	Straight* transformToViewport(Coordinate wor, Coordinate wli, Coordinate vpor, Coordinate vpli);
 };
 

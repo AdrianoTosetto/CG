@@ -11,7 +11,7 @@ class ListaEnc {
 	Elemento<T> *head = nullptr;
 	int size = 0;
 
- protected:
+ public:
 	Elemento<T> *getHead() const {
 		return head;
 	}
@@ -161,6 +161,27 @@ class ListaEnc {
 				anterior->setProximo(eliminar->getProximo());
 				delete eliminar;
 				--size;
+				return volta;
+			}
+		}
+	}
+
+	T consultaDaPosicao(int pos) {
+		//std::cout << size << std::endl;
+		if(listaVazia()) {
+			throw std::runtime_error("Lista Vazia");
+		}
+		if(pos > size-1 || pos < 0) {
+			throw std::runtime_error("Posição Inválida");
+		} else {
+			if(pos == 0) {
+				return head->getInfo();
+			} else {
+				Elemento<T> *nodo = head;
+				for(int i = 0; i < pos; i++) {
+					nodo = nodo->getProximo();
+				}
+				T volta = nodo->getInfo();
 				return volta;
 			}
 		}

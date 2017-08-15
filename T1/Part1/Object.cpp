@@ -21,4 +21,7 @@ Object::Object() {
 Object:: ~Object() {
 
 }
+uint32_t Object::getType() {
+	return this->type;
+}
 Object* Object::transformToViewport(Coordinate wor, Coordinate wli, Coordinate vpor, Coordinate vpli) { };
