@@ -92,7 +92,7 @@ extern "C" {
 		cr = cairo_create (surface);
 		cairo_set_source_rgb (cr, 1, 1, 1);
 		cairo_paint (cr);
-
+		gtk_widget_queue_draw(window_widget);
 		 //cairo_destroy (cr);
 	}
 	void redraw() {
@@ -219,7 +219,7 @@ extern "C" {
 		objectID++;
 		v->drawPolygon(p, cr, surface, w);
 		gtk_widget_queue_draw (window_widget);
-		objectID += 0x10;
+		objectID += 0x1;
 		pollyVector.clear();
 		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialog6")));
 	}
@@ -277,11 +277,14 @@ extern "C" {
 	}
 	void removeObject() {
 		GtkWidget *objDialog;
-		int id = atoi(gtk_entry_get_text(GTK_ENTRY(GTK_WIDGET(gtk_builder_get_object(builder, "entry1")))));
-		for(Elemento<Object*>* T = displayFile->getHead(); T != nullptr; T = T->getProximo()) {
-			if (T->getInfo()->getId() == id) {
-				displayFile->retiraEspecifico(T->getInfo());
+		int id = (int) gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton14"))));
 
+		for(Elemento<Object*>* T = displayFile->getHead(); T != nullptr; T = T->getProximo()) {	
+			std::cout << "Objeto " << T->getInfo()->getName() << " id " << T->getInfo()->getId() << std::endl;
+			std::cout << "Id input: " << id << std::endl;
+			if (T->getInfo()->getId() == id) {
+				std::cout << "Objeto retirado: " << T->getInfo()->getId() << std::endl;
+				displayFile->retiraEspecifico(T->getInfo());
 				objDialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog4"));
 				gtk_widget_hide(objDialog);
 				redraw();
