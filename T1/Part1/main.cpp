@@ -262,21 +262,21 @@ extern "C" {
 		redraw();
 	}
 	void emptyDisplayFileDialog() {
-		/*GtkWidget *dialog;
+		GtkWidget *dialog;
 		dialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog7"));
-		gtk_dialog_run(GTK_DIALOG(dialog));*/
+		gtk_dialog_run(GTK_DIALOG(dialog));
 	}
 	void removeObjectDialog() {
-		/*if (displayFile->getSize() < 1) {
+		if (displayFile->getSize() < 1) {
 			emptyDisplayFileDialog();
 			return;
 		}
 		GtkWidget *dialog;
 		dialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog4"));
-		gtk_dialog_run(GTK_DIALOG(dialog));*/
+		gtk_dialog_run(GTK_DIALOG(dialog));
 	}
 	void removeObject() {
-		/*GtkWidget *objDialog;
+		GtkWidget *objDialog;
 		int id = atoi(gtk_entry_get_text(GTK_ENTRY(GTK_WIDGET(gtk_builder_get_object(builder, "entry1")))));
 		for(Elemento<Object*>* T = displayFile->getHead(); T != nullptr; T = T->getProximo()) {
 			if (T->getInfo()->getId() == id) {
@@ -284,9 +284,10 @@ extern "C" {
 
 				objDialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog4"));
 				gtk_widget_hide(objDialog);
+				redraw();
 				return;
 			}
-		}*/
+		}
 	}
 	void btn_ok_clicked_cb(){
   		cr = cairo_create (surface);
