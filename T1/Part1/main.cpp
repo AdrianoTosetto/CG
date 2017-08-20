@@ -92,7 +92,7 @@ extern "C" {
 		cr = cairo_create (surface);
 		cairo_set_source_rgb (cr, 1, 1, 1);
 		cairo_paint (cr);
-		gtk_widget_queue_draw(window_widget);
+		gtk_widget_queue_draw(window_widget);	
 		 //cairo_destroy (cr);
 	}
 	void redraw() {
@@ -158,10 +158,27 @@ extern "C" {
 		dialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog5"));
 		gtk_dialog_run(GTK_DIALOG(dialog));
 	}
+	void removeNthList(int row) {
+    	if (gtk_tree_model_iter_nth_child(GTK_TREE_MODEL(list_store), &iter, NULL, row)) {
+       		gtk_list_store_remove(list_store, &iter);
+     	}
+	}
+	void removeFromList(int oid) {
+		int position = 0;
+		for(auto T = displayFile->getHead(); T != nullptr; T = T->getProximo()) {
+			if(T->getInfo()->getId() == objectID) {
+				removeNthList(position);
+				std::cout << "removeu da list_store" << std::endl;
+				return;
+			}
+			position++;
+		}
+	}
 	void addList(std::string name, std::string type, int objID) {
     	gtk_list_store_append(list_store, &iter);
    		gtk_list_store_set(list_store, &iter, 0, name.c_str(), 1, type.c_str(), 2, objID,-1);
 	}
+
 	void addPoint() { //GtkButton *button, GtkWidget *dialog
 		std::string nameEntry = gtk_entry_get_text(GTK_ENTRY(GTK_WIDGET(gtk_builder_get_object(builder, "entry2"))));
 		if (nameEntry == "") return;
@@ -278,18 +295,18 @@ extern "C" {
 	void removeObject() {
 		GtkWidget *objDialog;
 		int id = (int) gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton14"))));
-
+		int position = 0;
 		for(Elemento<Object*>* T = displayFile->getHead(); T != nullptr; T = T->getProximo()) {	
-			std::cout << "Objeto " << T->getInfo()->getName() << " id " << T->getInfo()->getId() << std::endl;
-			std::cout << "Id input: " << id << std::endl;
 			if (T->getInfo()->getId() == id) {
-				std::cout << "Objeto retirado: " << T->getInfo()->getId() << std::endl;
+				std::cout << "Objeto retirado: " << T->getInfo()->getId() << " pos: " << position << std::endl;
+				removeNthList(position);
 				displayFile->retiraEspecifico(T->getInfo());
 				objDialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog4"));
 				gtk_widget_hide(objDialog);
 				redraw();
 				return;
 			}
+			position++;
 		}
 	}
 	void btn_ok_clicked_cb(){
@@ -330,6 +347,7 @@ int main(int argc, char *argv[]) {
   w = new Window(builder, a, b, window_widget, drawing_area);
   v = new Viewport(a, c);
   log = new InfoLog("actionLog", builder);
+  removeNthList(0);
   gtk_widget_show_all(window_widget);
   gtk_main ();
 

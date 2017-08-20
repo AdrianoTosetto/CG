@@ -1411,6 +1411,18 @@
                                         <attribute name="text">2</attribute>
                                       </attributes>
                                     </child>
+                                    <child>
+                                      <object class="GtkCellRendererText" id="cel_id1"/>
+                                      <attributes>
+                                        <attribute name="text">2</attribute>
+                                      </attributes>
+                                    </child>
+                                    <child>
+                                      <object class="GtkCellRendererText" id="cel_id2"/>
+                                      <attributes>
+                                        <attribute name="text">2</attribute>
+                                      </attributes>
+                                    </child>
                                   </object>
                                 </child>
                               </object>
