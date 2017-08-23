@@ -180,6 +180,7 @@ extern "C" {
 	}
 
 	void addPoint() { //GtkButton *button, GtkWidget *dialog
+		log->_logf("pinto:%d", 5);
 		std::string nameEntry = gtk_entry_get_text(GTK_ENTRY(GTK_WIDGET(gtk_builder_get_object(builder, "entry2"))));
 		if (nameEntry == "") return;
 		double pointX = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton6"))));
