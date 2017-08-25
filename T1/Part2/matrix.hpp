@@ -1,67 +1,66 @@
+//namespace cgmatrix{
+
 #ifndef MATRIX_HPP
 #define MATRIX_HPP
 #include <vector>
+
+
 
 class Matrix
 {
 public:
 	Matrix(int _rows, int _cols): rows(_rows), cols(_cols) {
-		std::vector<int> m(_rows *_cols);
+		std::vector<double> m(_rows *_cols);
+
 		rawMatrix = m;
+	}
+	int getRows() const{
+		return this->rows;
+	}
+	int getCols() const{
+		return this->cols;
 	}
 	void setValue(int row, int col, int value) {
 		rawMatrix.at(row*cols + col) = value;
 	}
 	double getValue(int row, int col) {
-		return rawMatrix.at(row*cols + col);
+		return rawMatrix[row*cols + col];
 	}
 
-	int &operator()(int i, int j) {
+	double &operator()(int i, int j) {
 	    return rawMatrix[i*cols + j];
 	}
 
-	int operator()(int i, int j) const {
+	double operator()(int i, int j) const {
 	    return rawMatrix[i*cols + j];
 	}
-	Matrix& operator*=(const Matrix& b) {
-		
-		for (int i = 0; i < this->rows; ++i) 
-			for (int j = 0; j < b.cols; ++j) {
-				setValue(i, j, 0);
-				for (int k = 0; k < this->cols; ++k) {
-					setValue(i, j, &rawMatrix[i][j] += &rawMatrix[i][k] * b.rawMatrix[k][j]);
+	Matrix& operator*=(const Matrix& rhs) {
+		Matrix m{this->rows, rhs.cols};
+		for (int i = 0; i < this->rows; ++i) {
+			for (int j = 0; j < rhs.getCols(); ++j) {
+				m.setValue(i, j, 0);
+				for (int k = 0; k < rhs.getRows(); ++k) {
+					m.setValue(i, j, (this->getValue(i,k) * rhs(k,j)) + m.getValue(i,j));
 				}
 			}
+		}
+		return *this = m;
 	}
-	Matrix operator*(Matrix a, const Matrix& b) {
- 	   return a *= b;
+
+	~Matrix() {
+
 	}
-	~Matrix();
 
 private:
 	int rows;
 	int cols;
-	std::vector<int> rawMatrix;
+	std::vector<double> rawMatrix;
 };
 
-int main(int argc, char const *argv[])
-{
-	Matrix m1(3,3);
-	Matrix m2(3,3);
-
-	for(int i = 0; i < 3;i++) {
-		for(int j = 0; j < 3;j++) {
-			m1.setValue(i,j,i+j);
-		}
-	}
-
-	for(int i = 0; i < 3;i++) {
-		for(int j = 0; j < 3;j++) {
-			m2.setValue(i,j,i+j);
-		}
-	}
-
-	return 0;
-}
+Matrix operator*(Matrix a, const Matrix& b) {
+ 	return a *= b;
+ }
 
 #endif
+
+//}

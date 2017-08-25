@@ -7,6 +7,7 @@
 #include "Object.h"
 #include "Polygon.hpp"
 #include "InfoLog.hpp"
+#include "matrix.hpp"
 
 #include <stdlib.h>
 
@@ -324,6 +325,11 @@ extern "C" {
 		dialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialogTranslate"));
 		gtk_dialog_run(GTK_DIALOG(dialog));
 	}
+	void scaleDialog() {
+		GtkWidget *dialog;
+		dialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialogScale"));
+		gtk_dialog_run(GTK_DIALOG(dialog));
+	}
 	void translateObject() {
 
 		double id = SPIN_GET_VALUE(builder, "spinIDTranslate");
@@ -338,6 +344,89 @@ extern "C" {
 
 				Coordinate newA(oldA.getX() + dx, oldA.getY() + dy);
 				Coordinate newB(oldB.getX() + dx, oldB.getY() + dy);
+
+				s->setA(newA);
+				s->setB(newB);
+				std::cout << "xa: " << s->getA().getX() << "ya: " << s->getA().getY() << std::endl; 
+				redraw();
+				return;
+			}
+		}
+		std::cout << "not found!" << std::endl;
+	}
+	void scaleObject() {
+		double id = SPIN_GET_VALUE(builder, "spinIDScale");
+		double scale = SPIN_GET_VALUE(builder, "spinStepScale");
+
+		for(auto t = displayFile->getHead(); t != nullptr; t = t->getProximo()) {
+			if(t->getInfo()->getId() == id) {
+				Straight *s = dynamic_cast<Straight*>(t->getInfo());
+				Coordinate oldA = s->getA();
+				Coordinate oldB = s->getB();
+
+				double centerx = (oldA.getX() + oldB.getX())/2;
+				double centery = (oldA.getY() + oldB.getY())/2;
+
+				Matrix coords(1, 3);
+				Matrix trans1(3, 3);
+				Matrix scaling(3, 3);
+				Matrix trans2(3, 3);
+				Matrix result(3, 3);
+
+				coords.setValue(0,2,1);
+
+				for(int i = 0; i < 3;i++) {
+					for(int j = 0; j < 3;j++) {
+						trans1.setValue(i,j,0);
+						scaling.setValue(i,j,0);
+						trans2.setValue(i,j,0);
+						if(i==j) {
+							trans1.setValue(i,j,1);
+							scaling.setValue(i,j,1);
+							trans2.setValue(i,j,1);
+						}
+					}
+				}
+
+				trans1.setValue(2,0,-centerx);
+				trans1.setValue(2,1,-centery);
+				scaling.setValue(0,0, scale);
+				scaling.setValue(1,1, scale);
+				trans2.setValue(2,0,centerx);
+				trans2.setValue(2,1,centery);
+
+				std::cout << trans1.getValue(0,0) << " " << trans1.getValue(0,1) << " " << trans1.getValue(0,2) << "\n" << std::endl;
+				std::cout << trans1.getValue(1,0) << " " << trans1.getValue(1,1) << " " << trans1.getValue(1,2) << "\n" << std::endl;
+				std::cout << trans1.getValue(2,0) << " " << trans1.getValue(2,1) << " " << trans1.getValue(2,2) << "\n" << std::endl;
+
+				std::cout << scaling.getValue(0,0) << " " << scaling.getValue(0,1) << " " << scaling.getValue(0,2) << "\n" << std::endl;
+				std::cout << scaling.getValue(1,0) << " " << scaling.getValue(1,1) << " " << scaling.getValue(1,2) << "\n" << std::endl;
+				std::cout << scaling.getValue(2,0) << " " << scaling.getValue(2,1) << " " << scaling.getValue(2,2) << "\n" << std::endl;
+
+				std::cout << trans2.getValue(0,0) << " " << trans2.getValue(0,1) << " " << trans2.getValue(0,2) << "\n" << std::endl;
+				std::cout << trans2.getValue(1,0) << " " << trans2.getValue(1,1) << " " << trans2.getValue(1,2) << "\n" << std::endl;
+				std::cout << trans2.getValue(2,0) << " " << trans2.getValue(2,1) << " " << trans2.getValue(2,2) << "\n" << std::endl;
+
+				result = trans1 * scaling;
+				result = result * trans2;
+
+				coords.setValue(0,0,oldA.getX());
+				coords.setValue(0,1,oldA.getY());
+
+				std::cout << result.getValue(0,0) << " " << result.getValue(0,1) << " " << result.getValue(0,2) << "\n" << std::endl;
+				std::cout << result.getValue(1,0) << " " << result.getValue(1,1) << " " << result.getValue(1,2) << "\n" << std::endl;
+				std::cout << result.getValue(2,0) << " " << result.getValue(2,1) << " " << result.getValue(2,2) << "\n" << std::endl;
+
+				coords *= result;
+
+				Coordinate newA(coords.getValue(0,0), coords.getValue(0,1));
+
+				coords.setValue(0,0,oldB.getX());
+				coords.setValue(0,1,oldB.getY());
+
+				coords *= result;
+
+				Coordinate newB(coords.getValue(0,0), coords.getValue(0,1));
 
 				s->setA(newA);
 				s->setB(newB);

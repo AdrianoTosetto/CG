@@ -6,6 +6,7 @@ class Coordinate {
 private: 
 	double x;
 	double y;
+	double z;
 
  public:
  	Coordinate(double _x, double _y);

@@ -2,7 +2,7 @@
 #include <iostream>
 
 Coordinate::Coordinate(double _x, double _y) : x(_x), y(_y) {
-	
+	this->z = 1;
 }
 
 double Coordinate::getX() {
