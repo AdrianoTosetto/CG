@@ -180,6 +180,13 @@
       </packing>
     </child>
   </object>
+  <object class="GtkSpinButton" id="spinDYTranslate">
+    <property name="visible">True</property>
+    <property name="can_focus">True</property>
+    <property name="progress_fraction">0.040000000000000001</property>
+    <property name="input_purpose">number</property>
+    <property name="adjustment">adjustment1</property>
+  </object>
   <object class="GtkSpinButton" id="spinbutton4">
     <property name="visible">True</property>
     <property name="can_focus">True</property>
@@ -759,6 +766,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <signal name="clicked" handler="gtk_widget_hide" object="dialogTranslate" swapped="yes"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -809,21 +817,6 @@
               </packing>
             </child>
             <child>
-              <object class="GtkSpinButton" id="spinDYTranslate">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="progress_fraction">0.040000000000000001</property>
-                <property name="input_purpose">number</property>
-                <property name="adjustment">adjustment1</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">2</property>
-                <property name="width">1</property>
-                <property name="height">1</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkLabel" id="label19">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
@@ -857,6 +850,22 @@
               </object>
               <packing>
                 <property name="left_attach">0</property>
+                <property name="top_attach">2</property>
+                <property name="width">1</property>
+                <property name="height">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSpinButton" id="spinDYTranslate">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="text" translatable="yes">-1</property>
+                <property name="input_purpose">number</property>
+                <property name="adjustment">adjustment1</property>
+                <property name="value">-1</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
                 <property name="top_attach">2</property>
                 <property name="width">1</property>
                 <property name="height">1</property>

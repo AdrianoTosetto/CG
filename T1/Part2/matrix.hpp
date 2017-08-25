@@ -10,31 +10,32 @@ public:
 		rawMatrix = m;
 	}
 	void setValue(int row, int col, int value) {
-		rawMatrix.at(row*cols + cols) = value;
+		rawMatrix.at(row*cols + col) = value;
 	}
 	double getValue(int row, int col) {
-		return rawMatrix.at(row*col + col);
+		return rawMatrix.at(row*cols + col);
 	}
 
 	int &operator()(int i, int j) {
-	    return rawMatrix[i*j + j];
+	    return rawMatrix[i*cols + j];
 	}
 
 	int operator()(int i, int j) const {
-	    return rawMatrix[i*j + j];
+	    return rawMatrix[i*cols + j];
 	}
 	Matrix& operator*=(const Matrix& b) {
+		
 		for (int i = 0; i < this->rows; ++i) 
 			for (int j = 0; j < b.cols; ++j) {
-				//setValue(i, j, 0);
+				setValue(i, j, 0);
 				for (int k = 0; k < this->cols; ++k) {
-					//setValue(i, j, &rawMatrix[i][j] += &rawMatrix[i][k] * b.rawMatrix[k][j]);
+					setValue(i, j, &rawMatrix[i][j] += &rawMatrix[i][k] * b.rawMatrix[k][j]);
 				}
 			}
 	}
-	/*Matrix operator*(Matrix a, const Matrix& b) {
+	Matrix operator*(Matrix a, const Matrix& b) {
  	   return a *= b;
-	}*/
+	}
 	~Matrix();
 
 private:

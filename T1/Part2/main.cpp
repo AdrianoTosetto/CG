@@ -328,7 +328,7 @@ extern "C" {
 
 		double id = SPIN_GET_VALUE(builder, "spinIDTranslate");
 		double dx = SPIN_GET_VALUE(builder, "spinDXTranslate");
-		double dy = SPIN_GET_VALUE(builder, "spinDXTranslate");
+		double dy = SPIN_GET_VALUE(builder, "spinDYTranslate");
 
 		for(auto t = displayFile->getHead(); t != nullptr; t = t->getProximo()) {
 			if(t->getInfo()->getId() == id) {
