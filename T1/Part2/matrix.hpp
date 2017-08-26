@@ -20,7 +20,7 @@ public:
 	int getCols() const{
 		return this->cols;
 	}
-	void setValue(int row, int col, int value) {
+	void setValue(int row, int col, double value) {
 		rawMatrix.at(row*cols + col) = value;
 	}
 	double getValue(int row, int col) {
