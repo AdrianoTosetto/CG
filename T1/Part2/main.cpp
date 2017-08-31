@@ -14,6 +14,11 @@
 
 #define SPIN_GET_VALUE(BUILDER, ID) gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(BUILDER, ID))))
 
+#define GET_OBJ(ID) for(auto t = displayFile->getHead(); t != nullptr; t = t->getProximo())\
+							if(t->getInfo()->getId() == ID) return t->getInfo()
+
+
+
 Coordinate a(0, 0);
 Coordinate b(1000, 1000);
 Coordinate c(500, 500);
@@ -113,19 +118,16 @@ extern "C" {
 			objToDraw = displayFile->consultaDaPosicao(i);
 			switch (objToDraw->getType()) {
 				case TPOINT:
-					std::cout << "mugi best girl" << std::endl;
 					pntToDraw = dynamic_cast<Point2D*>(objToDraw);
 					v->drawPoint(pntToDraw, cr, surface, w);
 					gtk_widget_queue_draw (window_widget);
 					break;
 				case TSTRAIGHT:
-					std::cout << "ayano best girl" << std::endl;
 					strToDraw = dynamic_cast<Straight*>(objToDraw);
 					v->drawStraight(strToDraw, cr, surface, w);
 					gtk_widget_queue_draw (window_widget);
 					break;
 				case TPOLYGON:
-					std::cout << "ursula best girl" << std::endl;
 					pgnToDraw = dynamic_cast<Polygon*>(objToDraw);
 					v->drawPolygon(pgnToDraw, cr, surface, w);
 					gtk_widget_queue_draw (window_widget);
@@ -200,6 +202,8 @@ extern "C" {
 		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialog1")));
 		addList(nameEntry, "Point", objectID);
 		objectID++;
+		_log->_log("Novo poligono adicionado!\n");
+
 	}
 	void addStraight() {
 		std::string nameEntry = gtk_entry_get_text(GTK_ENTRY(GTK_WIDGET(gtk_builder_get_object(builder, "entry3"))));
@@ -217,6 +221,8 @@ extern "C" {
 		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialog2")));
 		addList(nameEntry, "Straight", objectID);
 		objectID += 0x1;
+		_log->_log("Nova reta adicionado!\n");
+
 	}
 	void addPolygonName() {
 		std::string nameEntry = gtk_entry_get_text(GTK_ENTRY(GTK_WIDGET(gtk_builder_get_object(builder, "entry5"))));
@@ -241,12 +247,13 @@ extern "C" {
 		if(p->getCoordinates().begin() == p->getCoordinates().end()) return;
 		displayFile->adiciona(dynamic_cast<Object*>(p));
 		addList(p->getName(), "Polygon", objectID);
-		objectID++;
 		v->drawPolygon(p, cr, surface, w);
 		gtk_widget_queue_draw (window_widget);
 		objectID += 0x1;
 		pollyVector.clear();
 		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialog6")));
+		_log->_log("Nova reta adicionado!\n");
+
 	}
 	void stepUp() {
 		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
@@ -306,7 +313,6 @@ extern "C" {
 		int position = 0;
 		for(Elemento<Object*>* T = displayFile->getHead(); T != nullptr; T = T->getProximo()) {	
 			if (T->getInfo()->getId() == id) {
-				std::cout << "Objeto retirado: " << T->getInfo()->getId() << " pos: " << position << std::endl;
 				removeNthList(position);
 				displayFile->retiraEspecifico(T->getInfo());
 				objDialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog4"));
@@ -339,95 +345,177 @@ extern "C" {
 		dialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialogRotate"));
 		gtk_dialog_run(GTK_DIALOG(dialog));
 	}
-	void rotate(double x, double y, int id, double rad) {
-		for(auto t = displayFile->getHead(); t != nullptr; t = t->getProximo()) {
-			if(t->getInfo()->getId() == id) {
-				Straight *s = dynamic_cast<Straight*>(t->getInfo());
-				Coordinate oldA = s->getA();
-				Coordinate oldB = s->getB();
-				
-				double centerx = (oldA.getX() + oldB.getX())/2;
-				double centery = (oldA.getY() + oldB.getY())/2;
+	Matrix rotateCoord(double x, double y, double rad) {
+		Matrix coords(1, 3);
+		Matrix trans1(3, 3);
+		Matrix rotating(3, 3);
+		Matrix trans2(3, 3);
+		Matrix result(3, 3);
+
+		coords.setValue(0,2,1);
+
+		for(int i = 0; i < 3;i++) {
+			for(int j = 0; j < 3;j++) {
+				trans1.setValue(i,j,0);
+				rotating.setValue(i,j,0);
+				trans2.setValue(i,j,0);
+				if(i==j) {
+					trans1.setValue(i,j,1);
+					rotating.setValue(i,j,1);
+					trans2.setValue(i,j,1);
+				}
 			}
 		}
-	}
-	void rotateCenter() {
-		double id = SPIN_GET_VALUE(builder, "spinIDRotate");
-		double pointx = SPIN_GET_VALUE(builder, "spinXRotate");
-		double pointy = SPIN_GET_VALUE(builder, "spinYRotate");
-		double radians = d2r(SPIN_GET_VALUE(builder, "spinDegreesRotate"));
 
+		trans1.setValue(2,0,-x);
+		trans1.setValue(2,1,-y);
+		rotating.setValue(0,0, std::cos(rad));
+		rotating.setValue(0,1, (-1) * std::sin(rad));
+		rotating.setValue(1,0, std::sin(rad));
+		rotating.setValue(1,1, std::cos(rad));
+		trans2.setValue(2,0,x);
+		trans2.setValue(2,1,y);
+
+		result = trans1 * rotating;
+		result = result * trans2;
+
+		return result;
+	}
+	void rotate(double x, double y, int id, double rad) {
+		Matrix result = rotateCoord(x, y, rad);
 		for(auto t = displayFile->getHead(); t != nullptr; t = t->getProximo()) {
 			if(t->getInfo()->getId() == id) {
-				Straight *s = dynamic_cast<Straight*>(t->getInfo());
-				Coordinate oldA = s->getA();
-				Coordinate oldB = s->getB();
+				switch (t->getInfo()->getType()) {
+					case TPOINT: {
+						Point2D *p = dynamic_cast<Point2D*>(t->getInfo());
+						Coordinate oldC = p->getCoordinate();
 
-				double centerx = (oldA.getX() + oldB.getX())/2;
-				double centery = (oldA.getY() + oldB.getY())/2;
+						Matrix coords(1,3);
 
-				Matrix coords(1, 3);
-				Matrix trans1(3, 3);
-				Matrix rotating(3, 3);
-				Matrix trans2(3, 3);
-				Matrix result(3, 3);
+						coords.setValue(0,2,1);
+						coords.setValue(0,0,oldC.getX());
+						coords.setValue(0,1,oldC.getY());
 
-				coords.setValue(0,2,1);
+						coords *= result;
 
-				for(int i = 0; i < 3;i++) {
-					for(int j = 0; j < 3;j++) {
-						trans1.setValue(i,j,0);
-						rotating.setValue(i,j,0);
-						trans2.setValue(i,j,0);
-						if(i==j) {
-							trans1.setValue(i,j,1);
-							rotating.setValue(i,j,1);
-							trans2.setValue(i,j,1);
-						}
+						Coordinate newC(coords.getValue(0,0), coords.getValue(0,1));
+
+						p->setCoordinate(newC);
+						break;
 					}
+					case TSTRAIGHT: {
+						Straight *s = dynamic_cast<Straight*>(t->getInfo());
+						Coordinate oldA = s->getA();
+						Coordinate oldB = s->getB();
+
+						Matrix coords(1,3);
+
+						coords.setValue(0,2,1);
+						coords.setValue(0,0,oldA.getX());
+						coords.setValue(0,1,oldA.getY());
+
+						coords *= result;
+
+						Coordinate newA(coords.getValue(0,0), coords.getValue(0,1));
+
+						coords.setValue(0,0,oldB.getX());
+						coords.setValue(0,1,oldB.getY());
+
+						coords *= result;
+
+						Coordinate newB(coords.getValue(0,0), coords.getValue(0,1));
+
+						s->setA(newA);
+						s->setB(newB);
+						break;
+					}
+					case TPOLYGON: {
+						Polygon *p = dynamic_cast<Polygon*>(t->getInfo());
+						std::vector<Coordinate> pcoords = p->getCoordinates();
+						std::vector<Coordinate> newPCoords;	
+						Matrix coords(1,3);
+						coords.setValue(0,2,1);
+						for(auto it = pcoords.begin(); it != pcoords.end(); it++) {
+							coords.setValue(0,0, it->getX());
+							coords.setValue(0,1, it->getY());
+							coords *= result;
+							Coordinate c(coords.getValue(0,0), coords.getValue(0,1));
+							newPCoords.push_back(c);
+						}
+						p->setCoordinates(newPCoords);
+						break;
+					}
+					default:
+						std::cout << "¯|_(ツ)_|¯" << std::endl;
+
 				}
-
-				std::cout << radians << "\n" << std::endl;
-
-				trans1.setValue(2,0,-centerx);
-				trans1.setValue(2,1,-centery);
-				rotating.setValue(0,0, std::cos(radians));
-				rotating.setValue(0,1, (-1) * std::sin(radians));
-				rotating.setValue(1,0, std::sin(radians));
-				rotating.setValue(1,1, std::cos(radians));
-				trans2.setValue(2,0,centerx);
-				trans2.setValue(2,1,centery);
-				std::cout << "aqui: " <<  std::cos(radians) << std::endl;
-				std::cout << rotating.getValue(0,0) << " " << rotating.getValue(0,1) << " " << rotating.getValue(0,2) << "\n" << std::endl;
-				std::cout << rotating.getValue(1,0) << " " << rotating.getValue(1,1) << " " << rotating.getValue(1,2) << "\n" << std::endl;
-				std::cout << rotating.getValue(2,0) << " " << rotating.getValue(2,1) << " " << rotating.getValue(2,2) << "\n" << std::endl;
-
-				result = trans1 * rotating;
-				result = result * trans2;
-
-				coords.setValue(0,0,oldA.getX());
-				coords.setValue(0,1,oldA.getY());
-
-				coords *= result;
-
-				Coordinate newA(coords.getValue(0,0), coords.getValue(0,1));
-
-				coords.setValue(0,0,oldB.getX());
-				coords.setValue(0,1,oldB.getY());
-
-				coords *= result;
-
-				Coordinate newB(coords.getValue(0,0), coords.getValue(0,1));
-
-				s->setA(newA);
-				s->setB(newB);
-				std::cout << "xa: " << s->getA().getX() << "ya: " << s->getA().getY() << std::endl; 
 				redraw();
 				gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialogScale")));
 				return;
 			}
 		}
-		std::cout << "not found!" << std::endl;
+	}
+	void rotateCenter() {
+		double id = SPIN_GET_VALUE(builder, "spinIDRotate");
+		double radians = d2r(SPIN_GET_VALUE(builder, "spinDegreesRotate"));
+
+		double centerX = 0.0, centerY = 0.0;
+
+		for(auto t = displayFile->getHead(); t != nullptr; t = t->getProximo()) {
+			if(t->getInfo()->getId() == id) { 
+				switch (t->getInfo()->getType()) {
+					case TPOINT:
+						gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialogScale")));
+						return;
+					case TSTRAIGHT: {
+						Straight *s = dynamic_cast<Straight*>(t->getInfo());
+						Coordinate c1 = s->getA();
+						Coordinate c2 = s->getB();
+
+						centerX = ((c2.getX() + c1.getX())/2);
+						centerY = ((c2.getY() + c1.getY())/2);
+						break;
+					}
+					case TPOLYGON: {
+						Polygon *p = dynamic_cast<Polygon*>(t->getInfo());
+						std::vector<Coordinate> pcoords = p->getCoordinates();
+
+						double xSum = 0;
+						double ySum = 0;
+
+						for(auto it = pcoords.begin(); it != pcoords.end(); it++) {
+							xSum += it->getX();
+							//std::cout << xSum << std::endl;
+							ySum += it->getY();
+							//std::cout << ySum << std::endl;
+						}
+
+						centerX = xSum / pcoords.size();
+						centerY = ySum / pcoords.size();
+						
+						break;
+					}
+					default:
+						std::cout << "¯|_(ツ)_|¯" << std::endl;
+
+				}
+			}
+		}
+		rotate(centerX, centerY, id, radians);
+	}
+	void rotateOrigin() {
+		double id = SPIN_GET_VALUE(builder, "spinIDRotate");
+		double radians = d2r(SPIN_GET_VALUE(builder, "spinDegreesRotate"));
+
+		rotate(0, 0, id, radians);
+	}
+	void rotatePoint() {
+		double id = SPIN_GET_VALUE(builder, "spinIDRotate");
+		double pointx = SPIN_GET_VALUE(builder, "spinXRotate");
+		double pointy = SPIN_GET_VALUE(builder, "spinYRotate");
+		double radians = d2r(SPIN_GET_VALUE(builder, "spinDegreesRotate"));
+
+		rotate(pointx, pointy, id, radians);
 	}
 	void translateObject() {
 
@@ -437,18 +525,150 @@ extern "C" {
 
 		for(auto t = displayFile->getHead(); t != nullptr; t = t->getProximo()) {
 			if(t->getInfo()->getId() == id) {
-				Straight *s = dynamic_cast<Straight*>(t->getInfo());
-				Coordinate oldA = s->getA();
-				Coordinate oldB = s->getB();
+				switch (t->getInfo()->getType()) {
+					case TPOINT: {
+						Point2D *p = dynamic_cast<Point2D*>(t->getInfo());
+						Coordinate oldC = p->getCoordinate();
 
-				Coordinate newA(oldA.getX() + dx, oldA.getY() + dy);
-				Coordinate newB(oldB.getX() + dx, oldB.getY() + dy);
+						Coordinate newC(oldC.getX(), oldC.getY());
 
-				s->setA(newA);
-				s->setB(newB);
-				std::cout << "xa: " << s->getA().getX() << "ya: " << s->getA().getY() << std::endl; 
+						p->setCoordinate(newC);
+
+						redraw();
+						gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialogTranslate")));
+						return;
+					}
+					case TSTRAIGHT: {
+						Straight *s = dynamic_cast<Straight*>(t->getInfo());
+						Coordinate oldA = s->getA();
+						Coordinate oldB = s->getB();
+
+						Coordinate newA(oldA.getX() + dx, oldA.getY() + dy);
+						Coordinate newB(oldB.getX() + dx, oldB.getY() + dy);
+
+						s->setA(newA);
+						s->setB(newB);
+						redraw();
+						gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialogTranslate")));
+						return;
+					}
+					case TPOLYGON: {
+						Polygon *p = dynamic_cast<Polygon*>(t->getInfo());
+						std::vector<Coordinate> pcoords = p->getCoordinates();
+						std::vector<Coordinate> newPCoords;	
+						Matrix coords(1,3);
+						coords.setValue(0,2,1);
+						for(auto it = pcoords.begin(); it != pcoords.end(); it++) {
+							coords.setValue(0,0, it->getX());
+							coords.setValue(0,1, it->getY());
+							Coordinate c(coords.getValue(0,0) + dx, coords.getValue(0,1) + dy);
+							newPCoords.push_back(c);
+						}
+						p->setCoordinates(newPCoords);
+						redraw();
+						gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialogTranslate")));
+						return;
+					}
+					default:
+						std::cout << "¯|_(ツ)_|¯" << std::endl;
+
+				}
+			}
+		}
+		std::cout << "not found!" << std::endl;
+	}
+	Matrix scaleCoord(double centerx, double centery, double scale) {
+		Matrix coords(1, 3);
+		Matrix trans1(3, 3);
+		Matrix scaling(3, 3);
+		Matrix trans2(3, 3);
+		Matrix result(3, 3);
+
+		coords.setValue(0,2,1);
+
+		for(int i = 0; i < 3;i++) {
+			for(int j = 0; j < 3;j++) {
+				trans1.setValue(i,j,0);
+				scaling.setValue(i,j,0);
+				trans2.setValue(i,j,0);
+				if(i==j) {
+					trans1.setValue(i,j,1);
+					scaling.setValue(i,j,1);
+					trans2.setValue(i,j,1);
+				}
+			}
+		}
+
+		trans1.setValue(2,0,-centerx);
+		trans1.setValue(2,1,-centery);
+		scaling.setValue(0,0, scale);
+		scaling.setValue(1,1, scale);
+		trans2.setValue(2,0,centerx);
+		trans2.setValue(2,1,centery);
+
+		result = trans1 * scaling;
+		result = result * trans2;
+
+		return result;
+	}
+	void scale(double x, double y, int id, double scl) {
+		Matrix result = scaleCoord(x, y, scl);
+		for(auto t = displayFile->getHead(); t != nullptr; t = t->getProximo()) {
+			if(t->getInfo()->getId() == id) {
+				switch (t->getInfo()->getType()) {
+					case TPOINT: {
+						gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialogScale")));
+						return;
+					}
+					case TSTRAIGHT: {
+						Straight *s = dynamic_cast<Straight*>(t->getInfo());
+						Coordinate oldA = s->getA();
+						Coordinate oldB = s->getB();
+
+						Matrix coords(1,3);
+
+						coords.setValue(0,2,1);
+						coords.setValue(0,0,oldA.getX());
+						coords.setValue(0,1,oldA.getY());
+
+						coords *= result;
+
+						Coordinate newA(coords.getValue(0,0), coords.getValue(0,1));
+
+						coords.setValue(0,0,oldB.getX());
+						coords.setValue(0,1,oldB.getY());
+
+						coords *= result;
+
+						Coordinate newB(coords.getValue(0,0), coords.getValue(0,1));
+
+						s->setA(newA);
+						s->setB(newB);
+						//std::cout << "xa: " << s->getA().getX() << "ya: " << s->getA().getY() << std::endl;
+						break;
+					}
+					case TPOLYGON: {
+						Polygon *p = dynamic_cast<Polygon*>(t->getInfo());
+						std::vector<Coordinate> pcoords = p->getCoordinates();
+						std::vector<Coordinate> newPCoords;	
+						Matrix coords(1,3);
+						coords.setValue(0,2,1);
+						for(auto it = pcoords.begin(); it != pcoords.end(); it++) {
+							coords.setValue(0,0, it->getX());
+							coords.setValue(0,1, it->getY());
+							coords *= result;
+							Coordinate c(coords.getValue(0,0), coords.getValue(0,1));
+							newPCoords.push_back(c);
+						}
+						p->setCoordinates(newPCoords);
+						break;
+					}
+					default:
+						std::cout << "¯|_(ツ)_|¯" << std::endl;
+
+				}
 				redraw();
-				gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialogTranslate")));
+				gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialogScale")));
 				return;
 			}
 		}
@@ -456,67 +676,48 @@ extern "C" {
 	}
 	void scaleObject() {
 		double id = SPIN_GET_VALUE(builder, "spinIDScale");
-		double scale = SPIN_GET_VALUE(builder, "spinStepScale");
-
+		double scl = SPIN_GET_VALUE(builder, "spinStepScale");
 		for(auto t = displayFile->getHead(); t != nullptr; t = t->getProximo()) {
 			if(t->getInfo()->getId() == id) {
-				Straight *s = dynamic_cast<Straight*>(t->getInfo());
-				Coordinate oldA = s->getA();
-				Coordinate oldB = s->getB();
-
-				double centerx = (oldA.getX() + oldB.getX())/2;
-				double centery = (oldA.getY() + oldB.getY())/2;
-
-				Matrix coords(1, 3);
-				Matrix trans1(3, 3);
-				Matrix scaling(3, 3);
-				Matrix trans2(3, 3);
-				Matrix result(3, 3);
-
-				coords.setValue(0,2,1);
-
-				for(int i = 0; i < 3;i++) {
-					for(int j = 0; j < 3;j++) {
-						trans1.setValue(i,j,0);
-						scaling.setValue(i,j,0);
-						trans2.setValue(i,j,0);
-						if(i==j) {
-							trans1.setValue(i,j,1);
-							scaling.setValue(i,j,1);
-							trans2.setValue(i,j,1);
-						}
+				switch (t->getInfo()->getType()) {
+					case TPOINT: {
+						Point2D *p = dynamic_cast<Point2D*>(t->getInfo());
+						Coordinate oldC = p->getCoordinate();
+						scale(oldC.getX(), oldC.getY(), id, scl);
+						break;
 					}
+					case TSTRAIGHT: {
+						Straight *s = dynamic_cast<Straight*>(t->getInfo());
+						Coordinate oldA = s->getA();
+						Coordinate oldB = s->getB();
+
+						double centerx = (oldA.getX() + oldB.getX())/2;
+						double centery = (oldA.getY() + oldB.getY())/2;
+
+						scale(centerx, centery, id, scl);
+						break;
+					}
+					case TPOLYGON: {
+						Polygon *p = dynamic_cast<Polygon*>(t->getInfo());
+						std::vector<Coordinate> pcoords = p->getCoordinates();
+
+						double xSum = 0;
+						double ySum = 0;
+
+						for(auto it = pcoords.begin(); it != pcoords.end(); it++) {
+							xSum += it->getX();
+							ySum += it->getY();
+						}
+
+						double xMed = xSum / pcoords.size();
+						double yMed = ySum / pcoords.size();
+						scale(xMed, yMed,id, scl);
+						break;
+					}
+					default:
+						std::cout << "¯|_(ツ)_|¯" << std::endl;
+
 				}
-
-				trans1.setValue(2,0,-centerx);
-				trans1.setValue(2,1,-centery);
-				scaling.setValue(0,0, scale);
-				scaling.setValue(1,1, scale);
-				trans2.setValue(2,0,centerx);
-				trans2.setValue(2,1,centery);
-
-				result = trans1 * scaling;
-				result = result * trans2;
-
-				coords.setValue(0,0,oldA.getX());
-				coords.setValue(0,1,oldA.getY());
-
-				coords *= result;
-
-				Coordinate newA(coords.getValue(0,0), coords.getValue(0,1));
-
-				coords.setValue(0,0,oldB.getX());
-				coords.setValue(0,1,oldB.getY());
-
-				coords *= result;
-
-				Coordinate newB(coords.getValue(0,0), coords.getValue(0,1));
-
-				s->setA(newA);
-				s->setB(newB);
-				std::cout << "xa: " << s->getA().getX() << "ya: " << s->getA().getY() << std::endl; 
-				redraw();
-				gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialogScale")));
 				return;
 			}
 		}
@@ -531,12 +732,6 @@ int main(int argc, char *argv[]) {
   cairo_set_source_rgb(cr, 0, 0, 0);
   cairo_set_line_width(cr, 1);
   cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
-  
-  //displayFile->adiciona(steste);
-
-  //auto str = dynamic_cast<Straight*>(displayFile->getHead()->getInfo());
-
-  //std::cout << str->getA().getX() << std::endl;
 
   builder = gtk_builder_new();
   gtk_builder_add_from_file(builder, "part1.1", NULL);

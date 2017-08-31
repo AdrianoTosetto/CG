@@ -58,10 +58,6 @@ class Viewport {
     double ay = toDraw.getA().getY();
     double bx = toDraw.getB().getX();
     double by = toDraw.getB().getY();
-    //std::cout << "haha " << ax << std::endl;
-    //std::cout << "haha " << ay << std::endl;
-    //std::cout << "haha " << bx << std::endl;
-    //std::cout << "haha " << by << std::endl;
 
     c = cairo_create (surface);
     cairo_move_to(c, ax, ay);
