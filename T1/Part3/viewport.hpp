@@ -34,7 +34,7 @@ class Viewport {
 
 
  	void drawStraight(Straight* straight, cairo_t *c, cairo_surface_t *surface, Window* window) {
- 		Straight toDraw = *straight->transformToViewport(window->getOrigin(), window->getLimit(), this->origin, this->limit);
+ 		Straight toDraw = *straight->transformToViewport(window->getWOrigin(), window->getWLimit(), this->origin, this->limit);
 
     double ax = toDraw.getA().getX();
     double ay = toDraw.getA().getY();

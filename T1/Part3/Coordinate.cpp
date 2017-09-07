@@ -1,7 +1,15 @@
 #include "Coordinate.h"
 #include <iostream>
 
+#define DEFAULT_X 0
+#define DEFAULT_Y 0
+
 Coordinate::Coordinate(double _x, double _y) : x(_x), y(_y) {
+	this->z = 1;
+}
+Coordinate::Coordinate() {
+	this->x = DEFAULT_X;
+	this->y = DEFAULT_Y;
 	this->z = 1;
 }
 

@@ -8,7 +8,10 @@
 #include "Polygon.hpp"
 #include "InfoLog.hpp"
 #include "matrix.hpp"
-#include <cmath>
+#include <math.h>
+#include "vector.hpp"
+
+using namespace algebra;
 
 #include <stdlib.h>
 
@@ -23,12 +26,18 @@ Coordinate a(0, 0);
 Coordinate b(1000, 1000);
 Coordinate c(500, 500);
 
+Vector vup(0, 1000);
+Vector vecu(4, 5);
+Vector vecv(3, 3);
+
 static cairo_surface_t *surface = NULL;
+Matrix description(3,3);
 GtkWidget *drawing_area;
 GtkWidget *window_widget;
 GtkBuilder* builder;
 int objectID = 0;
 auto displayFile = new ListaEnc<Object*>();
+auto windowFile = new ListaEnc<Object*>();
 Viewport *v;
 Window *w;
 cairo_t *cr; 
@@ -107,15 +116,25 @@ extern "C" {
 		gtk_widget_queue_draw(window_widget);	
 		 //cairo_destroy (cr);
 	}
+	void updateWindowFile() {
+		windowFile->destroiLista();
+
+		for(int i = 0; i < displayFile->getSize(); i++) {
+			Object *o = displayFile->consultaDaPosicao(i);
+			description = w->generateDescription();
+			windowFile->adiciona(w->transformToWindow(*o, description));
+		}
+	}
 	void redraw() {
+		updateWindowFile();
 		erase();
 		Object* objToDraw;
 		Point2D* pntToDraw;
 		Straight* strToDraw;
 		Polygon* pgnToDraw;
 		std::vector<Coordinate> newCoords;
-		for(int i = 0; i < displayFile->getSize(); i++) {
-			objToDraw = displayFile->consultaDaPosicao(i);
+		for(int i = 0; i < windowFile->getSize(); i++) {
+			objToDraw = windowFile->consultaDaPosicao(i);
 			switch (objToDraw->getType()) {
 				case TPOINT:
 					pntToDraw = dynamic_cast<Point2D*>(objToDraw);
@@ -195,9 +214,11 @@ extern "C" {
 		double pointY = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton7"))));
 		Coordinate pointCoord(pointX, pointY);
 		Point2D *toAdd = new Point2D(pointCoord, objectID, nameEntry);
-		v->drawPoint(toAdd, cr, surface, w);
+		Point2D *toAddW = dynamic_cast<Point2D*>(w->transformToWindow(*toAdd, description));
+		v->drawPoint(toAddW, cr, surface, w);
 		gtk_widget_queue_draw (window_widget);
 		displayFile->adiciona(toAdd);
+		windowFile->adiciona(toAddW);
 		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialog1")));
 		addList(nameEntry, "Point", objectID);
 		objectID++;
@@ -214,9 +235,11 @@ extern "C" {
 		Coordinate straightCoordA(straightXA, straightYA);
 		Coordinate straightCoordB(straightXB, straightYB);
 		Straight *toAdd = new Straight(straightCoordA, straightCoordB, objectID, nameEntry);
-		v->drawStraight(toAdd, cr, surface, w);
+		Straight *toAddW = dynamic_cast<Straight*>(w->transformToWindow(*toAdd, description));
+		v->drawStraight(toAddW, cr, surface, w);
 		gtk_widget_queue_draw (window_widget);
 		displayFile->adiciona(toAdd);
+		windowFile->adiciona(toAddW);
 		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialog2")));
 		addList(nameEntry, "Straight", objectID);
 		objectID += 0x1;
@@ -242,10 +265,14 @@ extern "C" {
 	}
 	void finishPolygon() {
 		Polygon *p = new Polygon("poligono", objectID, pollyVector);
+		Polygon *pw = dynamic_cast<Polygon*>(w->transformToWindow(*p, description));
 		if(p->getCoordinates().begin() == p->getCoordinates().end()) return;
 		displayFile->adiciona(dynamic_cast<Object*>(p));
+		windowFile->adiciona(dynamic_cast<Object*>(pw));
+
+
 		addList(p->getName(), "Polygon", objectID);
-		v->drawPolygon(p, cr, surface, w);
+		v->drawPolygon(pw, cr, surface, w);
 		gtk_widget_queue_draw (window_widget);
 		objectID += 0x1;
 		pollyVector.clear();
@@ -367,10 +394,10 @@ extern "C" {
 
 		trans1.setValue(2,0,-x);
 		trans1.setValue(2,1,-y);
-		rotating.setValue(0,0, std::cos(rad));
-		rotating.setValue(0,1, (-1) * std::sin(rad));
-		rotating.setValue(1,0, std::sin(rad));
-		rotating.setValue(1,1, std::cos(rad));
+		rotating.setValue(0,0, cos(rad));
+		rotating.setValue(0,1, (-1) * sin(rad));
+		rotating.setValue(1,0, sin(rad));
+		rotating.setValue(1,1, cos(rad));
 		trans2.setValue(2,0,x);
 		trans2.setValue(2,1,y);
 
@@ -725,6 +752,10 @@ extern "C" {
 
 
 int main(int argc, char *argv[]) {
+  /*std::cout << vecu.getNorm() << std::endl;
+  std::cout << vecu.innerProduct(vecu) << std::endl;
+  std::cout << vecu.innerProduct(vecv) << std::endl;
+  std::cout << (vecu + vecv).getA() << std::endl;*/
   gtk_init(&argc, &argv);  
   cr = cairo_create (surface);
   cairo_set_source_rgb(cr, 0, 0, 0);
@@ -743,8 +774,9 @@ int main(int argc, char *argv[]) {
   g_signal_connect (drawing_area, "draw", G_CALLBACK (draw_cb), NULL);
   g_signal_connect (drawing_area,"configure-event", G_CALLBACK (configure_event_cb), NULL);
   gtk_builder_connect_signals(builder, NULL);
-  w = new Window(builder, a, b, window_widget, drawing_area);
+  w = new Window(builder, a, b, vup, window_widget, drawing_area);
   v = new Viewport(a, c);
+  description = w->generateDescription();
   _log = new InfoLog("actionLog", builder);
   removeNthList(0);
   gtk_widget_show_all(window_widget);
