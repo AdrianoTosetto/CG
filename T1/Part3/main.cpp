@@ -118,10 +118,10 @@ extern "C" {
 	}
 	void updateWindowFile() {
 		windowFile->destroiLista();
+		description = w->generateDescription();
 
 		for(int i = 0; i < displayFile->getSize(); i++) {
 			Object *o = displayFile->consultaDaPosicao(i);
-			description = w->generateDescription();
 			windowFile->adiciona(w->transformToWindow(*o, description));
 		}
 	}
@@ -222,6 +222,8 @@ extern "C" {
 		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialog1")));
 		addList(nameEntry, "Point", objectID);
 		objectID++;
+		std::cout << toAdd->getCoordinate().getX() << " " << toAdd->getCoordinate().getY() << std::endl;
+		std::cout << toAddW->getCoordinate().getX() << " " << toAddW->getCoordinate().getY() << std::endl;
 		_log->_log("Novo ponto adicionado!\n");
 
 	}
@@ -243,6 +245,7 @@ extern "C" {
 		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialog2")));
 		addList(nameEntry, "Straight", objectID);
 		objectID += 0x1;
+		std::cout << toAddW->getA().getX() << " " << toAddW->getA().getY() << std::endl;
 		_log->_log("Nova reta adicionada!\n");
 	}
 	void addPolygonName() {
@@ -284,24 +287,37 @@ extern "C" {
 		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
 		w->setOrigin(Coordinate(w->getOrigin().getX(), w->getOrigin().getY() + step));
 		w->setLimit(Coordinate(w->getLimit().getX(), w->getLimit().getY() + step));
+		Vector vec0(0, step);
+
+		w->setVUp(w->getVUp() + vec0);
+		w->setU(w->getU() + vec0);
 		redraw();
 	}
 	void stepLeft() {
 		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
 		w->setOrigin(Coordinate(w->getOrigin().getX() - step, w->getOrigin().getY()));
 		w->setLimit(Coordinate(w->getLimit().getX() - step, w->getLimit().getY()));
+		Vector vec(-step, 0);
+		w->setVUp(w->getVUp() + vec);
+		w->setU(w->getU() + vec);
 		redraw();
 	}
 	void stepRight() {
 		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
 		w->setOrigin(Coordinate(w->getOrigin().getX() + step, w->getOrigin().getY()));
 		w->setLimit(Coordinate(w->getLimit().getX() + step, w->getLimit().getY()));
+		Vector vec(step, 0);
+		w->setVUp(w->getVUp() + vec);
+		w->setU(w->getU() + vec);
 		redraw();
 	}
 	void stepDown() {
 		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
 		w->setOrigin(Coordinate(w->getOrigin().getX(), w->getOrigin().getY() - step));
 		w->setLimit(Coordinate(w->getLimit().getX(), w->getLimit().getY() - step));
+		Vector vec(0, -step);
+		w->setVUp(w->getVUp() + vec);
+		w->setU(w->getU() + vec);
 		redraw();
 	}
 	void zoomIn() {
@@ -309,6 +325,8 @@ extern "C" {
 		//step /= 2;
 		w->setOrigin(Coordinate(w->getOrigin().getX() + step, w->getOrigin().getY() + step));
 		w->setLimit(Coordinate(w->getLimit().getX() - step, w->getLimit().getY() - step));
+		Vector vec(step, -step);
+		w->setVUp(w->getVUp() + vec);
 		redraw();
 	}
 	void zoomOut() {
@@ -316,6 +334,8 @@ extern "C" {
 		//step /= 2;
 		w->setOrigin(Coordinate(w->getOrigin().getX() - step, w->getOrigin().getY() - step));
 		w->setLimit(Coordinate(w->getLimit().getX() + step, w->getLimit().getY() + step));
+		Vector vec(-step, step);
+		w->setVUp(w->getVUp() + vec);
 		redraw();
 	}
 	void emptyDisplayFileDialog() {
@@ -763,7 +783,7 @@ int main(int argc, char *argv[]) {
   cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
 
   builder = gtk_builder_new();
-  gtk_builder_add_from_file(builder, "part1.1", NULL);
+  gtk_builder_add_from_file(builder, "project_window.glade", NULL);
 
   window_widget = GTK_WIDGET( gtk_builder_get_object( GTK_BUILDER(builder), "main_window") );
   drawing_area = GTK_WIDGET( gtk_builder_get_object( GTK_BUILDER(builder), "drawingarea1") );
@@ -774,7 +794,9 @@ int main(int argc, char *argv[]) {
   g_signal_connect (drawing_area, "draw", G_CALLBACK (draw_cb), NULL);
   g_signal_connect (drawing_area,"configure-event", G_CALLBACK (configure_event_cb), NULL);
   gtk_builder_connect_signals(builder, NULL);
-  w = new Window(builder, a, b, vup, window_widget, drawing_area);
+  Vector vaxis(a.getX(), b.getY());
+  Vector uaxis(b.getX(), a.getY());
+  w = new Window(builder, a, b, vaxis, uaxis, window_widget, drawing_area);
   v = new Viewport(a, c);
   description = w->generateDescription();
   _log = new InfoLog("actionLog", builder);

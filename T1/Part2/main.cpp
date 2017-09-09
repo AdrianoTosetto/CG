@@ -732,7 +732,7 @@ int main(int argc, char *argv[]) {
   cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
 
   builder = gtk_builder_new();
-  gtk_builder_add_from_file(builder, "part1.1", NULL);
+  gtk_builder_add_from_file(builder, "project_window.glade", NULL);
 
   window_widget = GTK_WIDGET( gtk_builder_get_object( GTK_BUILDER(builder), "main_window") );
   drawing_area = GTK_WIDGET( gtk_builder_get_object( GTK_BUILDER(builder), "drawingarea1") );

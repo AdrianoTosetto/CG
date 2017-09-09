@@ -3,12 +3,13 @@
 #include <iostream>
 #include "matrix.hpp"
 #include <vector>
+#include <assert.h>
 
-Window::Window(Coordinate _origin, Coordinate _limit, Vector _vup): origin(_origin), limit(_limit), vup(_vup), worigin(-1,-1), wlimit(1,1) {
+Window::Window(Coordinate _origin, Coordinate _limit, Vector _vaxis, Vector _uaxis): origin(_origin), limit(_limit), vaxis(_vaxis),uaxis(_uaxis), worigin(-1,-1), wlimit(1,1) {
 
 }
-Window::Window (GtkBuilder* builder, Coordinate _origin, Coordinate _limit, Vector _vup,
-	              GtkWidget* window_widget, GtkWidget* drawing_area) : origin(_origin), limit(_limit), vup(_vup), 
+Window::Window (GtkBuilder* builder, Coordinate _origin, Coordinate _limit, Vector _vaxis,Vector _uaxis,
+	              GtkWidget* window_widget, GtkWidget* drawing_area) : origin(_origin), limit(_limit), vaxis(vaxis), uaxis(uaxis), 
 																	   worigin(-1,-1), wlimit(1,1) {
 }
 Window::~Window() {
@@ -41,6 +42,18 @@ void Window::setWLimit(Coordinate coor) {
 void Window::setWOrigin(Coordinate coor) {
 	this->worigin = coor;
 }
+Vector Window::getVUp() {
+	return this->vaxis;
+}
+void Window::setVUp(Vector vec) {
+	this->vaxis = vec;
+}
+void Window::setU(Vector vec) {
+	this->uaxis = vec;
+}
+Vector Window::getU() const {
+	return this->uaxis;
+}
 Matrix Window::generateDescription() {
 	Matrix trans(3,3);
 	Matrix rotate(3,3);
@@ -60,16 +73,17 @@ Matrix Window::generateDescription() {
 	trans.setValue(2,0,-(origin.getX() + limit.getX())/2);
 	trans.setValue(2,1,-(origin.getY() + limit.getY())/2);
 	Vector y(0, 1);
-	double angle = (-1) * acos((vup*y)/(vup.getNorm() * y.getNorm()));
+	double angle = (-1) * acos((vaxis*y)/(vaxis.getNorm() * y.getNorm()));
+	std::cout << angle << std::endl;
 	rotate.setValue(0,0, cos(angle));
 	rotate.setValue(0,1, (-1) * sin(angle));
 	rotate.setValue(1,0, sin(angle));
 	rotate.setValue(1,1, cos(angle));
 
-	Vector uup(limit.getX() - (vup.getA() + origin.getX()), limit.getY() - (vup.getB() + origin.getY()));
+	//Vector uup(limit.getX() - (vup.getA() + origin.getX()), limit.getY() - (vup.getB() + origin.getY()));
 
-	double sizeV = vup.getNorm();
-	double sizeU = uup.getNorm();
+	double sizeV = vaxis.getNorm();
+	double sizeU = uaxis.getNorm();
 
 	scale.setValue(0, 0, 1/sizeV);
 	scale.setValue(1, 1, 1/sizeU);

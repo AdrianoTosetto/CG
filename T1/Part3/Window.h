@@ -15,25 +15,29 @@ class Window {
  private:
   	Coordinate origin, limit;
   	Coordinate worigin, wlimit;
-  	Vector vup;
+  	Vector vaxis;
+  	Vector uaxis;
 
   	GtkWidget* _mainWindow;
   	GtkBuilder* builder = NULL;
  public:
-	Window(Coordinate _origin, Coordinate _limit, Vector _vup);
-	Window(GtkBuilder* builder, Coordinate _origin, Coordinate _limit, Vector _vup,
-				GtkWidget* window_widget, GtkWidget* drawing_area);
+	Window(Coordinate _origin, Coordinate _limit, Vector _vaxis, Vector _uaxis);
+	Window(GtkBuilder* builder, Coordinate _origin, Coordinate _limit, Vector _vaxis,
+				Vector _uaxis, GtkWidget* window_widget, GtkWidget* drawing_area);
 	~Window();
 	Coordinate getOrigin();
 	Coordinate getLimit();	
 	Coordinate getWOrigin() const;
 	Coordinate getWLimit() const;
-
+	Vector getVUp();
 
 	void setOrigin(Coordinate coor);
 	void setLimit(Coordinate coor);
 	void setWLimit(Coordinate coor);
 	void setWOrigin(Coordinate coor);
+	void setVUp(Vector vec);
+	void setU(Vector vec);
+	Vector getU() const;
 	Matrix generateDescription();
 	Object* transformToWindow(Object &o, Matrix result);
 	GtkWidget* getMainWindow();
