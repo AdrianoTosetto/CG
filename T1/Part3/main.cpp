@@ -222,7 +222,7 @@ extern "C" {
 		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialog1")));
 		addList(nameEntry, "Point", objectID);
 		objectID++;
-		std::cout << toAddW->getCoordinate().getX() << " " << toAddW->getCoordinate().getY() << std::endl;
+        //std::cout << toAddW->getCoordinate().getX() << " " << toAddW->getCoordinate().getY() << std::endl;
 		_log->_log("Novo ponto adicionado!\n");
 
 	}
@@ -244,8 +244,8 @@ extern "C" {
 		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialog2")));
 		addList(nameEntry, "Straight", objectID);
 		objectID += 0x1;
-		std::cout << toAddW->getA().getX() << toAddW->getA().getY() << std::endl;
-		std::cout << toAddW->getB().getX() << toAddW->getB().getY() << std::endl;
+        //std::cout << toAddW->getA().getX() << toAddW->getA().getY() << std::endl;
+        //std::cout << toAddW->getB().getX() << toAddW->getB().getY() << std::endl;
 		_log->_log("Nova reta adicionada!\n");
 	}
 	void addPolygonName() {
@@ -323,10 +323,34 @@ extern "C" {
 	void zoomIn() {
 		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
 		//step /= 2;
-		w->setOrigin(Coordinate(w->getOrigin().getX() + step, w->getOrigin().getY() + step));
-		w->setLimit(Coordinate(w->getLimit().getX() - step, w->getLimit().getY() - step));
-		Vector vec(step, -step);
-		w->setVUp(w->getVUp() + vec);
+        if ((w->getOrigin().getX() + step > w->getLimit().getX() - step) && !(w->getOrigin().getY() + step > w->getLimit().getY() - step)) {
+            w->setOrigin(Coordinate((w->getOrigin().getX() + w->getLimit().getX())/2, w->getOrigin().getY()));
+            w->setLimit(Coordinate((w->getOrigin().getX() + w->getLimit().getX())/2, w->getLimit().getY()));
+            Vector vec((w->getLimit().getX() - w->getOrigin().getX())/2, -step);
+            w->setVUp(w->getVUp() + vec);
+            w->setU(w->getU() - vec);
+        }
+        if ((w->getOrigin().getY() + step > w->getLimit().getY() - step) && !(w->getOrigin().getY() + step > w->getLimit().getY() - step)) {
+            w->setOrigin(Coordinate(w->getOrigin().getX(), (w->getOrigin().getY() + w->getLimit().getY())/2));
+            w->setLimit(Coordinate(w->getLimit().getX(), (w->getOrigin().getY() + w->getLimit().getY())/2));
+            Vector vec(step, -(w->getLimit().getY() - w->getOrigin().getY())/2);
+            w->setVUp(w->getVUp() + vec);
+            w->setU(w->getU() - vec);
+        }
+        if ((w->getOrigin().getY() + step > w->getLimit().getY() - step) && (w->getOrigin().getY() + step > w->getLimit().getY() - step)) {
+            w->setOrigin(Coordinate((w->getOrigin().getX() + w->getLimit().getX())/2, (w->getOrigin().getY() + w->getLimit().getY())/2));
+            w->setLimit(Coordinate((w->getOrigin().getX() + w->getLimit().getX())/2, (w->getOrigin().getY() + w->getLimit().getY())/2));
+            Vector vec((w->getLimit().getX() - w->getOrigin().getX())/2, -(w->getLimit().getY() - w->getOrigin().getY())/2);
+            w->setVUp(w->getVUp() + vec);
+            w->setU(w->getU() - vec);
+        }
+        if (!(w->getOrigin().getY() + step > w->getLimit().getY() - step) && !(w->getOrigin().getY() + step > w->getLimit().getY() - step)) {
+            w->setOrigin(Coordinate(w->getOrigin().getX() + step, w->getOrigin().getY() + step));
+            w->setLimit(Coordinate(w->getLimit().getX() - step, w->getLimit().getY() - step));
+            Vector vec(step, -step);
+            w->setVUp(w->getVUp() + vec);
+            w->setU(w->getU() - vec);
+        }
 		redraw();
 	}
 	void zoomOut() {
@@ -336,6 +360,7 @@ extern "C" {
 		w->setLimit(Coordinate(w->getLimit().getX() + step, w->getLimit().getY() + step));
 		Vector vec(-step, step);
 		w->setVUp(w->getVUp() + vec);
+        w->setU(w->getU() - vec);
 		redraw();
 	}
 	void emptyDisplayFileDialog() {

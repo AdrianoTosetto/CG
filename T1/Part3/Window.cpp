@@ -67,23 +67,24 @@ Matrix Window::generateDescription() {
 	Matrix scale(3,3);
 	for(int i = 0; i < 3;i++) {
 		for(int j = 0; j < 3;j++) {
+            if(i==j) {
+                trans.setValue(i,j,1);
+                rotate.setValue(i,j,1);
+                scale.setValue(i,j,1);
+                continue;
+            }
 			trans.setValue(i,j,0);
 			rotate.setValue(i,j,0);
 			scale.setValue(i,j,0);
-			if(i==j) {
-				trans.setValue(i,j,1);
-				rotate.setValue(i,j,1);
-				scale.setValue(i,j,1);
-			}
 		}
 	}
-	trans.setValue(2,0,-(origin.getX() + limit.getX())/2);
-	trans.setValue(2,1,-(origin.getY() + limit.getY())/2);
-	Vector y(0, 1);
+    trans.setValue(2,0,-(origin.getX() + limit.getX())/2);
+    trans.setValue(2,1,-(origin.getY() + limit.getY())/2);
+
 	double angle = -this->rotatedAngle;
 
 
-	std::cout << angle << std::endl;
+    //std::cout << angle << std::endl;
 	rotate.setValue(0,0, cos(angle));
 	rotate.setValue(0,1, (-1) * sin(angle));
 	rotate.setValue(1,0, sin(angle));
@@ -94,11 +95,11 @@ Matrix Window::generateDescription() {
 	double sizeV = vaxis.getNorm();
 	double sizeU = uaxis.getNorm();
 
-	std::cout << sizeV << std::endl;
-	std::cout << sizeU << std::endl;
+    //std::cout << sizeV << std::endl;
+    //std::cout << sizeU << std::endl;
 
-	scale.setValue(0, 0, 1/sizeV);
-	scale.setValue(1, 1, 1/sizeU);
+    scale.setValue(0, 0, 2*(1/sizeV));
+    scale.setValue(1, 1, 2*(1/sizeU));
 
 	Matrix result = trans * rotate * scale;
 
