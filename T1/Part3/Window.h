@@ -18,6 +18,8 @@ class Window {
   	Vector vaxis;
   	Vector uaxis;
 
+  	double rotatedAngle = 0;
+
   	GtkWidget* _mainWindow;
   	GtkBuilder* builder = NULL;
  public:
@@ -40,6 +42,8 @@ class Window {
 	Vector getU() const;
 	Matrix generateDescription();
 	Object* transformToWindow(Object &o, Matrix result);
+	double getRotatedAngle();
+	void setRotatedAngle(double angle);
 	GtkWidget* getMainWindow();
 };
 

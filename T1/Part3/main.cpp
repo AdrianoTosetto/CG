@@ -222,7 +222,6 @@ extern "C" {
 		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialog1")));
 		addList(nameEntry, "Point", objectID);
 		objectID++;
-		std::cout << toAdd->getCoordinate().getX() << " " << toAdd->getCoordinate().getY() << std::endl;
 		std::cout << toAddW->getCoordinate().getX() << " " << toAddW->getCoordinate().getY() << std::endl;
 		_log->_log("Novo ponto adicionado!\n");
 
@@ -245,7 +244,8 @@ extern "C" {
 		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialog2")));
 		addList(nameEntry, "Straight", objectID);
 		objectID += 0x1;
-		std::cout << toAddW->getA().getX() << " " << toAddW->getA().getY() << std::endl;
+		std::cout << toAddW->getA().getX() << toAddW->getA().getY() << std::endl;
+		std::cout << toAddW->getB().getX() << toAddW->getB().getY() << std::endl;
 		_log->_log("Nova reta adicionada!\n");
 	}
 	void addPolygonName() {
@@ -289,8 +289,8 @@ extern "C" {
 		w->setLimit(Coordinate(w->getLimit().getX(), w->getLimit().getY() + step));
 		Vector vec0(0, step);
 
-		w->setVUp(w->getVUp() + vec0);
-		w->setU(w->getU() + vec0);
+		//w->setVUp(w->getVUp() + vec0);
+		//w->setU(w->getU() + vec0);
 		redraw();
 	}
 	void stepLeft() {
@@ -298,8 +298,8 @@ extern "C" {
 		w->setOrigin(Coordinate(w->getOrigin().getX() - step, w->getOrigin().getY()));
 		w->setLimit(Coordinate(w->getLimit().getX() - step, w->getLimit().getY()));
 		Vector vec(-step, 0);
-		w->setVUp(w->getVUp() + vec);
-		w->setU(w->getU() + vec);
+		//w->setVUp(w->getVUp() + vec);
+		//w->setU(w->getU() + vec);
 		redraw();
 	}
 	void stepRight() {
@@ -307,8 +307,8 @@ extern "C" {
 		w->setOrigin(Coordinate(w->getOrigin().getX() + step, w->getOrigin().getY()));
 		w->setLimit(Coordinate(w->getLimit().getX() + step, w->getLimit().getY()));
 		Vector vec(step, 0);
-		w->setVUp(w->getVUp() + vec);
-		w->setU(w->getU() + vec);
+		//w->setVUp(w->getVUp() + vec);
+		//w->setU(w->getU() + vec);
 		redraw();
 	}
 	void stepDown() {
@@ -316,8 +316,8 @@ extern "C" {
 		w->setOrigin(Coordinate(w->getOrigin().getX(), w->getOrigin().getY() - step));
 		w->setLimit(Coordinate(w->getLimit().getX(), w->getLimit().getY() - step));
 		Vector vec(0, -step);
-		w->setVUp(w->getVUp() + vec);
-		w->setU(w->getU() + vec);
+		//w->setVUp(w->getVUp() + vec);
+		//w->setU(w->getU() + vec);
 		redraw();
 	}
 	void zoomIn() {

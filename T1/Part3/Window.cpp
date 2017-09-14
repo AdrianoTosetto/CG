@@ -9,7 +9,7 @@ Window::Window(Coordinate _origin, Coordinate _limit, Vector _vaxis, Vector _uax
 
 }
 Window::Window (GtkBuilder* builder, Coordinate _origin, Coordinate _limit, Vector _vaxis,Vector _uaxis,
-	              GtkWidget* window_widget, GtkWidget* drawing_area) : origin(_origin), limit(_limit), vaxis(vaxis), uaxis(uaxis), 
+	              GtkWidget* window_widget, GtkWidget* drawing_area) : origin(_origin), limit(_limit), vaxis(_vaxis), uaxis(_uaxis), 
 																	   worigin(-1,-1), wlimit(1,1) {
 }
 Window::~Window() {
@@ -54,7 +54,14 @@ void Window::setU(Vector vec) {
 Vector Window::getU() const {
 	return this->uaxis;
 }
+void Window::setRotatedAngle(double angle) {
+	this->rotatedAngle = angle;
+}
+double Window::getRotatedAngle() {
+	return this->rotatedAngle;
+}
 Matrix Window::generateDescription() {
+
 	Matrix trans(3,3);
 	Matrix rotate(3,3);
 	Matrix scale(3,3);
@@ -73,7 +80,9 @@ Matrix Window::generateDescription() {
 	trans.setValue(2,0,-(origin.getX() + limit.getX())/2);
 	trans.setValue(2,1,-(origin.getY() + limit.getY())/2);
 	Vector y(0, 1);
-	double angle = (-1) * acos((vaxis*y)/(vaxis.getNorm() * y.getNorm()));
+	double angle = -this->rotatedAngle;
+
+
 	std::cout << angle << std::endl;
 	rotate.setValue(0,0, cos(angle));
 	rotate.setValue(0,1, (-1) * sin(angle));
@@ -84,6 +93,9 @@ Matrix Window::generateDescription() {
 
 	double sizeV = vaxis.getNorm();
 	double sizeU = uaxis.getNorm();
+
+	std::cout << sizeV << std::endl;
+	std::cout << sizeU << std::endl;
 
 	scale.setValue(0, 0, 1/sizeV);
 	scale.setValue(1, 1, 1/sizeU);

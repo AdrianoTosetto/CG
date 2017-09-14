@@ -53,7 +53,7 @@ class Viewport {
   }
 
   void drawPoint(Point2D* point, cairo_t *c, cairo_surface_t *surface, Window* window) {
-    Point2D toDraw = *point->transformToViewport(window->getOrigin(), window->getLimit(), this->origin, this->limit);
+    Point2D toDraw = *point->transformToViewport(window->getWOrigin(), window->getWLimit(), this->origin, this->limit);
     cairo_set_line_cap(c, CAIRO_LINE_CAP_ROUND);
     double pointx = toDraw.getCoordinate().getX();
     double pointy = toDraw.getCoordinate().getY();
@@ -66,7 +66,7 @@ class Viewport {
   }
   void drawPolygon(Polygon* polygon, cairo_t *c, cairo_surface_t *surface, Window* window) {
 
-    Polygon newPoly = *polygon->transformToViewport(window->getOrigin(), window->getLimit(), this->origin, this->limit);
+    Polygon newPoly = *polygon->transformToViewport(window->getWOrigin(), window->getWLimit(), this->origin, this->limit);
     
     std::vector<Coordinate> coordsVec = newPoly.getCoordinates();
     auto it = coordsVec.begin();
