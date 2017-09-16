@@ -1,6 +1,3 @@
-#ifndef VIEWPORT_HPP
-#define VIEWPORT_HPP
-
 #include "Coordinate.h"
 #include <gtk/gtk.h>
 #include "Window.h"
@@ -91,4 +88,3 @@ class Viewport {
   }
 };
 
-#endif

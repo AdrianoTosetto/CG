@@ -10,13 +10,16 @@
 #include "matrix.hpp"
 #include <math.h>
 #include "vector.hpp"
-#include "callbacks.hpp"
 
 using namespace algebra;
 
 #include <stdlib.h>
 
 #define SPIN_GET_VALUE(BUILDER, ID) gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(BUILDER, ID))))
+
+#define GET_OBJ(ID) for(auto t = displayFile->getHead(); t != nullptr; t = t->getProximo())\
+							if(t->getInfo()->getId() == ID) return t->getInfo()
+
 
 
 Coordinate a(0, 0);
@@ -49,7 +52,6 @@ GtkTreeView* tree;
 GtkListStore *list_store;
 GtkTreeIter iter;
 std::vector<Coordinate> pollyVector;
-std::string pollyName;
 //Polygon* polly = nullptr;
 //auto steste =  new Straight(Coordinate(200,200), Coordinate(300, 300));
 
@@ -100,6 +102,13 @@ extern "C" {
 	double d2r(double d) {
   		return (d / 180.0) * ((double) M_PI);
 	}
+	void test(GtkWidget* button, Window *w) {
+		cr = cairo_create (surface);
+  		cairo_move_to(cr, 200, 200);
+  		cairo_line_to(cr, 300, 300);
+ 		cairo_stroke(cr);
+ 		gtk_widget_queue_draw (window_widget);
+	}
 	void erase() {
 		cr = cairo_create (surface);
 		cairo_set_source_rgb (cr, 1, 1, 1);
@@ -149,16 +158,33 @@ extern "C" {
 		}
 	}
 	void addObjectDialog() {
-		c_addObjectDialog(builder);	
+		GtkWidget *dialog;
+		dialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog3"));
+		gtk_dialog_run(GTK_DIALOG(dialog));
 	}
-	void addPointDialog() {
-		c_addPointDialog(builder);
+	void addPointDialog() { //Window *w, GtkMenuItem *item;
+		GtkWidget *dialog;
+		GtkWidget *objDialog;
+		objDialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog3"));
+		gtk_widget_hide(objDialog);
+		dialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog1"));
+		gtk_dialog_run(GTK_DIALOG(dialog));
 	}
 	void addStraightDialog() {
-		c_addStraightDialog(builder);
+		GtkWidget *dialog;
+		GtkWidget *objDialog;
+		objDialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog3"));
+		gtk_widget_hide(objDialog);
+		dialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog2"));
+		gtk_dialog_run(GTK_DIALOG(dialog));
 	}
 	void addPolygonDialog() {
-		c_addPolygonDialog(builder);
+		GtkWidget *dialog;
+		GtkWidget *objDialog;
+		objDialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog3"));
+		gtk_widget_hide(objDialog);
+		dialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog5"));
+		gtk_dialog_run(GTK_DIALOG(dialog));
 	}
 	void removeNthList(int row) {
     	if (gtk_tree_model_iter_nth_child(GTK_TREE_MODEL(list_store), &iter, NULL, row)) {
@@ -181,30 +207,81 @@ extern "C" {
    		gtk_list_store_set(list_store, &iter, 0, name.c_str(), 1, type.c_str(), 2, objID,-1);
 	}
 
-	void addPoint() {
-		std::string nameEntry = c_addPoint(builder, w, v, window_widget, cr, _log, objectID, displayFile, windowFile, description, surface);
+	void addPoint() { //GtkButton *button, GtkWidget *dialog
+		std::string nameEntry = gtk_entry_get_text(GTK_ENTRY(GTK_WIDGET(gtk_builder_get_object(builder, "entry2"))));
+		if (nameEntry == "") return;
+		double pointX = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton6"))));
+		double pointY = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton7"))));
+		Coordinate pointCoord(pointX, pointY);
+		Point2D *toAdd = new Point2D(pointCoord, objectID, nameEntry);
+		Point2D *toAddW = dynamic_cast<Point2D*>(w->transformToWindow(*toAdd, description));
+		v->drawPoint(toAddW, cr, surface, w);
+		gtk_widget_queue_draw (window_widget);
+		displayFile->adiciona(toAdd);
+		windowFile->adiciona(toAddW);
+		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialog1")));
 		addList(nameEntry, "Point", objectID);
-		objectID += 0x1;
+		objectID++;
+		std::cout << toAddW->getCoordinate().getX() << " " << toAddW->getCoordinate().getY() << std::endl;
+		_log->_log("Novo ponto adicionado!\n");
 
 	}
 	void addStraight() {
-		std::string nameEntry = c_addStraight(builder, w, v, window_widget, cr, _log, objectID, displayFile, windowFile, description, surface);
+		std::string nameEntry = gtk_entry_get_text(GTK_ENTRY(GTK_WIDGET(gtk_builder_get_object(builder, "entry3"))));
+		if (nameEntry == "") return;
+		double straightXA = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton8"))));
+		double straightYA = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton9"))));
+		double straightXB = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton10"))));
+		double straightYB = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton11"))));
+		Coordinate straightCoordA(straightXA, straightYA);
+		Coordinate straightCoordB(straightXB, straightYB);
+		Straight *toAdd = new Straight(straightCoordA, straightCoordB, objectID, nameEntry);
+		Straight *toAddW = dynamic_cast<Straight*>(w->transformToWindow(*toAdd, description));
+		v->drawStraight(toAddW, cr, surface, w);
+		gtk_widget_queue_draw (window_widget);
+		displayFile->adiciona(toAdd);
+		windowFile->adiciona(toAddW);
+		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialog2")));
 		addList(nameEntry, "Straight", objectID);
 		objectID += 0x1;
+		std::cout << toAddW->getA().getX() << toAddW->getA().getY() << std::endl;
+		std::cout << toAddW->getB().getX() << toAddW->getB().getY() << std::endl;
+		_log->_log("Nova reta adicionada!\n");
 	}
 	void addPolygonName() {
-		pollyName = c_addPolygonName(builder);
+		std::string nameEntry = gtk_entry_get_text(GTK_ENTRY(GTK_WIDGET(gtk_builder_get_object(builder, "entry5"))));
+		if (nameEntry == "") return;
+		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialog2")));
+		GtkWidget *dialog;
+		GtkWidget *objDialog;
+		objDialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog5"));
+		gtk_widget_hide(objDialog);
+		dialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog6"));
+		gtk_dialog_run(GTK_DIALOG(dialog));
 	}
 	void addPolygonCoordinate() {
-		Coordinate *newCoord = c_addPolygonCoordinate(builder);
+		double coordX = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton12"))));
+		double coordY =  gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton13"))));
+		Coordinate *newCoord = new Coordinate(coordX, coordY);
 		pollyVector.push_back(*newCoord);
+		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialog5")));
 	}
 	void finishPolygon() {
-		Polygon *p = c_finishPolygon(builder, w, v, window_widget, cr, _log, objectID, 
-									 displayFile, windowFile, description, surface, pollyName, pollyVector);
+		Polygon *p = new Polygon("poligono", objectID, pollyVector);
+		Polygon *pw = dynamic_cast<Polygon*>(w->transformToWindow(*p, description));
+		if(p->getCoordinates().begin() == p->getCoordinates().end()) return;
+		displayFile->adiciona(dynamic_cast<Object*>(p));
+		windowFile->adiciona(dynamic_cast<Object*>(pw));
+
+
 		addList(p->getName(), "Polygon", objectID);
+		v->drawPolygon(pw, cr, surface, w);
+		gtk_widget_queue_draw (window_widget);
 		objectID += 0x1;
 		pollyVector.clear();
+		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialog6")));
+		_log->_log("Novo polígono adicionado!\n");
+
 	}
 	void emptyDisplayFileDialog() {
 		GtkWidget *dialog;
