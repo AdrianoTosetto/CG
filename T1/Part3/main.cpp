@@ -184,13 +184,25 @@ extern "C" {
 	void addPoint() {
 		std::string nameEntry = c_addPoint(builder, w, v, window_widget, cr, _log, objectID, displayFile, windowFile, description, surface);
 		addList(nameEntry, "Point", objectID);
+<<<<<<< HEAD
 		objectID += 0x1;
+=======
+		objectID++;
+        //std::cout << toAddW->getCoordinate().getX() << " " << toAddW->getCoordinate().getY() << std::endl;
+		_log->_log("Novo ponto adicionado!\n");
+>>>>>>> 61485fb1d4f0bd1d3c2a90e06fdc14131aaf0c1e
 
 	}
 	void addStraight() {
 		std::string nameEntry = c_addStraight(builder, w, v, window_widget, cr, _log, objectID, displayFile, windowFile, description, surface);
 		addList(nameEntry, "Straight", objectID);
 		objectID += 0x1;
+<<<<<<< HEAD
+=======
+        //std::cout << toAddW->getA().getX() << toAddW->getA().getY() << std::endl;
+        //std::cout << toAddW->getB().getX() << toAddW->getB().getY() << std::endl;
+		_log->_log("Nova reta adicionada!\n");
+>>>>>>> 61485fb1d4f0bd1d3c2a90e06fdc14131aaf0c1e
 	}
 	void addPolygonName() {
 		pollyName = c_addPolygonName(builder);
@@ -205,6 +217,92 @@ extern "C" {
 		addList(p->getName(), "Polygon", objectID);
 		objectID += 0x1;
 		pollyVector.clear();
+<<<<<<< HEAD
+=======
+		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialog6")));
+		_log->_log("Novo polígono adicionado!\n");
+
+	}
+	void stepUp() {
+		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
+		w->setOrigin(Coordinate(w->getOrigin().getX(), w->getOrigin().getY() + step));
+		w->setLimit(Coordinate(w->getLimit().getX(), w->getLimit().getY() + step));
+		Vector vec0(0, step);
+
+		//w->setVUp(w->getVUp() + vec0);
+		//w->setU(w->getU() + vec0);
+		redraw();
+	}
+	void stepLeft() {
+		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
+		w->setOrigin(Coordinate(w->getOrigin().getX() - step, w->getOrigin().getY()));
+		w->setLimit(Coordinate(w->getLimit().getX() - step, w->getLimit().getY()));
+		Vector vec(-step, 0);
+		//w->setVUp(w->getVUp() + vec);
+		//w->setU(w->getU() + vec);
+		redraw();
+	}
+	void stepRight() {
+		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
+		w->setOrigin(Coordinate(w->getOrigin().getX() + step, w->getOrigin().getY()));
+		w->setLimit(Coordinate(w->getLimit().getX() + step, w->getLimit().getY()));
+		Vector vec(step, 0);
+		//w->setVUp(w->getVUp() + vec);
+		//w->setU(w->getU() + vec);
+		redraw();
+	}
+	void stepDown() {
+		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
+		w->setOrigin(Coordinate(w->getOrigin().getX(), w->getOrigin().getY() - step));
+		w->setLimit(Coordinate(w->getLimit().getX(), w->getLimit().getY() - step));
+		Vector vec(0, -step);
+		//w->setVUp(w->getVUp() + vec);
+		//w->setU(w->getU() + vec);
+		redraw();
+	}
+	void zoomIn() {
+		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
+		//step /= 2;
+        if ((w->getOrigin().getX() + step > w->getLimit().getX() - step) && !(w->getOrigin().getY() + step > w->getLimit().getY() - step)) {
+            w->setOrigin(Coordinate((w->getOrigin().getX() + w->getLimit().getX())/2, w->getOrigin().getY()));
+            w->setLimit(Coordinate((w->getOrigin().getX() + w->getLimit().getX())/2, w->getLimit().getY()));
+            Vector vec((w->getLimit().getX() - w->getOrigin().getX())/2, -step);
+            w->setVUp(w->getVUp() + vec);
+            w->setU(w->getU() - vec);
+        }
+        if ((w->getOrigin().getY() + step > w->getLimit().getY() - step) && !(w->getOrigin().getY() + step > w->getLimit().getY() - step)) {
+            w->setOrigin(Coordinate(w->getOrigin().getX(), (w->getOrigin().getY() + w->getLimit().getY())/2));
+            w->setLimit(Coordinate(w->getLimit().getX(), (w->getOrigin().getY() + w->getLimit().getY())/2));
+            Vector vec(step, -(w->getLimit().getY() - w->getOrigin().getY())/2);
+            w->setVUp(w->getVUp() + vec);
+            w->setU(w->getU() - vec);
+        }
+        if ((w->getOrigin().getY() + step > w->getLimit().getY() - step) && (w->getOrigin().getY() + step > w->getLimit().getY() - step)) {
+            w->setOrigin(Coordinate((w->getOrigin().getX() + w->getLimit().getX())/2, (w->getOrigin().getY() + w->getLimit().getY())/2));
+            w->setLimit(Coordinate((w->getOrigin().getX() + w->getLimit().getX())/2, (w->getOrigin().getY() + w->getLimit().getY())/2));
+            Vector vec((w->getLimit().getX() - w->getOrigin().getX())/2, -(w->getLimit().getY() - w->getOrigin().getY())/2);
+            w->setVUp(w->getVUp() + vec);
+            w->setU(w->getU() - vec);
+        }
+        if (!(w->getOrigin().getY() + step > w->getLimit().getY() - step) && !(w->getOrigin().getY() + step > w->getLimit().getY() - step)) {
+            w->setOrigin(Coordinate(w->getOrigin().getX() + step, w->getOrigin().getY() + step));
+            w->setLimit(Coordinate(w->getLimit().getX() - step, w->getLimit().getY() - step));
+            Vector vec(step, -step);
+            w->setVUp(w->getVUp() + vec);
+            w->setU(w->getU() - vec);
+        }
+		redraw();
+	}
+	void zoomOut() {
+		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
+		//step /= 2;
+		w->setOrigin(Coordinate(w->getOrigin().getX() - step, w->getOrigin().getY() - step));
+		w->setLimit(Coordinate(w->getLimit().getX() + step, w->getLimit().getY() + step));
+		Vector vec(-step, step);
+		w->setVUp(w->getVUp() + vec);
+        w->setU(w->getU() - vec);
+		redraw();
+>>>>>>> 61485fb1d4f0bd1d3c2a90e06fdc14131aaf0c1e
 	}
 	void emptyDisplayFileDialog() {
 		GtkWidget *dialog;
