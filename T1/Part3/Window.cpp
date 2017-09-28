@@ -87,7 +87,6 @@ Matrix Window::generateDescription() {
 			scale.setValue(i,j,0);
 		}
 	}
-<<<<<<< HEAD
 	trans.setValue(2,0,-(origin.getX() + limit.getX())/2);
 	trans.setValue(2,1,-(origin.getY() + limit.getY())/2);
 	Vector y(0, 1);
@@ -97,13 +96,10 @@ Matrix Window::generateDescription() {
 	//if ((rotatedAngle > 2*M_PI) || (rotatedAngle < -2*M_PI)) yaxis = yaxis * -1;
 
 	double angle = (-1) * acos((vaxis * yaxis) / (vaxis.getNorm()));
-=======
     trans.setValue(2,0,-(origin.getX() + limit.getX())/2);
     trans.setValue(2,1,-(origin.getY() + limit.getY())/2);
 
-	double angle = -this->rotatedAngle;
->>>>>>> 61485fb1d4f0bd1d3c2a90e06fdc14131aaf0c1e
-
+	//double angle = -this->rotatedAngle;
 	if (vaxis.getA() < 0) angle *= -1;
 
     //std::cout << angle << std::endl;
@@ -120,14 +116,10 @@ Matrix Window::generateDescription() {
     //std::cout << sizeV << std::endl;
     //std::cout << sizeU << std::endl;
 
-<<<<<<< HEAD
 	scale.setValue(0, 0, 2/sizeV);
 	scale.setValue(1, 1, 2/sizeU);
-=======
     scale.setValue(0, 0, 2*(1/sizeV));
     scale.setValue(1, 1, 2*(1/sizeU));
->>>>>>> 61485fb1d4f0bd1d3c2a90e06fdc14131aaf0c1e
-
 	Matrix result = trans * rotate * scale;
 
 	return result;

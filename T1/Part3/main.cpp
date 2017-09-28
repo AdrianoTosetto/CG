@@ -10,46 +10,44 @@
 #include "matrix.hpp"
 #include <math.h>
 #include "vector.hpp"
+#include "globals.hpp"
 #include "callbacks.hpp"
-
-using namespace algebra;
 
 #include <stdlib.h>
 
-#define SPIN_GET_VALUE(BUILDER, ID) gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(BUILDER, ID))))
+using namespace algebra;
 
+extern Coordinate a;
+extern Coordinate b;
+extern Coordinate c;
 
-Coordinate a(0, 0);
-Coordinate b(1000, 1000);
-Coordinate c(500, 500);
+extern Vector vup;
+extern Vector vecu;
+extern Vector vecv;
 
-Vector vup(0, 1000);
-Vector vecu(4, 5);
-Vector vecv(3, 3);
-
-static cairo_surface_t *surface = NULL;
-Matrix description(3,3);
-GtkWidget *drawing_area;
-GtkWidget *window_widget;
-GtkBuilder* builder;
-int objectID = 0;
-auto displayFile = new ListaEnc<Object*>();
-auto windowFile = new ListaEnc<Object*>();
-Viewport *v;
-Window *w;
-cairo_t *cr; 
-InfoLog *_log;
-double i = 0;
+extern cairo_surface_t *surface;
+extern Matrix description;
+extern GtkWidget *drawing_area;
+extern GtkWidget *window_widget;
+extern GtkBuilder* builder;
+extern int objectID;
+extern ListaEnc<Object*>* displayFile;
+extern ListaEnc<Object*>* windowFile;
+extern Viewport *v;
+extern Window *w;
+extern cairo_t *cr; 
+extern InfoLog *_log;
+extern double i;
 //double steppedX = 0;
 //double steppedY = 0;
 //double steppedZoom = 0;
-GtkTreeModel* main_model;
-GtkTreeSelection* main_selection;
-GtkTreeView* tree;
-GtkListStore *list_store;
-GtkTreeIter iter;
-std::vector<Coordinate> pollyVector;
-std::string pollyName;
+extern GtkTreeModel* main_model;
+extern GtkTreeSelection* main_selection;
+extern GtkTreeView* tree;
+extern GtkListStore *list_store;
+extern GtkTreeIter iter;
+extern std::vector<Coordinate> pollyVector;
+extern std::string pollyName;
 //Polygon* polly = nullptr;
 //auto steste =  new Straight(Coordinate(200,200), Coordinate(300, 300));
 
@@ -96,913 +94,102 @@ static gboolean draw_cb (GtkWidget *widget, cairo_t   *cr,  gpointer   data){
   gtk_widget_queue_draw (window_widget);
  } */
 
-extern "C" {
-	double d2r(double d) {
-  		return (d / 180.0) * ((double) M_PI);
-	}
-	void erase() {
-		cr = cairo_create (surface);
-		cairo_set_source_rgb (cr, 1, 1, 1);
-		cairo_paint (cr);
-		gtk_widget_queue_draw(window_widget);	
-		 //cairo_destroy (cr);
-	}
-	void updateWindowFile() {
-		windowFile->destroiLista();
-		description = w->generateDescription();
-
-		for(int i = 0; i < displayFile->getSize(); i++) {
-			Object *o = displayFile->consultaDaPosicao(i);
-			windowFile->adiciona(w->transformToWindow(*o, description));
-		}
-	}
-	void redraw() {
-		updateWindowFile();
-		erase();
-		Object* objToDraw;
-		Point2D* pntToDraw;
-		Straight* strToDraw;
-		Polygon* pgnToDraw;
-		std::vector<Coordinate> newCoords;
-		for(int i = 0; i < windowFile->getSize(); i++) {
-			objToDraw = windowFile->consultaDaPosicao(i);
-			switch (objToDraw->getType()) {
-				case TPOINT:
-					pntToDraw = dynamic_cast<Point2D*>(objToDraw);
-					v->drawPoint(pntToDraw, cr, surface, w);
-					gtk_widget_queue_draw (window_widget);
-					break;
-				case TSTRAIGHT:
-					strToDraw = dynamic_cast<Straight*>(objToDraw);
-					v->drawStraight(strToDraw, cr, surface, w);
-					gtk_widget_queue_draw (window_widget);
-					break;
-				case TPOLYGON:
-					pgnToDraw = dynamic_cast<Polygon*>(objToDraw);
-					v->drawPolygon(pgnToDraw, cr, surface, w);
-					gtk_widget_queue_draw (window_widget);
-					break;
-				default:
-					std::cout << "¯|_(ツ)_|¯" << std::endl;
-
-			}
-		}
-	}
+extern "C" {	
 	void addObjectDialog() {
-		c_addObjectDialog(builder);	
+		c_addObjectDialog();	
 	}
 	void addPointDialog() {
-		c_addPointDialog(builder);
+		c_addPointDialog();
 	}
 	void addStraightDialog() {
-		c_addStraightDialog(builder);
+		c_addStraightDialog();
 	}
 	void addPolygonDialog() {
-		c_addPolygonDialog(builder);
+		c_addPolygonDialog();
 	}
-	void removeNthList(int row) {
-    	if (gtk_tree_model_iter_nth_child(GTK_TREE_MODEL(list_store), &iter, NULL, row)) {
-       		gtk_list_store_remove(list_store, &iter);
-     	}
-	}
-	void removeFromList(int oid) {
-		int position = 0;
-		for(auto T = displayFile->getHead(); T != nullptr; T = T->getProximo()) {
-			if(T->getInfo()->getId() == objectID) {
-				removeNthList(position);
-				std::cout << "removeu da list_store" << std::endl;
-				return;
-			}
-			position++;
-		}
-	}
-	void addList(std::string name, std::string type, int objID) {
-    	gtk_list_store_append(list_store, &iter);
-   		gtk_list_store_set(list_store, &iter, 0, name.c_str(), 1, type.c_str(), 2, objID,-1);
-	}
-
+	
 	void addPoint() {
-		std::string nameEntry = c_addPoint(builder, w, v, window_widget, cr, _log, objectID, displayFile, windowFile, description, surface);
-		addList(nameEntry, "Point", objectID);
-<<<<<<< HEAD
-		objectID += 0x1;
-=======
-		objectID++;
-        //std::cout << toAddW->getCoordinate().getX() << " " << toAddW->getCoordinate().getY() << std::endl;
-		_log->_log("Novo ponto adicionado!\n");
->>>>>>> 61485fb1d4f0bd1d3c2a90e06fdc14131aaf0c1e
-
+		c_addPoint();
 	}
 	void addStraight() {
-		std::string nameEntry = c_addStraight(builder, w, v, window_widget, cr, _log, objectID, displayFile, windowFile, description, surface);
-		addList(nameEntry, "Straight", objectID);
-		objectID += 0x1;
-<<<<<<< HEAD
-=======
-        //std::cout << toAddW->getA().getX() << toAddW->getA().getY() << std::endl;
-        //std::cout << toAddW->getB().getX() << toAddW->getB().getY() << std::endl;
-		_log->_log("Nova reta adicionada!\n");
->>>>>>> 61485fb1d4f0bd1d3c2a90e06fdc14131aaf0c1e
+		c_addStraight();
 	}
 	void addPolygonName() {
-		pollyName = c_addPolygonName(builder);
+		c_addPolygonName();
 	}
 	void addPolygonCoordinate() {
-		Coordinate *newCoord = c_addPolygonCoordinate(builder);
-		pollyVector.push_back(*newCoord);
+		c_addPolygonCoordinate();
 	}
 	void finishPolygon() {
-		Polygon *p = c_finishPolygon(builder, w, v, window_widget, cr, _log, objectID, 
-									 displayFile, windowFile, description, surface, pollyName, pollyVector);
-		addList(p->getName(), "Polygon", objectID);
-		objectID += 0x1;
-		pollyVector.clear();
-<<<<<<< HEAD
-=======
-		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialog6")));
-		_log->_log("Novo polígono adicionado!\n");
+		c_finishPolygon();
 
 	}
-	void stepUp() {
-		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
-		w->setOrigin(Coordinate(w->getOrigin().getX(), w->getOrigin().getY() + step));
-		w->setLimit(Coordinate(w->getLimit().getX(), w->getLimit().getY() + step));
-		Vector vec0(0, step);
 
-		//w->setVUp(w->getVUp() + vec0);
-		//w->setU(w->getU() + vec0);
-		redraw();
-	}
-	void stepLeft() {
-		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
-		w->setOrigin(Coordinate(w->getOrigin().getX() - step, w->getOrigin().getY()));
-		w->setLimit(Coordinate(w->getLimit().getX() - step, w->getLimit().getY()));
-		Vector vec(-step, 0);
-		//w->setVUp(w->getVUp() + vec);
-		//w->setU(w->getU() + vec);
-		redraw();
-	}
-	void stepRight() {
-		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
-		w->setOrigin(Coordinate(w->getOrigin().getX() + step, w->getOrigin().getY()));
-		w->setLimit(Coordinate(w->getLimit().getX() + step, w->getLimit().getY()));
-		Vector vec(step, 0);
-		//w->setVUp(w->getVUp() + vec);
-		//w->setU(w->getU() + vec);
-		redraw();
-	}
-	void stepDown() {
-		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
-		w->setOrigin(Coordinate(w->getOrigin().getX(), w->getOrigin().getY() - step));
-		w->setLimit(Coordinate(w->getLimit().getX(), w->getLimit().getY() - step));
-		Vector vec(0, -step);
-		//w->setVUp(w->getVUp() + vec);
-		//w->setU(w->getU() + vec);
-		redraw();
-	}
-	void zoomIn() {
-		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
-		//step /= 2;
-        if ((w->getOrigin().getX() + step > w->getLimit().getX() - step) && !(w->getOrigin().getY() + step > w->getLimit().getY() - step)) {
-            w->setOrigin(Coordinate((w->getOrigin().getX() + w->getLimit().getX())/2, w->getOrigin().getY()));
-            w->setLimit(Coordinate((w->getOrigin().getX() + w->getLimit().getX())/2, w->getLimit().getY()));
-            Vector vec((w->getLimit().getX() - w->getOrigin().getX())/2, -step);
-            w->setVUp(w->getVUp() + vec);
-            w->setU(w->getU() - vec);
-        }
-        if ((w->getOrigin().getY() + step > w->getLimit().getY() - step) && !(w->getOrigin().getY() + step > w->getLimit().getY() - step)) {
-            w->setOrigin(Coordinate(w->getOrigin().getX(), (w->getOrigin().getY() + w->getLimit().getY())/2));
-            w->setLimit(Coordinate(w->getLimit().getX(), (w->getOrigin().getY() + w->getLimit().getY())/2));
-            Vector vec(step, -(w->getLimit().getY() - w->getOrigin().getY())/2);
-            w->setVUp(w->getVUp() + vec);
-            w->setU(w->getU() - vec);
-        }
-        if ((w->getOrigin().getY() + step > w->getLimit().getY() - step) && (w->getOrigin().getY() + step > w->getLimit().getY() - step)) {
-            w->setOrigin(Coordinate((w->getOrigin().getX() + w->getLimit().getX())/2, (w->getOrigin().getY() + w->getLimit().getY())/2));
-            w->setLimit(Coordinate((w->getOrigin().getX() + w->getLimit().getX())/2, (w->getOrigin().getY() + w->getLimit().getY())/2));
-            Vector vec((w->getLimit().getX() - w->getOrigin().getX())/2, -(w->getLimit().getY() - w->getOrigin().getY())/2);
-            w->setVUp(w->getVUp() + vec);
-            w->setU(w->getU() - vec);
-        }
-        if (!(w->getOrigin().getY() + step > w->getLimit().getY() - step) && !(w->getOrigin().getY() + step > w->getLimit().getY() - step)) {
-            w->setOrigin(Coordinate(w->getOrigin().getX() + step, w->getOrigin().getY() + step));
-            w->setLimit(Coordinate(w->getLimit().getX() - step, w->getLimit().getY() - step));
-            Vector vec(step, -step);
-            w->setVUp(w->getVUp() + vec);
-            w->setU(w->getU() - vec);
-        }
-		redraw();
-	}
-	void zoomOut() {
-		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
-		//step /= 2;
-		w->setOrigin(Coordinate(w->getOrigin().getX() - step, w->getOrigin().getY() - step));
-		w->setLimit(Coordinate(w->getLimit().getX() + step, w->getLimit().getY() + step));
-		Vector vec(-step, step);
-		w->setVUp(w->getVUp() + vec);
-        w->setU(w->getU() - vec);
-		redraw();
->>>>>>> 61485fb1d4f0bd1d3c2a90e06fdc14131aaf0c1e
-	}
-	void emptyDisplayFileDialog() {
-		GtkWidget *dialog;
-		dialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog7"));
-		gtk_dialog_run(GTK_DIALOG(dialog));
-	}
 	void removeObjectDialog() {
 		if (displayFile->getSize() < 1) {
 			emptyDisplayFileDialog();
 			return;
 		}
-		GtkWidget *dialog;
-		dialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog4"));
-		gtk_dialog_run(GTK_DIALOG(dialog));
+		c_removeObjectDialog();
 	}
 	void removeObject() {
-		GtkWidget *objDialog;
-		int id = (int) gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton14"))));
-		int position = 0;
-		for(auto T = displayFile->getHead(); T != nullptr; T = T->getProximo()) {	
-			if (T->getInfo()->getId() == id) {
-				removeNthList(position);
-				displayFile->retiraEspecifico(T->getInfo());
-				objDialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog4"));
-				gtk_widget_hide(objDialog);
-				redraw();
-				return;
-			}
-			position++;
-		}
+		c_removeObject();
 	}
-	void btn_ok_clicked_cb(){
-  		cr = cairo_create (surface);
-  		cairo_move_to(cr, 200, 100);
-  		cairo_line_to(cr, 300, 50);
-  		cairo_stroke(cr);
-  		gtk_widget_queue_draw (window_widget);
-	}
+
 	void translateDialog() {
-		GtkWidget *dialog;
-		dialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialogTranslate"));
-		gtk_dialog_run(GTK_DIALOG(dialog));
+		c_translateDialog();
 	}
 	void scaleDialog() {
-		GtkWidget *dialog;
-		dialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialogScale"));
-		gtk_dialog_run(GTK_DIALOG(dialog));
+		c_scaleDialog();
 	}
 	void rotateDialog() {
-		GtkWidget *dialog;
-		dialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialogRotate"));
-		gtk_dialog_run(GTK_DIALOG(dialog));
+		c_rotateDialog();
 	}
-	Matrix rotateCoord(double x, double y, double rad) {
-		Matrix coords(1, 3);
-		Matrix trans1(3, 3);
-		Matrix rotating(3, 3);
-		Matrix trans2(3, 3);
-		Matrix result(3, 3);
 
-		coords.setValue(0,2,1);
-
-		for(int i = 0; i < 3;i++) {
-			for(int j = 0; j < 3;j++) {
-				trans1.setValue(i,j,0);
-				rotating.setValue(i,j,0);
-				trans2.setValue(i,j,0);
-				if(i==j) {
-					trans1.setValue(i,j,1);
-					rotating.setValue(i,j,1);
-					trans2.setValue(i,j,1);
-				}
-			}
-		}
-
-		trans1.setValue(2,0,-x);
-		trans1.setValue(2,1,-y);
-		rotating.setValue(0,0, cos(rad));
-		rotating.setValue(0,1, (-1) * sin(rad));
-		rotating.setValue(1,0, sin(rad));
-		rotating.setValue(1,1, cos(rad));
-		trans2.setValue(2,0,x);
-		trans2.setValue(2,1,y);
-
-		result = trans1 * rotating;
-		result = result * trans2;
-
-		return result;
-	}
-	void rotate(double x, double y, int id, double rad) {
-		Matrix result = rotateCoord(x, y, rad);
-		for(auto t = displayFile->getHead(); t != nullptr; t = t->getProximo()) {
-			if(t->getInfo()->getId() == id) {
-				switch (t->getInfo()->getType()) {
-					case TPOINT: {
-						Point2D *p = dynamic_cast<Point2D*>(t->getInfo());
-						Coordinate oldC = p->getCoordinate();
-
-						Matrix coords(1,3);
-
-						coords.setValue(0,2,1);
-						coords.setValue(0,0,oldC.getX());
-						coords.setValue(0,1,oldC.getY());
-
-						coords *= result;
-
-						Coordinate newC(coords.getValue(0,0), coords.getValue(0,1));
-
-						p->setCoordinate(newC);
-						break;
-					}
-					case TSTRAIGHT: {
-						Straight *s = dynamic_cast<Straight*>(t->getInfo());
-						Coordinate oldA = s->getA();
-						Coordinate oldB = s->getB();
-
-						Matrix coords(1,3);
-
-						coords.setValue(0,2,1);
-						coords.setValue(0,0,oldA.getX());
-						coords.setValue(0,1,oldA.getY());
-
-						coords *= result;
-
-						Coordinate newA(coords.getValue(0,0), coords.getValue(0,1));
-
-						coords.setValue(0,0,oldB.getX());
-						coords.setValue(0,1,oldB.getY());
-
-						coords *= result;
-
-						Coordinate newB(coords.getValue(0,0), coords.getValue(0,1));
-
-						s->setA(newA);
-						s->setB(newB);
-						break;
-					}
-					case TPOLYGON: {
-						Polygon *p = dynamic_cast<Polygon*>(t->getInfo());
-						std::vector<Coordinate> pcoords = p->getCoordinates();
-						std::vector<Coordinate> newPCoords;	
-						Matrix coords(1,3);
-						coords.setValue(0,2,1);
-						for(auto it = pcoords.begin(); it != pcoords.end(); it++) {
-							coords.setValue(0,0, it->getX());
-							coords.setValue(0,1, it->getY());
-							coords *= result;
-							Coordinate c(coords.getValue(0,0), coords.getValue(0,1));
-							newPCoords.push_back(c);
-						}
-						p->setCoordinates(newPCoords);
-						break;
-					}
-					default:
-						std::cout << "¯|_(ツ)_|¯" << std::endl;
-
-				}
-				redraw();
-				gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialogScale")));
-				return;
-			}
-		}
-	}
 	void rotateCenter() {
-		double id = SPIN_GET_VALUE(builder, "spinIDRotate");
-		double radians = d2r(SPIN_GET_VALUE(builder, "spinDegreesRotate"));
-
-		double centerX = 0.0, centerY = 0.0;
-
-		for(auto t = displayFile->getHead(); t != nullptr; t = t->getProximo()) {
-			if(t->getInfo()->getId() == id) { 
-				switch (t->getInfo()->getType()) {
-					case TPOINT:
-						gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialogScale")));
-						return;
-					case TSTRAIGHT: {
-						Straight *s = dynamic_cast<Straight*>(t->getInfo());
-						Coordinate c1 = s->getA();
-						Coordinate c2 = s->getB();
-
-						centerX = ((c2.getX() + c1.getX())/2);
-						centerY = ((c2.getY() + c1.getY())/2);
-						break;
-					}
-					case TPOLYGON: {
-						Polygon *p = dynamic_cast<Polygon*>(t->getInfo());
-						std::vector<Coordinate> pcoords = p->getCoordinates();
-
-						double xSum = 0;
-						double ySum = 0;
-
-						for(auto it = pcoords.begin(); it != pcoords.end(); it++) {
-							xSum += it->getX();
-							//std::cout << xSum << std::endl;
-							ySum += it->getY();
-							//std::cout << ySum << std::endl;
-						}
-
-						centerX = xSum / pcoords.size();
-						centerY = ySum / pcoords.size();
-						
-						break;
-					}
-					default:
-						std::cout << "¯|_(ツ)_|¯" << std::endl;
-
-				}
-			}
-		}
-		rotate(centerX, centerY, id, radians);
+		c_rotateCenter();
 	}
 	void rotateOrigin() {
-		double id = SPIN_GET_VALUE(builder, "spinIDRotate");
-		double radians = d2r(SPIN_GET_VALUE(builder, "spinDegreesRotate"));
-
-		rotate(0, 0, id, radians);
+		c_rotateOrigin();
 	}
 	void rotatePoint() {
-		double id = SPIN_GET_VALUE(builder, "spinIDRotate");
-		double pointx = SPIN_GET_VALUE(builder, "spinXRotate");
-		double pointy = SPIN_GET_VALUE(builder, "spinYRotate");
-		double radians = d2r(SPIN_GET_VALUE(builder, "spinDegreesRotate"));
-
-		rotate(pointx, pointy, id, radians);
+		c_rotatePoint();
 	}
 	void translateObject() {
-
-		double id = SPIN_GET_VALUE(builder, "spinIDTranslate");
-		double dx = SPIN_GET_VALUE(builder, "spinDXTranslate");
-		double dy = SPIN_GET_VALUE(builder, "spinDYTranslate");
-
-		for(auto t = displayFile->getHead(); t != nullptr; t = t->getProximo()) {
-			if(t->getInfo()->getId() == id) {
-				switch (t->getInfo()->getType()) {
-					case TPOINT: {
-						Point2D *p = dynamic_cast<Point2D*>(t->getInfo());
-						Coordinate oldC = p->getCoordinate();
-
-						Coordinate newC(oldC.getX() + dx, oldC.getY() + dy);
-
-						p->setCoordinate(newC);
-
-						redraw();
-						gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialogTranslate")));
-						return;
-					}
-					case TSTRAIGHT: {
-						Straight *s = dynamic_cast<Straight*>(t->getInfo());
-						Coordinate oldA = s->getA();
-						Coordinate oldB = s->getB();
-
-						Coordinate newA(oldA.getX() + dx, oldA.getY() + dy);
-						Coordinate newB(oldB.getX() + dx, oldB.getY() + dy);
-
-						s->setA(newA);
-						s->setB(newB);
-						redraw();
-						gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialogTranslate")));
-						return;
-					}
-					case TPOLYGON: {
-						Polygon *p = dynamic_cast<Polygon*>(t->getInfo());
-						std::vector<Coordinate> pcoords = p->getCoordinates();
-						std::vector<Coordinate> newPCoords;	
-						Matrix coords(1,3);
-						coords.setValue(0,2,1);
-						for(auto it = pcoords.begin(); it != pcoords.end(); it++) {
-							coords.setValue(0,0, it->getX());
-							coords.setValue(0,1, it->getY());
-							Coordinate c(coords.getValue(0,0) + dx, coords.getValue(0,1) + dy);
-							newPCoords.push_back(c);
-						}
-						p->setCoordinates(newPCoords);
-						redraw();
-						gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialogTranslate")));
-						return;
-					}
-					default:
-						std::cout << "¯|_(ツ)_|¯" << std::endl;
-
-				}
-			}
-		}
-		std::cout << "not found!" << std::endl;
-	}
-	Matrix scaleCoord(double centerx, double centery, double scale) {
-		Matrix coords(1, 3);
-		Matrix trans1(3, 3);
-		Matrix scaling(3, 3);
-		Matrix trans2(3, 3);
-		Matrix result(3, 3);
-
-		coords.setValue(0,2,1);
-
-		for(int i = 0; i < 3;i++) {
-			for(int j = 0; j < 3;j++) {
-				trans1.setValue(i,j,0);
-				scaling.setValue(i,j,0);
-				trans2.setValue(i,j,0);
-				if(i==j) {
-					trans1.setValue(i,j,1);
-					scaling.setValue(i,j,1);
-					trans2.setValue(i,j,1);
-				}
-			}
-		}
-
-		trans1.setValue(2,0,-centerx);
-		trans1.setValue(2,1,-centery);
-		scaling.setValue(0,0, scale);
-		scaling.setValue(1,1, scale);
-		trans2.setValue(2,0,centerx);
-		trans2.setValue(2,1,centery);
-
-		result = trans1 * scaling;
-		result = result * trans2;
-
-		return result;
-	}
-	void scale(double x, double y, int id, double scl) {
-		Matrix result = scaleCoord(x, y, scl);
-		for(auto t = displayFile->getHead(); t != nullptr; t = t->getProximo()) {
-			if(t->getInfo()->getId() == id) {
-				switch (t->getInfo()->getType()) {
-					case TPOINT: {
-						gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialogScale")));
-						return;
-					}
-					case TSTRAIGHT: {
-						Straight *s = dynamic_cast<Straight*>(t->getInfo());
-						Coordinate oldA = s->getA();
-						Coordinate oldB = s->getB();
-
-						Matrix coords(1,3);
-
-						coords.setValue(0,2,1);
-						coords.setValue(0,0,oldA.getX());
-						coords.setValue(0,1,oldA.getY());
-
-						coords *= result;
-
-						Coordinate newA(coords.getValue(0,0), coords.getValue(0,1));
-
-						coords.setValue(0,0,oldB.getX());
-						coords.setValue(0,1,oldB.getY());
-
-						coords *= result;
-
-						Coordinate newB(coords.getValue(0,0), coords.getValue(0,1));
-
-						s->setA(newA);
-						s->setB(newB);
-						//std::cout << "xa: " << s->getA().getX() << "ya: " << s->getA().getY() << std::endl;
-						break;
-					}
-					case TPOLYGON: {
-						Polygon *p = dynamic_cast<Polygon*>(t->getInfo());
-						std::vector<Coordinate> pcoords = p->getCoordinates();
-						std::vector<Coordinate> newPCoords;	
-						Matrix coords(1,3);
-						coords.setValue(0,2,1);
-						for(auto it = pcoords.begin(); it != pcoords.end(); it++) {
-							coords.setValue(0,0, it->getX());
-							coords.setValue(0,1, it->getY());
-							coords *= result;
-							Coordinate c(coords.getValue(0,0), coords.getValue(0,1));
-							newPCoords.push_back(c);
-						}
-						p->setCoordinates(newPCoords);
-						break;
-					}
-					default:
-						std::cout << "¯|_(ツ)_|¯" << std::endl;
-
-				}
-				redraw();
-				gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialogScale")));
-				return;
-			}
-		}
-		std::cout << "not found!" << std::endl;
+		c_translateObject();
 	}
 	void scaleObject() {
-		double id = SPIN_GET_VALUE(builder, "spinIDScale");
-		double scl = SPIN_GET_VALUE(builder, "spinStepScale");
-		for(auto t = displayFile->getHead(); t != nullptr; t = t->getProximo()) {
-			if(t->getInfo()->getId() == id) {
-				switch (t->getInfo()->getType()) {
-					case TPOINT: {
-						Point2D *p = dynamic_cast<Point2D*>(t->getInfo());
-						Coordinate oldC = p->getCoordinate();
-						scale(oldC.getX(), oldC.getY(), id, scl);
-						break;
-					}
-					case TSTRAIGHT: {
-						Straight *s = dynamic_cast<Straight*>(t->getInfo());
-						Coordinate oldA = s->getA();
-						Coordinate oldB = s->getB();
-
-						double centerx = (oldA.getX() + oldB.getX())/2;
-						double centery = (oldA.getY() + oldB.getY())/2;
-
-						scale(centerx, centery, id, scl);
-						break;
-					}
-					case TPOLYGON: {
-						Polygon *p = dynamic_cast<Polygon*>(t->getInfo());
-						std::vector<Coordinate> pcoords = p->getCoordinates();
-
-						double xSum = 0;
-						double ySum = 0;
-
-						for(auto it = pcoords.begin(); it != pcoords.end(); it++) {
-							xSum += it->getX();
-							ySum += it->getY();
-						}
-
-						double xMed = xSum / pcoords.size();
-						double yMed = ySum / pcoords.size();
-						scale(xMed, yMed,id, scl);
-						break;
-					}
-					default:
-						std::cout << "¯|_(ツ)_|¯" << std::endl;
-
-				}
-				return;
-			}
-		}
-		std::cout << "not found!" << std::endl;
+		c_scaleObject();
 	}
+
 	void zoomOut() {
-		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
-		step = (step / w->getVUp().getNorm()) + 1;
-		/*w->setOrigin(Coordinate(w->getOrigin().getX() - step, w->getOrigin().getY() - step));
-		w->setLimit(Coordinate(w->getLimit().getX() + step, w->getLimit().getY() + step));
-		Vector vec(-step, step);
-		w->setVUp(w->getVUp() + vec);*/
-
-		Matrix coords(1,3);
-		Coordinate coord(0,0);
-		coords.setValue(0,2,1);
-		Vector vec(0,0);
-
-		double centerx = (w->getOrigin().getX() + w->getLimit().getX())/2;
-		double centery = (w->getOrigin().getY() + w->getLimit().getY())/2;
-
-		Matrix scaling = scaleCoord(centerx, centery, step);
-		Matrix scalingVec = scaleCoord(0,0,step);
-
-		coords.setValue(0,0, w->getOrigin().getX());
-		coords.setValue(0,1, w->getOrigin().getY());
-		coords *= scaling;
-		coord.setX(coords.getValue(0,0));
-		coord.setY(coords.getValue(0,1));
-		w->setOrigin(coord);
-
-		coords.setValue(0,0, w->getLimit().getX());
-		coords.setValue(0,1, w->getLimit().getY());
-		coords *= scaling;
-		coord.setX(coords.getValue(0,0));
-		coord.setY(coords.getValue(0,1));
-		w->setLimit(coord);
-
-		coords.setValue(0,0, w->getVUp().getA());
-		coords.setValue(0,1, w->getVUp().getB());
-		coords *= scalingVec;
-		vec.setA(coords.getValue(0,0));
-		vec.setB(coords.getValue(0,1));
-		w->setVUp(vec);
-
-		coords.setValue(0,0, w->getU().getA());
-		coords.setValue(0,1, w->getU().getB());
-		coords *= scalingVec;
-		vec.setA(coords.getValue(0,0));
-		vec.setB(coords.getValue(0,1));
-		w->setU(vec);
-
-		redraw();
+		c_zoomOut();
 	}
 	void zoomIn() {
-		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
-		step = 1 - (step / w->getVUp().getNorm());
-		/*w->setOrigin(Coordinate(w->getOrigin().getX() + step, w->getOrigin().getY() + step));
-		w->setLimit(Coordinate(w->getLimit().getX() - step, w->getLimit().getY() - step));
-		Vector vec(step, -step);
-		w->setVUp(w->getVUp() + vec);*/
-
-		Matrix coords(1,3);
-		Coordinate coord(0,0);
-		coords.setValue(0,2,1);
-		Vector vec(0,0);
-
-		double centerx = (w->getOrigin().getX() + w->getLimit().getX())/2;
-		double centery = (w->getOrigin().getY() + w->getLimit().getY())/2;
-
-		Matrix scaling = scaleCoord(centerx, centery, step);
-		Matrix scalingVec = scaleCoord(0,0,step);
-
-		coords.setValue(0,0, w->getOrigin().getX());
-		coords.setValue(0,1, w->getOrigin().getY());
-		coords *= scaling;
-		coord.setX(coords.getValue(0,0));
-		coord.setY(coords.getValue(0,1));
-		w->setOrigin(coord);
-
-		coords.setValue(0,0, w->getLimit().getX());
-		coords.setValue(0,1, w->getLimit().getY());
-		coords *= scaling;
-		coord.setX(coords.getValue(0,0));
-		coord.setY(coords.getValue(0,1));
-		w->setLimit(coord);
-
-		coords.setValue(0,0, w->getVUp().getA());
-		coords.setValue(0,1, w->getVUp().getB());
-		coords *= scalingVec;
-		vec.setA(coords.getValue(0,0));
-		vec.setB(coords.getValue(0,1));
-		w->setVUp(vec);
-
-		coords.setValue(0,0, w->getU().getA());
-		coords.setValue(0,1, w->getU().getB());
-		coords *= scalingVec;
-		vec.setA(coords.getValue(0,0));
-		vec.setB(coords.getValue(0,1));
-		w->setU(vec);
-
-		redraw();
+		c_zoomIn();
 	}
 	void stepUp() {
-		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
-		/*w->setOrigin(Coordinate(w->getOrigin().getX(), w->getOrigin().getY() + step));
-		w->setLimit(Coordinate(w->getLimit().getX(), w->getLimit().getY() + step));
-		Vector vec0(0, step);*/
-		double combK = (step * w->getVUp().getNorm()) / (pow(w->getVUp().getA(), 2) + pow(w->getVUp().getB(), 2));
-		double dx = w->getVUp().getA() * combK;
-		double dy = w->getVUp().getB() * combK;
-
-		w->setOrigin(Coordinate(w->getOrigin().getX() + dx, w->getOrigin().getY() + dy));
-		w->setLimit(Coordinate(w->getLimit().getX() + dx, w->getLimit().getY() + dy));
-
-		//w->setVUp(w->getVUp() + vec0);
-		//w->setU(w->getU() + vec0);
-		redraw();
+		c_stepUp();
 	}
 	void stepLeft() {
-		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
-		/*w->setOrigin(Coordinate(w->getOrigin().getX() - step, w->getOrigin().getY()));
-		w->setLimit(Coordinate(w->getLimit().getX() - step, w->getLimit().getY()));
-		Vector vec(-step, 0);*/
-
-		double combK = (step * w->getU().getNorm()) / (pow(w->getU().getA(), 2) + pow(w->getU().getB(), 2));
-		double dx = w->getU().getA() * combK;
-		double dy = w->getU().getB() * combK;
-
-		w->setOrigin(Coordinate(w->getOrigin().getX() - dx, w->getOrigin().getY() - dy));
-		w->setLimit(Coordinate(w->getLimit().getX() - dx, w->getLimit().getY() - dy));
-
-		//w->setVUp(w->getVUp() + vec);
-		//w->setU(w->getU() + vec);
-		redraw();
+		c_stepLeft();
 	}
 	void stepRight() {
-		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
-		/*w->setOrigin(Coordinate(w->getOrigin().getX() + step, w->getOrigin().getY()));
-		w->setLimit(Coordinate(w->getLimit().getX() + step, w->getLimit().getY()));
-		Vector vec(step, 0);*/
-
-		double combK = (step * w->getU().getNorm()) / (pow(w->getU().getA(), 2) + pow(w->getU().getB(), 2));
-		double dx = w->getU().getA() * combK;
-		double dy = w->getU().getB() * combK;
-
-		w->setOrigin(Coordinate(w->getOrigin().getX() + dx, w->getOrigin().getY() + dy));
-		w->setLimit(Coordinate(w->getLimit().getX() + dx, w->getLimit().getY() + dy));
-
-		//w->setVUp(w->getVUp() + vec);
-		//w->setU(w->getU() + vec);
-		redraw();
+		c_stepRight();
 	}
 	void stepDown() {
-		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
-		/*w->setOrigin(Coordinate(w->getOrigin().getX(), w->getOrigin().getY() - step));
-		w->setLimit(Coordinate(w->getLimit().getX(), w->getLimit().getY() - step));
-		Vector vec(0, -step);*/
-
-		double combK = (step * w->getVUp().getNorm()) / (pow(w->getVUp().getA(), 2) + pow(w->getVUp().getB(), 2));
-		double dx = w->getVUp().getA() * combK;
-		double dy = w->getVUp().getB() * combK;
-
-		w->setOrigin(Coordinate(w->getOrigin().getX() - dx, w->getOrigin().getY() - dy));
-		w->setLimit(Coordinate(w->getLimit().getX() - dx, w->getLimit().getY() - dy));
-
-		//w->setVUp(w->getVUp() + vec);
-		//w->setU(w->getU() + vec);
-		redraw();
+		c_stepDown();
 	}
 	void rotateAnticlock() {
-		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton15"))));
-		step = -d2r(step);
-
-		//w->setAngle(w->getAngle() + step);
-		//if (w->getAngle() < -2*M_PI) w->setAngle(w->getAngle() + 2*M_PI);
-
-		Matrix coords(1,3);
-		Coordinate coord(0,0);
-		coords.setValue(0,2,1);
-		Vector vec(0,0);
-
-		double centerx = (w->getOrigin().getX() + w->getLimit().getX())/2;
-		double centery = (w->getOrigin().getY() + w->getLimit().getY())/2;
-
-		Matrix rotating = rotateCoord(centerx, centery, step);
-		Matrix rotatingVec = rotateCoord(0, 0, step);
-
-		coords.setValue(0,0, w->getOrigin().getX());
-		coords.setValue(0,1, w->getOrigin().getY());
-		coords *= rotating;
-		coord.setX(coords.getValue(0,0));
-		coord.setY(coords.getValue(0,1));
-		w->setOrigin(coord);
-
-		coords.setValue(0,0, w->getLimit().getX());
-		coords.setValue(0,1, w->getLimit().getY());
-		coords *= rotating;
-		coord.setX(coords.getValue(0,0));
-		coord.setY(coords.getValue(0,1));
-		w->setLimit(coord);
-
-		coords.setValue(0,0, w->getVUp().getA());
-		coords.setValue(0,1, w->getVUp().getB());
-		coords *= rotatingVec;
-		vec.setA(coords.getValue(0,0));
-		vec.setB(coords.getValue(0,1));
-		w->setVUp(vec);
-
-		coords.setValue(0,0, w->getU().getA());
-		coords.setValue(0,1, w->getU().getB());
-		coords *= rotatingVec;
-		vec.setA(coords.getValue(0,0));
-		vec.setB(coords.getValue(0,1));
-		w->setU(vec);
-
-		redraw();
+		c_rotateAnticlock();
 	}
 	void rotateClock() {
-		double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton15"))));
-		step = d2r(step);
-
-		//w->setAngle(w->getAngle() + step);
-		//if (w->getAngle() > 2*M_PI) w->setAngle(w->getAngle() - 2*M_PI);
-
-		Matrix coords(1,3);
-		Coordinate coord(0,0);
-		coords.setValue(0,2,1);
-		Vector vec(0,0);
-
-		double centerx = (w->getOrigin().getX() + w->getLimit().getX())/2;
-		double centery = (w->getOrigin().getY() + w->getLimit().getY())/2;
-
-		Matrix rotating = rotateCoord(centerx, centery, step);
-		Matrix rotatingVec = rotateCoord(0,0,step);
-
-		coords.setValue(0,0, w->getOrigin().getX());
-		coords.setValue(0,1, w->getOrigin().getY());
-		coords *= rotating;
-		coord.setX(coords.getValue(0,0));
-		coord.setY(coords.getValue(0,1));
-		w->setOrigin(coord);
-
-		coords.setValue(0,0, w->getLimit().getX());
-		coords.setValue(0,1, w->getLimit().getY());
-		coords *= rotating;
-		coord.setX(coords.getValue(0,0));
-		coord.setY(coords.getValue(0,1));
-		w->setLimit(coord);
-
-		coords.setValue(0,0, w->getVUp().getA());
-		coords.setValue(0,1, w->getVUp().getB());
-		coords *= rotatingVec;
-		vec.setA(coords.getValue(0,0));
-		vec.setB(coords.getValue(0,1));
-		w->setVUp(vec);
-
-		coords.setValue(0,0, w->getU().getA());
-		coords.setValue(0,1, w->getU().getB());
-		coords *= rotatingVec;
-		vec.setA(coords.getValue(0,0));
-		vec.setB(coords.getValue(0,1));
-		w->setU(vec);
-
-		redraw();
+		c_rotateClock();
 	}
 }
 
 
 int main(int argc, char *argv[]) {
-  /*std::cout << vecu.getNorm() << std::endl;
-  std::cout << vecu.innerProduct(vecu) << std::endl;
-  std::cout << vecu.innerProduct(vecv) << std::endl;
-  std::cout << (vecu + vecv).getA() << std::endl;*/
   gtk_init(&argc, &argv);  
   cr = cairo_create (surface);
   cairo_set_source_rgb(cr, 0, 0, 0);
@@ -1030,14 +217,6 @@ int main(int argc, char *argv[]) {
   removeNthList(0);
   gtk_widget_show_all(window_widget);
   gtk_main ();
-
-  //Coordinate ori(0, 0);
-  //Coordinate lim(100, 100);
-
-  //Window* window = new Window(GTK_BUILDER(builder), ori, lim, window_widget, drawing_area);
-  //v->drawSomething(cr);
  
-
-
   return 0;
 }

@@ -46,8 +46,15 @@ public:
 		}
 		return *this = m;
 	}
-	static Matrix indentidade(int n) {
-		return Matrix(n,n);
+	static Matrix identidade(int n) {
+		Matrix m(n,n);
+		for(int i = 0; i < n;i++) {
+			for(int j = 0; j < n;j++) {
+				m.setValue(i,j,0);
+				if(i==j) m.setValue(i,j,1);
+			}
+		}
+		return m;
 	}
 	~Matrix() {
 
