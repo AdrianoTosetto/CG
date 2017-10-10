@@ -7,6 +7,7 @@
 
 #define 	M_PI   3.14159265358979323846
 
+
 Window::Window(Coordinate _origin, Coordinate _limit, Vector _vaxis, Vector _uaxis): origin(_origin), limit(_limit), vaxis(_vaxis),uaxis(_uaxis), worigin(-1,-1), wlimit(1,1) {
 
 }
@@ -76,14 +77,15 @@ Matrix Window::generateDescription() {
 	Matrix scale(3,3);
 	for(int i = 0; i < 3;i++) {
 		for(int j = 0; j < 3;j++) {
+            if(i==j) {
+                trans.setValue(i,j,1);
+                rotate.setValue(i,j,1);
+                scale.setValue(i,j,1);
+                continue;
+            }
 			trans.setValue(i,j,0);
 			rotate.setValue(i,j,0);
 			scale.setValue(i,j,0);
-			if(i==j) {
-				trans.setValue(i,j,1);
-				rotate.setValue(i,j,1);
-				scale.setValue(i,j,1);
-			}
 		}
 	}
 	trans.setValue(2,0,-(origin.getX() + limit.getX())/2);
@@ -95,10 +97,13 @@ Matrix Window::generateDescription() {
 	//if ((rotatedAngle > 2*M_PI) || (rotatedAngle < -2*M_PI)) yaxis = yaxis * -1;
 
 	double angle = (-1) * acos((vaxis * yaxis) / (vaxis.getNorm()));
+    trans.setValue(2,0,-(origin.getX() + limit.getX())/2);
+    trans.setValue(2,1,-(origin.getY() + limit.getY())/2);
 
+	//double angle = -this->rotatedAngle;
 	if (vaxis.getA() < 0) angle *= -1;
 
-	std::cout << angle << std::endl;
+    //std::cout << angle << std::endl;
 	rotate.setValue(0,0, cos(angle));
 	rotate.setValue(0,1, (-1) * sin(angle));
 	rotate.setValue(1,0, sin(angle));
@@ -109,12 +114,13 @@ Matrix Window::generateDescription() {
 	double sizeV = vaxis.getNorm();
 	double sizeU = uaxis.getNorm();
 
-	std::cout << sizeV << std::endl;
-	std::cout << sizeU << std::endl;
+    //std::cout << sizeV << std::endl;
+    //std::cout << sizeU << std::endl;
 
 	scale.setValue(0, 0, 2/sizeV);
 	scale.setValue(1, 1, 2/sizeU);
-
+    scale.setValue(0, 0, 2*(1/sizeV));
+    scale.setValue(1, 1, 2*(1/sizeU));
 	Matrix result = trans * rotate * scale;
 
 	return result;

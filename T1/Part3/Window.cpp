@@ -7,6 +7,7 @@
 
 #define 	M_PI   3.14159265358979323846
 
+
 Window::Window(Coordinate _origin, Coordinate _limit, Vector _vaxis, Vector _uaxis): origin(_origin), limit(_limit), vaxis(_vaxis),uaxis(_uaxis), worigin(-1,-1), wlimit(1,1) {
 
 }

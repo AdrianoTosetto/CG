@@ -30,6 +30,10 @@ class Vector {
 		Vector v(this->a + rhs.a, this->b + rhs.b);
 		return *this = v;
 	}
+    Vector& operator-(const Vector& rhs) {
+        Vector v(this->a - rhs.a, this->b - rhs.b);
+        return *this = v;
+    }
 	double operator*(Vector v) {
 		return (this->a * v.getA()) + (this->b * v.getB());
 	}
