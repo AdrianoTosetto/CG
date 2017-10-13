@@ -1,12 +1,24 @@
 #ifndef GLOBALS_HPP
 #define GLOBALS_HPP
+#include <gtk/gtk.h>
+#include <iostream>
 #include <vector>
+#include "viewport.hpp"
+#include "Coordinate.h"
+#include "ListaEnc.hpp"
+#include "Object.h"
+#include "Polygon.hpp"
+#include "InfoLog.hpp"
+#include "matrix.hpp"
+#include <math.h>
+#include "vector.hpp"
+#include "dictionary.hpp"
 
 #define XLEFT -0.8
 #define XRIGHT -XLEFT
 #define YTOP 0.8
 #define YBOTTOM -YTOP
-#define INDEX(I) I - 1 
+#define INDEX(I) I - 1
 
 Coordinate a(0, 0);
 Coordinate b(1000, 1000);
@@ -26,7 +38,7 @@ auto displayFile = new ListaEnc<Object*>();
 auto windowFile = new ListaEnc<Object*>();
 Viewport *v;
 Window *w;
-cairo_t *cr; 
+cairo_t *cr;
 InfoLog *_log;
 GtkTreeModel* main_model;
 GtkTreeSelection* main_selection;

@@ -1,131 +1,117 @@
-#include "Coordinate.h"
+/*#include "Coordinate.h"
 #include "Point2D.h"
 #include "Straight.h"
 #include "Window.h"
-#include "viewport.hpp"
+#include "viewport.hpp"*/
 #include "globals.hpp"
 #include <gtk/gtk.h>
 #include "system_primitives.hpp"
 #include "object_primitives.hpp"
 #include "calculations.hpp"
+#include "dictionary.hpp"
 
-#define GET_OBJ(builder, name) GTK_WIDGET(gtk_builder_get_object(builder, name))
-#define SPIN_GET_VALUE(BUILDER, ID) gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(BUILDER, ID))))
-
-void c_addObjectDialog() {
-	GtkWidget *dialog;	
-	dialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog3"));
-	gtk_dialog_run(GTK_DIALOG(dialog));
+void dialogOpen(const gchar* widget) {
+	gtk_dialog_run(GTK_DIALOG(GET_OBJ(builder, widget)));
 }
-void c_addPointDialog() {
-	GtkWidget *dialog;
-	GtkWidget *objDialog;
-	objDialog = GET_OBJ(builder, "dialog3");
-	gtk_widget_hide(objDialog);
-	dialog    = GET_OBJ(builder, "dialog1");
-	gtk_dialog_run(GTK_DIALOG(dialog));
-}
-void c_addStraightDialog() {
-	GtkWidget *dialog;
-	GtkWidget *objDialog;
-	objDialog = GET_OBJ(builder, "dialog3");
-	gtk_widget_hide(objDialog);
-	dialog = GET_OBJ(builder, "dialog2");
-	gtk_dialog_run(GTK_DIALOG(dialog));
-}
-void c_addPolygonDialog() {
-	GtkWidget *dialog;
-	GtkWidget *objDialog;
-	objDialog = GET_OBJ(builder, "dialog3");
-	gtk_widget_hide(objDialog);
-	dialog = GET_OBJ(builder, "dialog5");
-	gtk_dialog_run(GTK_DIALOG(dialog));
+void dialogOpenAndClose(const gchar* widgetToOpen, const gchar* widgetToClose) {
+	gtk_widget_hide(GET_OBJ(builder, widgetToClose));
+	gtk_dialog_run(GTK_DIALOG(GET_OBJ(builder, widgetToOpen)));
 }
 
 void c_addPoint() {
-	std::string nameEntry = gtk_entry_get_text(GTK_ENTRY(GTK_WIDGET(gtk_builder_get_object(builder, "entry2"))));
+	std::string nameEntry = ENTRY_GET_TEXT(builder, POINT_NAME_ENTRY);
 	if (nameEntry == "") return;
-	double pointX = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton6"))));
-	double pointY = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton7"))));
+
+	double pointX = SPIN_GET_VALUE(builder, POINT_X_SPIN);
+	double pointY = SPIN_GET_VALUE(builder, POINT_Y_SPIN);
+
 	Coordinate pointCoord(pointX, pointY);
 	Point2D *toAdd = new Point2D(pointCoord, objectID, nameEntry);
 	Point2D *toAddW = dynamic_cast<Point2D*>(w->transformToWindow(*toAdd, description));
-	v->drawPoint(toAddW, cr, surface, w);
-	gtk_widget_queue_draw (window_widget);
+
 	displayFile->adiciona(toAdd);
 	windowFile->adiciona(toAddW);
-	gtk_widget_hide(GET_OBJ(builder, "dialog1"));
+	redraw();
+
+	gtk_widget_hide(GET_OBJ(builder, ADD_POINT_DIALOG));
+
 	addList(nameEntry, "Point", objectID);
 	objectID += 0x1;
 	_log->_log("Novo ponto adicionado!\n");
 }
 void c_addStraight() {
-	std::string nameEntry = gtk_entry_get_text(GTK_ENTRY(GTK_WIDGET(gtk_builder_get_object(builder, "entry3"))));
+	std::string nameEntry = ENTRY_GET_TEXT(builder, STRAIGHT_NAME_ENTRY);
 	if (nameEntry == "") return;
-	double straightXA = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton8"))));
-	double straightYA = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton9"))));
-	double straightXB = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton10"))));
-	double straightYB = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton11"))));
+
+	double straightXA = SPIN_GET_VALUE(builder, STRAIGHT_A_X_SPIN);
+	double straightYA = SPIN_GET_VALUE(builder, STRAIGHT_A_Y_SPIN);
+	double straightXB = SPIN_GET_VALUE(builder, STRAIGHT_B_X_SPIN);
+	double straightYB = SPIN_GET_VALUE(builder, STRAIGHT_B_Y_SPIN);
+
 	Coordinate straightCoordA(straightXA, straightYA);
 	Coordinate straightCoordB(straightXB, straightYB);
 	Straight *toAdd = new Straight(straightCoordA, straightCoordB, objectID, nameEntry);
 	Straight *toAddW = dynamic_cast<Straight*>(w->transformToWindow(*toAdd, description));
-	v->drawStraight(toAddW, cr, surface, w);
-	gtk_widget_queue_draw (window_widget);
+
+	//std::cout << toAddW->getType() << std::endl;
+
 	displayFile->adiciona(toAdd);
 	windowFile->adiciona(toAddW);
-	gtk_widget_hide(GET_OBJ(builder, "dialog2"));
+	redraw();
+
+	gtk_widget_hide(GET_OBJ(builder, ADD_STRAIGHT_DIALOG));
+
 	addList(nameEntry, "Straight", objectID);
 	objectID += 0x1;
 	_log->_log("Nova reta adicionada!\n");
 }
 void c_addPolygonName() {
-	std::string nameEntry = gtk_entry_get_text(GTK_ENTRY(GTK_WIDGET(gtk_builder_get_object(builder, "entry5"))));
+	std::string nameEntry = ENTRY_GET_TEXT(builder, POLYGON_NAME_ENTRY);
 	if (nameEntry == "") return;
-	gtk_widget_hide(GET_OBJ(builder, "dialog2"));
-	GtkWidget *dialog;
-	GtkWidget *objDialog;
-	objDialog = GET_OBJ(builder, "dialog5");
-	gtk_widget_hide(objDialog);
-	dialog = GET_OBJ(builder, "dialog6");
-	gtk_dialog_run(GTK_DIALOG(dialog));
+
 	pollyName = nameEntry;
+	std::cout << pollyName << std::endl;
+
+	gtk_widget_hide(GET_OBJ(builder, ADD_POLYGON_NAME_DIALOG));
+	gtk_dialog_run(GTK_DIALOG(GET_OBJ(builder, ADD_POLYGON_COORDINATE_DIALOG)));
 }
 void c_addPolygonCoordinate() {
-	double coordX = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton12"))));
-	double coordY =  gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton13"))));
+	double coordX = SPIN_GET_VALUE(builder, POLYGON_X_SPIN);
+	double coordY = SPIN_GET_VALUE(builder, POLYGON_X_SPIN);
+
 	Coordinate *newCoord = new Coordinate(coordX, coordY);
-	gtk_widget_hide(GET_OBJ(builder, "dialog5"));
+
 	pollyVector.push_back(*newCoord);
+	std::cout << pollyVector.size() << std::endl;
 }
 void c_finishPolygon() {
 	Polygon *p = new Polygon(pollyName, objectID, pollyVector);
 	Polygon *pw = dynamic_cast<Polygon*>(w->transformToWindow(*p, description));
+
 	if(p->getCoordinates().begin() == p->getCoordinates().end()) return;
+
 	displayFile->adiciona(dynamic_cast<Object*>(p));
 	windowFile->adiciona(dynamic_cast<Object*>(pw));
-	v->drawPolygon(pw, cr, surface, w);
-	gtk_widget_queue_draw (window_widget);
-	gtk_widget_hide(GET_OBJ(builder, "dialog6"));
+
+	redraw();
+
+	gtk_widget_hide(GET_OBJ(builder, ADD_POLYGON_COORDINATE_DIALOG));
+
 	addList(p->getName(), "Polygon", objectID);
 	objectID += 0x1;
 	pollyVector.clear();
 	_log->_log("Novo polígono adicionado!\n");
 }
-void c_removeObjectDialog() {
-	GtkWidget *dialog;
-	dialog = GET_OBJ(builder, "dialog4");
-	gtk_dialog_run(GTK_DIALOG(dialog));
-}
+
 void c_removeObject() {
 	GtkWidget *objDialog;
-	int id = (int) gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton14"))));
+	int id = (int) SPIN_GET_VALUE(builder, REMOVE_ID_SPIN);
 	int position = 0;
-	for(auto T = displayFile->getHead(); T != nullptr; T = T->getProximo()) {	
+	for(auto T = displayFile->getHead(); T != nullptr; T = T->getProximo()) {
 		if (T->getInfo()->getId() == id) {
 			removeNthList(position);
 			displayFile->retiraEspecifico(T->getInfo());
-			objDialog = GET_OBJ(builder, "dialog4");
+			objDialog = GET_OBJ(builder, REMOVE_OBJECT_DIALOG);
 			gtk_widget_hide(objDialog);
 			redraw();
 			return;
@@ -134,32 +120,17 @@ void c_removeObject() {
 	}
 }
 
-void c_translateDialog() {
-	GtkWidget *dialog;
-	dialog = GET_OBJ(builder, "dialogTranslate");
-	gtk_dialog_run(GTK_DIALOG(dialog));
-}
-void c_scaleDialog() {
-	GtkWidget *dialog;
-	dialog = GET_OBJ(builder, "dialogScale");
-	gtk_dialog_run(GTK_DIALOG(dialog));
-}
-void c_rotateDialog() {
-	GtkWidget *dialog;
-	dialog = GET_OBJ(builder, "dialogRotate");
-	gtk_dialog_run(GTK_DIALOG(dialog));
-}
 void c_rotateCenter() {
-	double id = SPIN_GET_VALUE(builder, "spinIDRotate");
-	double radians = d2r(SPIN_GET_VALUE(builder, "spinDegreesRotate"));
+	double id = SPIN_GET_VALUE(builder, ROTATE_ID_SPIN);
+	double radians = d2r(SPIN_GET_VALUE(builder, ROTATE_DEGREES_SPIN));
 
 	double centerX = 0.0, centerY = 0.0;
 
 	for(auto t = displayFile->getHead(); t != nullptr; t = t->getProximo()) {
-		if(t->getInfo()->getId() == id) { 
+		if(t->getInfo()->getId() == id) {
 			switch (t->getInfo()->getType()) {
 				case TPOINT:
-					gtk_widget_hide(GET_OBJ(builder, "dialogRotate"));
+					gtk_widget_hide(GET_OBJ(builder, ROTATE_OBJECT_DIALOG));
 					return;
 				case TSTRAIGHT: {
 					Straight *s = dynamic_cast<Straight*>(t->getInfo());
@@ -186,7 +157,7 @@ void c_rotateCenter() {
 
 					centerX = xSum / pcoords.size();
 					centerY = ySum / pcoords.size();
-						
+
 					rotate(centerX, centerY, p, radians);
 					return;
 				}
@@ -197,23 +168,23 @@ void c_rotateCenter() {
 	}
 }
 void c_rotateOrigin() {
-	double id = SPIN_GET_VALUE(builder, "spinIDRotate");
-	double radians = d2r(SPIN_GET_VALUE(builder, "spinDegreesRotate"));
+	double id = SPIN_GET_VALUE(builder, ROTATE_ID_SPIN);
+	double radians = d2r(SPIN_GET_VALUE(builder, ROTATE_DEGREES_SPIN));
 	Object* o = getObject(id);
 	rotate(0, 0, o, radians);
 }
 void c_rotatePoint() {
-	double id = SPIN_GET_VALUE(builder, "spinIDRotate");
-	double pointx = SPIN_GET_VALUE(builder, "spinXRotate");
-	double pointy = SPIN_GET_VALUE(builder, "spinYRotate");
-	double radians = d2r(SPIN_GET_VALUE(builder, "spinDegreesRotate"));
+	double id = SPIN_GET_VALUE(builder, ROTATE_ID_SPIN);
+	double radians = d2r(SPIN_GET_VALUE(builder, ROTATE_DEGREES_SPIN));
+	double pointx = SPIN_GET_VALUE(builder, ROTATE_X_SPIN);
+	double pointy = SPIN_GET_VALUE(builder, ROTATE_Y_SPIN);
 	Object* o = getObject(id);
 	rotate(pointx, pointy, o, radians);
 }
 void c_translateObject() {
-	double id = SPIN_GET_VALUE(builder, "spinIDTranslate");
-	double dx = SPIN_GET_VALUE(builder, "spinDXTranslate");
-	double dy = SPIN_GET_VALUE(builder, "spinDYTranslate");
+	double id = SPIN_GET_VALUE(builder, TRANSLATE_ID_SPIN);
+	double dx = SPIN_GET_VALUE(builder, TRANSLATE_X_SPIN);
+	double dy = SPIN_GET_VALUE(builder, TRANSLATE_Y_SPIN);
 	Object* o = getObject(id);
 	switch (o->getType()) {
 		case TPOINT: {
@@ -225,7 +196,7 @@ void c_translateObject() {
 			p->setCoordinate(newC);
 
 			redraw();
-			gtk_widget_hide(GET_OBJ(builder, "dialogTranslate"));
+			gtk_widget_hide(GET_OBJ(builder, TRANSLATE_OBJECT_DIALOG));
 			return;
 		}
 		case TSTRAIGHT: {
@@ -239,13 +210,13 @@ void c_translateObject() {
 			s->setA(newA);
 			s->setB(newB);
 			redraw();
-			gtk_widget_hide(GET_OBJ(builder, "dialogTranslate"));
+			gtk_widget_hide(GET_OBJ(builder, TRANSLATE_OBJECT_DIALOG));
 			return;
 		}
 		case TPOLYGON: {
 			Polygon *p = dynamic_cast<Polygon*>(o);
 			std::vector<Coordinate> pcoords = p->getCoordinates();
-			std::vector<Coordinate> newPCoords;	
+			std::vector<Coordinate> newPCoords;
 			Matrix coords(1,3);
 			coords.setValue(0,2,1);
 			for(auto it = pcoords.begin(); it != pcoords.end(); it++) {
@@ -256,7 +227,7 @@ void c_translateObject() {
 			}
 			p->setCoordinates(newPCoords);
 			redraw();
-			gtk_widget_hide(GET_OBJ(builder, "dialogTranslate"));
+			gtk_widget_hide(GET_OBJ(builder, TRANSLATE_OBJECT_DIALOG));
 			return;
 		}
 		default:
@@ -265,8 +236,8 @@ void c_translateObject() {
 	std::cout << "not found!" << std::endl;
 }
 void c_scaleObject() {
-	double id = SPIN_GET_VALUE(builder, "spinIDScale");
-	double scl = SPIN_GET_VALUE(builder, "spinStepScale");
+	double id = SPIN_GET_VALUE(builder, SCALE_ID_SPIN);
+	double scl = SPIN_GET_VALUE(builder, SCALE_STEP_SPIN);
 	Object* o = getObject(id);
 	switch (o->getType()) {
 		case TPOINT:
@@ -304,9 +275,9 @@ void c_scaleObject() {
 	}
 }
 
-void c_zoomOut() {
+void zoom(int in) {
 	double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
-	step = (step / w->getVUp().getNorm()) + 1;
+	step = 1 + (pow(-1, in) * (step / w->getVUp().getNorm()));
 
 	Matrix coords(1,3);
 	Coordinate coord(0,0);
@@ -349,51 +320,7 @@ void c_zoomOut() {
 
 	redraw();
 }
-void c_zoomIn() {
-	double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
-	step = 1 - (step / w->getVUp().getNorm());
 
-	Matrix coords(1,3);
-	Coordinate coord(0,0);
-	coords.setValue(0,2,1);
-	Vector vec(0,0);
-
-	double centerx = (w->getOrigin().getX() + w->getLimit().getX())/2;
-	double centery = (w->getOrigin().getY() + w->getLimit().getY())/2;
-
-	Matrix scaling = getScalingMatrix(centerx, centery, step);
-	Matrix scalingVec = getScalingMatrix(0,0,step);
-
-	coords.setValue(0,0, w->getOrigin().getX());
-	coords.setValue(0,1, w->getOrigin().getY());
-	coords *= scaling;
-	coord.setX(coords.getValue(0,0));
-	coord.setY(coords.getValue(0,1));
-	w->setOrigin(coord);
-
-	coords.setValue(0,0, w->getLimit().getX());
-	coords.setValue(0,1, w->getLimit().getY());
-	coords *= scaling;
-	coord.setX(coords.getValue(0,0));
-	coord.setY(coords.getValue(0,1));
-	w->setLimit(coord);
-
-	coords.setValue(0,0, w->getVUp().getA());
-	coords.setValue(0,1, w->getVUp().getB());
-	coords *= scalingVec;
-	vec.setA(coords.getValue(0,0));
-	vec.setB(coords.getValue(0,1));
-	w->setVUp(vec);
-
-	coords.setValue(0,0, w->getU().getA());
-	coords.setValue(0,1, w->getU().getB());
-	coords *= scalingVec;
-	vec.setA(coords.getValue(0,0));
-	vec.setB(coords.getValue(0,1));
-	w->setU(vec);
-
-	redraw();
-}
 void c_stepUp() {
 	double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
 	double combK = (step * w->getVUp().getNorm()) / (pow(w->getVUp().getA(), 2) + pow(w->getVUp().getB(), 2));
@@ -439,9 +366,9 @@ void c_stepDown() {
 	redraw();
 }
 
-void c_rotateAnticlock() {
+void rotateWindow(int anticlock) {
 	double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton15"))));
-	step = -d2r(step);
+	step = pow(-1, anticlock) * d2r(step);
 
 	Matrix coords(1,3);
 	Coordinate coord(0,0);

@@ -12,6 +12,7 @@
 #include "vector.hpp"
 #include "globals.hpp"
 #include "callbacks.hpp"
+#include "dictionary.hpp"
 
 #include <stdlib.h>
 
@@ -35,7 +36,7 @@ extern ListaEnc<Object*>* displayFile;
 extern ListaEnc<Object*>* windowFile;
 extern Viewport *v;
 extern Window *w;
-extern cairo_t *cr; 
+extern cairo_t *cr;
 extern InfoLog *_log;
 extern double i;
 //double steppedX = 0;
@@ -70,8 +71,6 @@ static gboolean configure_event_cb (GtkWidget *widget, GdkEventConfigure *event,
                                        CAIRO_CONTENT_COLOR,
                                        gtk_widget_get_allocated_width (widget),
                                        gtk_widget_get_allocated_height (widget));
-                                       //w->getLimit().getX() - w->getOrigin().getX(),
-                                       //w->getLimit().getY() - w->getOrigin().getY());
   clear_surface ();
   return TRUE;
 }
@@ -94,20 +93,20 @@ static gboolean draw_cb (GtkWidget *widget, cairo_t   *cr,  gpointer   data){
   gtk_widget_queue_draw (window_widget);
  } */
 
-extern "C" {	
+extern "C" {
 	void addObjectDialog() {
-		c_addObjectDialog();	
+    dialogOpen(ADD_OBJECT_DIALOG);
 	}
 	void addPointDialog() {
-		c_addPointDialog();
+    dialogOpenAndClose(ADD_POINT_DIALOG, ADD_OBJECT_DIALOG);
 	}
 	void addStraightDialog() {
-		c_addStraightDialog();
+    dialogOpenAndClose(ADD_STRAIGHT_DIALOG, ADD_OBJECT_DIALOG);
 	}
 	void addPolygonDialog() {
-		c_addPolygonDialog();
+    dialogOpenAndClose(ADD_POLYGON_NAME_DIALOG, ADD_OBJECT_DIALOG);
 	}
-	
+
 	void addPoint() {
 		c_addPoint();
 	}
@@ -122,28 +121,27 @@ extern "C" {
 	}
 	void finishPolygon() {
 		c_finishPolygon();
-
 	}
 
 	void removeObjectDialog() {
 		if (displayFile->getSize() < 1) {
-			emptyDisplayFileDialog();
+			dialogOpen(EMPTY_DF_DIALOG);
 			return;
 		}
-		c_removeObjectDialog();
+		dialogOpen(REMOVE_OBJECT_DIALOG);
 	}
 	void removeObject() {
 		c_removeObject();
 	}
 
 	void translateDialog() {
-		c_translateDialog();
+		dialogOpen(TRANSLATE_OBJECT_DIALOG);
 	}
 	void scaleDialog() {
-		c_scaleDialog();
+		dialogOpen(SCALE_OBJECT_DIALOG);
 	}
 	void rotateDialog() {
-		c_rotateDialog();
+		dialogOpen(ROTATE_OBJECT_DIALOG);
 	}
 
 	void rotateCenter() {
@@ -163,10 +161,10 @@ extern "C" {
 	}
 
 	void zoomOut() {
-		c_zoomOut();
+		zoom(0);
 	}
 	void zoomIn() {
-		c_zoomIn();
+		zoom(1);
 	}
 	void stepUp() {
 		c_stepUp();
@@ -181,16 +179,16 @@ extern "C" {
 		c_stepDown();
 	}
 	void rotateAnticlock() {
-		c_rotateAnticlock();
+		rotateWindow(1);
 	}
 	void rotateClock() {
-		c_rotateClock();
+		rotateWindow(0);
 	}
 }
 
 
 int main(int argc, char *argv[]) {
-  gtk_init(&argc, &argv);  
+  gtk_init(&argc, &argv);
   cr = cairo_create (surface);
   cairo_set_source_rgb(cr, 0, 0, 0);
   cairo_set_line_width(cr, 1);
@@ -216,7 +214,8 @@ int main(int argc, char *argv[]) {
   _log = new InfoLog("actionLog", builder);
   removeNthList(0);
   gtk_widget_show_all(window_widget);
+  redraw();
   gtk_main ();
- 
+
   return 0;
 }

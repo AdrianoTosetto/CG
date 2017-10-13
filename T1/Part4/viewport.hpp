@@ -7,6 +7,7 @@
 #include "Straight.h"
 #include "Point2D.h"
 #include "Polygon.hpp"
+//#include "globals.hpp"
 
 # define M_PI           3.14159265358979323846
 
@@ -37,9 +38,7 @@ class Viewport {
 
 
  	void drawStraight(Straight* straight, cairo_t *c, cairo_surface_t *surface, Window* window) {
- 		Straight toDraw = *straight->transformToViewport(window->getWOrigin(), window->getWLimit(), this->origin, this->limit);
-        std::cout << window->getWOrigin().getX() << " " << window->getWOrigin().getY() << std::endl;
-        std::cout << window->getWLimit().getX() << " " << window->getWLimit().getY() << std::endl;
+ 		    Straight toDraw = *straight->transformToViewport(window->getWOrigin(), window->getWLimit(), this->origin, this->limit);
 
         double ax = toDraw.getA().getX();
         double ay = toDraw.getA().getY();
@@ -51,11 +50,6 @@ class Viewport {
         cairo_line_to(c, bx, by);
         cairo_stroke(c);
  	}
-    void drawSomething(cairo_t *c) {
-        cairo_move_to(c, 50, 50);
-        cairo_line_to(c, 100, 150);
-        cairo_stroke(c);
-    }
 
     void drawPoint(Point2D* point, cairo_t *c, cairo_surface_t *surface, Window* window) {
         Point2D toDraw = *point->transformToViewport(window->getWOrigin(), window->getWLimit(), this->origin, this->limit);
@@ -72,7 +66,7 @@ class Viewport {
     void drawPolygon(Polygon* polygon, cairo_t *c, cairo_surface_t *surface, Window* window) {
 
         Polygon newPoly = *polygon->transformToViewport(window->getWOrigin(), window->getWLimit(), this->origin, this->limit);
-    
+
         std::vector<Coordinate> coordsVec = newPoly.getCoordinates();
         auto it = coordsVec.begin();
 

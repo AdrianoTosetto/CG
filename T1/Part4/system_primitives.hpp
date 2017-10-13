@@ -17,6 +17,11 @@
 	ARRAY1[1] != ARRAY2[1] ||\
 	ARRAY1[2] != ARRAY2[2] ||\
 	ARRAY1[3] != ARRAY2[3]
+#define IS_ZERO(ARRAY)\
+	ARRAY[0] == 0 &&\
+	ARRAY[1] == 0 &&\
+	ARRAY[2] == 0 &&\
+	ARRAY[3] == 0
 #define INSIDE_WINDOW(RC)\
 	RC[0] == 0 &&\
 	RC[1] == 0 &&\
@@ -54,19 +59,20 @@ void updateWindowFile() {
 	windowFile->destroiLista();
 	description = w->generateDescription();
 	windowFile->adiciona(border);
+	bool toAdd = true;
 	int code1[4] = {0,0,0,0};
-	int code2[4];
+	int code2[4] = {0,0,0,0};
 
 	for(int i = 0; i < displayFile->getSize(); i++) {
 		Object *o = displayFile->consultaDaPosicao(i);
 		Object *o1 = w->transformToWindow(*o, description);
 		if(o->getType() == TPOINT) {
-			
+
 			Point2D* po = dynamic_cast<Point2D*>(o1);
 
 			if((po->getCoordinate().getX() >= -0.8 && po->getCoordinate().getX() <= 0.8 && po->getCoordinate().getY() >= -0.8 && po->getCoordinate().getY() <= 0.8)) {
 				windowFile->adiciona(o1);
-				std::cout << "clipping" << std::endl;
+				//std::cout << "clipping" << std::endl;
 			}
 		}
 
@@ -122,47 +128,82 @@ void updateWindowFile() {
 				code2[INDEX(1)] = 0;
 			}
 
+			if(IS_ZERO(code1) && IS_ZERO(code2)) {
+				windowFile->adiciona(s);
+				continue;
+			}
+
+			if(LOGICAL_AND_ARRAY(code1, code2) != 0) continue;
+
+			int logand = LOGICAL_AND_ARRAY(code1, code2);
+
 			if(LOGICAL_AND_ARRAY(code1, code2) == 0 && IS_DIFFERENT(code1, code2)) {
+				std::cout << logand << std::endl;
 				double m = (y2s - y1s) / (x2s - x1s);
+				double intersection;
 
 				if(IS_ON_THE_RIGHT(code1)) {
-					Coordinate clipped(XRIGHT, m*(XRIGHT - x1s) + y1s);
-					s->setA(clipped);
+					intersection = m*(XRIGHT - x1s) + y1s;
+					if ((intersection > -0.8) && (intersection < 0.8)) {
+						Coordinate clipped(XRIGHT, intersection);
+						s->setA(clipped);
+					} else continue;
 				}
 				if(IS_ON_THE_RIGHT(code2)) {
-					Coordinate clipped(XRIGHT, m*(XRIGHT - x2s) + y2s);
-					s->setB(clipped);
+					intersection = m*(XRIGHT - x2s) + y2s;
+					if ((intersection > -0.8) && (intersection < 0.8)) {
+						Coordinate clipped(XRIGHT, intersection);
+						s->setB(clipped);
+					} else continue;
 				}
 
 				if(IS_ON_THE_LEFT(code1)) {
-					Coordinate clipped(XLEFT, m*(XLEFT - x1s) + y1s);
-					s->setA(clipped);
+					intersection = m*(XLEFT - x1s) + y1s;
+					if ((intersection > -0.8) && (intersection < 0.8)) {
+						Coordinate clipped(XLEFT, intersection);
+						s->setA(clipped);
+					} else continue;
 				}
 				if(IS_ON_THE_LEFT(code2)) {
-					Coordinate clipped(XLEFT, m*(XLEFT - x2s) + y2s);
-					s->setB(clipped);
+					intersection = m*(XLEFT - x2s) + y2s;
+					if ((intersection > -0.8) && (intersection < 0.8)) {
+						Coordinate clipped(XLEFT, intersection);
+						s->setB(clipped);
+					} else continue;
 				}
-				if(m == 0) m = 1;
+				//if(m == 0) std::cout << 1/(1/m) << std::endl;
 				if(IS_ON_THE_TOP(code1)) {
-					Coordinate clipped(x1s + (1/m) * (YTOP-y1s), YTOP);
-					s->setA(clipped);
+					intersection = x1s + (1/m) * (YTOP-y1s);
+					if ((intersection > -0.8) && (intersection < 0.8)) {
+						Coordinate clipped(intersection, YTOP);
+						s->setA(clipped);
+					} else continue;
 				}
 				if(IS_ON_THE_TOP(code2)) {
-					Coordinate clipped(x2s + (1/m) * (YTOP-y2s), YTOP);
-					s->setB(clipped);
+					intersection = x2s + (1/m) * (YTOP-y2s);
+					if ((intersection > -0.8) && (intersection < 0.8)) {
+						Coordinate clipped(intersection, YTOP);
+						s->setB(clipped);
+					} else continue;
 				}
 
 				if(IS_ON_THE_BOTTOM(code1)) {
-					Coordinate clipped(x1s + (1/m) * (YBOTTOM-y1s), YBOTTOM);
-					s->setA(clipped);
+					intersection = x1s + (1/m) * (YBOTTOM-y1s);
+					if ((intersection > -0.8) && (intersection < 0.8)) {
+						Coordinate clipped(intersection, YBOTTOM);
+						s->setA(clipped);
+					} else continue;
 				}
 				if(IS_ON_THE_BOTTOM(code2)) {
-					Coordinate clipped(x2s + (1/m) * (YBOTTOM-y2s), YBOTTOM);
-					s->setB(clipped);
+					intersection = x2s + (1/m) * (YBOTTOM-y2s);
+					if ((intersection > -0.8) && (intersection < 0.8)) {
+						Coordinate clipped(intersection, YBOTTOM);
+						s->setB(clipped);
+					} else continue;
 				}
 
-
-				windowFile->adiciona(s);
+				//Horizontal:
+					windowFile->adiciona(s);
 			}
 			//std::cout << "csz" << std::endl;
 			std::cout << code1[0] << " " << code1[1] << " " << code1[2] << " " << code1[3] << " " << std::endl;
@@ -170,7 +211,7 @@ void updateWindowFile() {
 		}
 
 		//windowFile->adiciona(w->transformToWindow(*o, description));
-	}		
+	}
 }
 
 void redraw() {
@@ -210,12 +251,6 @@ void redraw() {
 void addList(std::string name, std::string type, int objID) {
    	gtk_list_store_append(list_store, &iter);
 	gtk_list_store_set(list_store, &iter, 0, name.c_str(), 1, type.c_str(), 2, objID,-1);
-}
-
-void emptyDisplayFileDialog() {
-	GtkWidget *dialog;
-	dialog = GTK_WIDGET(gtk_builder_get_object(builder, "dialog7"));
-	gtk_dialog_run(GTK_DIALOG(dialog));
 }
 
 Object* getObject(int id) {
