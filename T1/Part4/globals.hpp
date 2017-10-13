@@ -2,6 +2,12 @@
 #define GLOBALS_HPP
 #include <vector>
 
+#define XLEFT -0.8
+#define XRIGHT -XLEFT
+#define YTOP 0.8
+#define YBOTTOM -YTOP
+#define INDEX(I) I - 1 
+
 Coordinate a(0, 0);
 Coordinate b(1000, 1000);
 Coordinate c(500, 500);
@@ -31,10 +37,10 @@ std::vector<Coordinate> pollyVector;
 std::string pollyName;
 
 std::vector<Coordinate> borderCoordinates;
-Coordinate c0(-0.8,0.8);
-Coordinate c1(-0.8,-0.8);
-Coordinate c2(0.8,-0.8);
-Coordinate c3(0.8,0.8);
+Coordinate c0(XLEFT,YTOP);
+Coordinate c1(XLEFT,YBOTTOM);
+Coordinate c2(XRIGHT,YBOTTOM);
+Coordinate c3(XRIGHT,YTOP);
 
 Polygon *border;
 
