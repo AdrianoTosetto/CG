@@ -59,7 +59,8 @@ void updateWindowFile() {
 	windowFile->destroiLista();
 	description = w->generateDescription();
 	windowFile->adiciona(border);
-	bool toAdd = true;
+	//bool toAdd = true;
+	//int codeZERO[4] = {0,0,0,0};
 	int code1[4] = {0,0,0,0};
 	int code2[4] = {0,0,0,0};
 
@@ -84,12 +85,15 @@ void updateWindowFile() {
 			double y1s = s->getA().getY();
 			double y2s = s->getB().getY();
 
+			std::cout << "y2s:" << y2s << std::endl;
+
 			if(x1s < XLEFT) {
 				code1[INDEX(4)] = 1;
 			} else {
 				code1[INDEX(4)] = 0;
 			}
-			if(x2s < XLEFT) {
+			if(x2s < XLEFT) {x2s = s->getB().getX();
+
 				code2[INDEX(4)] = 1;
 			} else {
 				code2[INDEX(4)] = 0;
@@ -104,7 +108,6 @@ void updateWindowFile() {
 			} else {
 				code2[INDEX(3)] = 0;
 			}
-
 
 
 			if(y1s < YBOTTOM) {
@@ -135,75 +138,90 @@ void updateWindowFile() {
 
 			if(LOGICAL_AND_ARRAY(code1, code2) != 0) continue;
 
-			int logand = LOGICAL_AND_ARRAY(code1, code2);
-
 			if(LOGICAL_AND_ARRAY(code1, code2) == 0 && IS_DIFFERENT(code1, code2)) {
-				std::cout << logand << std::endl;
 				double m = (y2s - y1s) / (x2s - x1s);
+				//if (x2s == x1s) ->
 				double intersection;
 
 				if(IS_ON_THE_RIGHT(code1)) {
 					intersection = m*(XRIGHT - x1s) + y1s;
+					std::cout << "Intersection 1 on right: " << intersection << std::endl;
 					if ((intersection > -0.8) && (intersection < 0.8)) {
 						Coordinate clipped(XRIGHT, intersection);
 						s->setA(clipped);
-					} else continue;
+					} //else continue;
 				}
 				if(IS_ON_THE_RIGHT(code2)) {
 					intersection = m*(XRIGHT - x2s) + y2s;
+					std::cout << "Intersection 2 on right: " << intersection << std::endl;
 					if ((intersection > -0.8) && (intersection < 0.8)) {
 						Coordinate clipped(XRIGHT, intersection);
 						s->setB(clipped);
-					} else continue;
+					} //else continue;
 				}
 
 				if(IS_ON_THE_LEFT(code1)) {
 					intersection = m*(XLEFT - x1s) + y1s;
+					std::cout << "Intersection 1 on left: " << intersection << std::endl;
 					if ((intersection > -0.8) && (intersection < 0.8)) {
 						Coordinate clipped(XLEFT, intersection);
 						s->setA(clipped);
-					} else continue;
+					} //else continue;
 				}
 				if(IS_ON_THE_LEFT(code2)) {
 					intersection = m*(XLEFT - x2s) + y2s;
+					std::cout << "Intersection 2 on left: " << intersection << std::endl;
 					if ((intersection > -0.8) && (intersection < 0.8)) {
 						Coordinate clipped(XLEFT, intersection);
 						s->setB(clipped);
-					} else continue;
+					} //else continue;
 				}
 				//if(m == 0) std::cout << 1/(1/m) << std::endl;
 				if(IS_ON_THE_TOP(code1)) {
 					intersection = x1s + (1/m) * (YTOP-y1s);
-					if ((intersection > -0.8) && (intersection < 0.8)) {
+					std::cout << 1/m << std::endl;
+					std::cout << "Intersection 1 on top: " << intersection << std::endl;
+					if ((intersection >= -0.8) && (intersection <= 0.8)) {
 						Coordinate clipped(intersection, YTOP);
 						s->setA(clipped);
-					} else continue;
+					} //else continue;
 				}
 				if(IS_ON_THE_TOP(code2)) {
+					std::cout << "entrou" << std::endl;
 					intersection = x2s + (1/m) * (YTOP-y2s);
-					if ((intersection > -0.8) && (intersection < 0.8)) {
+					std::cout << 1/m << std::endl;
+					std::cout << "Intersection 2 on top: " << intersection << std::endl;
+					if ((intersection >= -0.8) && (intersection <= 0.8)) {
 						Coordinate clipped(intersection, YTOP);
 						s->setB(clipped);
-					} else continue;
+					} //else continue;
 				}
 
 				if(IS_ON_THE_BOTTOM(code1)) {
 					intersection = x1s + (1/m) * (YBOTTOM-y1s);
+					std::cout << 1/m << std::endl;
+					std::cout << x1s << std::endl;
+					std::cout << "Intersection 1 on bottom: " << intersection << std::endl;
 					if ((intersection > -0.8) && (intersection < 0.8)) {
 						Coordinate clipped(intersection, YBOTTOM);
 						s->setA(clipped);
-					} else continue;
+					} //else continue;
 				}
 				if(IS_ON_THE_BOTTOM(code2)) {
 					intersection = x2s + (1/m) * (YBOTTOM-y2s);
+					std::cout << 1/m << std::endl;
+					std::cout << x1s << std::endl;
+					std::cout << "Intersection 2 on bottom: " << intersection << std::endl;
 					if ((intersection > -0.8) && (intersection < 0.8)) {
 						Coordinate clipped(intersection, YBOTTOM);
 						s->setB(clipped);
-					} else continue;
+					} //else continue;
 				}
 
+				if (s->getA().getX() == x1s && s->getA().getY() == y1s && s->getB().getX() == x2s && s->getB().getY() == y2s) continue;
+
 				//Horizontal:
-					windowFile->adiciona(s);
+				windowFile->adiciona(s);
 			}
 			//std::cout << "csz" << std::endl;
 			std::cout << code1[0] << " " << code1[1] << " " << code1[2] << " " << code1[3] << " " << std::endl;
