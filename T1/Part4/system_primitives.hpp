@@ -141,7 +141,7 @@ void updateWindowFile() {
 				std::cout << "Logical and is not 0" << std::endl;
 				continue;
 			}
-			int r1 = !LOGICAL_AND_ARRAY(code1, code2);
+			int r1 = LOGICAL_AND_ARRAY(code1, code2);
 			int r2 = IS_DIFFERENT(code1, code2);
 			std::cout << "R1: " << r1 << std::endl;
 			std::cout << "R2: " << r2 << std::endl;
