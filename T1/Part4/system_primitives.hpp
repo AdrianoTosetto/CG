@@ -179,7 +179,7 @@ void updateWindowFile() {
 				if(IS_ON_THE_LEFT(code2)) {
 					intersection = m*(XLEFT - x2s) + y2s;
 					std::cout << "Intersection 2 on left: " << intersection << std::endl;
-					if ((intersection > -0.8) && (intersection < 0.8)) {
+					if ((intersection >= -0.8) && (intersection <= 0.8)) {
 						Coordinate clipped(XLEFT, intersection);
 						s->setB(clipped);
 					} //else continue;
@@ -211,7 +211,7 @@ void updateWindowFile() {
 					std::cout << 1/m << std::endl;
 					std::cout << x1s << std::endl;
 					std::cout << "Intersection 1 on bottom: " << intersection << std::endl;
-					if ((intersection > -0.8) && (intersection < 0.8)) {
+					if ((intersection >= -0.8) && (intersection <= 0.8)) {
 						Coordinate clipped(intersection, YBOTTOM);
 						s->setA(clipped);
 					} //else continue;
@@ -221,7 +221,7 @@ void updateWindowFile() {
 					std::cout << 1/m << std::endl;
 					std::cout << x1s << std::endl;
 					std::cout << "Intersection 2 on bottom: " << intersection << std::endl;
-					if ((intersection > -0.8) && (intersection < 0.8)) {
+					if ((intersection >= -0.8) && (intersection <= 0.8)) {
 						Coordinate clipped(intersection, YBOTTOM);
 						s->setB(clipped);
 					} //else continue;
