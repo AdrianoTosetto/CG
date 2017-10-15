@@ -130,15 +130,20 @@ void updateWindowFile() {
 			} else {
 				code2[INDEX(1)] = 0;
 			}
-
+			/* reta está totalmente dentro da window */
 			if(IS_ZERO(code1) && IS_ZERO(code2)) {
 				windowFile->adiciona(s);
+				std::cout << "both inside " << std::endl;
 				continue;
 			}
 
-			if(LOGICAL_AND_ARRAY(code1, code2) != 0) continue;
+			if(LOGICAL_AND_ARRAY(code1, code2) != 0) {
+				std::cout << "Logical and is not 0" << std::endl;
+				continue;
+			}
 
-			if(LOGICAL_AND_ARRAY(code1, code2) == 0 && IS_DIFFERENT(code1, code2)) {
+			if(!LOGICAL_AND_ARRAY(code1, code2) || IS_DIFFERENT(code1, code2)) {
+				std::cout << "yeah yeah" << std::endl;
 				double m = (y2s - y1s) / (x2s - x1s);
 				//if (x2s == x1s) ->
 				double intersection;
@@ -186,6 +191,7 @@ void updateWindowFile() {
 						s->setA(clipped);
 					} //else continue;
 				}
+
 				if(IS_ON_THE_TOP(code2)) {
 					std::cout << "entrou" << std::endl;
 					intersection = x2s + (1/m) * (YTOP-y2s);
