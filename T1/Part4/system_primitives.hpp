@@ -6,6 +6,25 @@
 #ifndef SYSTEM_PRIMITIVES
 #define SYSTEM_PRIMITIVES
 #include "globals.hpp"
+#include <float.h>
+#include <array>
+
+void cohenSutherland(Object *o1);
+double max(std::array<double, 4> list, int size) {
+	double max = list[0];
+	for(int i = 1; i < size; i++)
+		if(list[i] > max) max = list[i];
+
+	return max;
+}
+
+double min(std::array<double, 4> list, int size) {
+	double min = list[0];
+	for(int i = 1; i < size; i++)
+		if(list[i] < min) min = list[i];
+
+	return min;
+}
 
 #define LOGICAL_AND_ARRAY(ARRAY1, ARRAY2)\
 	ARRAY1[0] & ARRAY2[0] &&\
@@ -61,8 +80,6 @@ void updateWindowFile() {
 	windowFile->adiciona(border);
 	//bool toAdd = true;
 	//int codeZERO[4] = {0,0,0,0};
-	int code1[4] = {0,0,0,0};
-	int code2[4] = {0,0,0,0};
 
 	for(int i = 0; i < displayFile->getSize(); i++) {
 		Object *o = displayFile->consultaDaPosicao(i);
@@ -78,6 +95,74 @@ void updateWindowFile() {
 		}
 
 		if(o->getType() == TSTRAIGHT) {
+			
+
+			Straight *s = dynamic_cast<Straight*>(o1);
+			double u = 1;
+			double xinitial = s->getA().getX();
+			double yinitial = s->getA().getY();
+
+			double xend     = s->getB().getX();
+			double yend     = s->getB().getY();
+
+			// parametric form
+
+			double dx = xend - xinitial;
+			double dy = yend - yinitial;
+
+			double p1 = -dx;
+			double p2 = dx;
+			double p3 = -dy;
+			double p4 = dy;
+
+			double q1 = xinitial- XLEFT;
+			double q2 = XRIGHT - xinitial;
+			double q3 = yinitial - YBOTTOM;
+			double q4 = YTOP - yinitial;
+
+			double r1 = p1 / q1;
+			double r2 = p2 / q2;
+			double r3 = p3 / q3;
+			double r4 = p4 / q4;
+
+			bool entering = false;
+			bool exiting  = false;
+			double t1 = 0;
+			double t2 = 1;
+
+			std::array<double, 4> ps{p1,p2,p3,p4};
+			std::array<double, 4> qs{q1,q2,q3,q4};
+
+			for (int i = 0; i < 4; i++)
+			{
+				if(ps[i] < 0) {
+					//t1 = max({0, p[i] / q[i]});
+				}
+				if(ps[i] > 0) {
+					//t2 = min({1, p[i] / q[i]});
+				}
+			}
+			if(t1 > t2) continue;
+
+			//double newX = xinitial + t*dx;
+			//double newY = yinitial + t*dy;
+
+			for(auto& e : {p1,p2,p3,p4}) {
+
+			}
+
+			//Coordinate newCoord(newX, newY);
+
+			//s->setB(newCoord);
+		}
+
+		//windowFile->adiciona(w->transformToWindow(*o, description));
+	}
+}
+
+void cohenSutherland(Object *o1) {
+	int code1[4] = {0,0,0,0};
+	int code2[4] = {0,0,0,0};
 			Straight *s = dynamic_cast<Straight*>(o1);
 			double x1s = s->getA().getX();
 			double x2s = s->getB().getX();
@@ -130,19 +215,19 @@ void updateWindowFile() {
 			} else {
 				code2[INDEX(1)] = 0;
 			}
+			int r1 = LOGICAL_AND_ARRAY(code1, code2);
+			int r2 = IS_DIFFERENT(code1, code2);
 			/* reta está totalmente dentro da window */
 			if(IS_ZERO(code1) && IS_ZERO(code2)) {
 				windowFile->adiciona(s);
 				std::cout << "both inside " << std::endl;
-				continue;
+				return;
 			}
 
-			if(LOGICAL_AND_ARRAY(code1, code2) != 0) {
+			if(r1) {
 				std::cout << "Logical and is not 0" << std::endl;
-				continue;
+				return;
 			}
-			int r1 = LOGICAL_AND_ARRAY(code1, code2);
-			int r2 = IS_DIFFERENT(code1, code2);
 			std::cout << "R1: " << r1 << std::endl;
 			std::cout << "R2: " << r2 << std::endl;
 			if(!r1 && r2) {
@@ -227,7 +312,7 @@ void updateWindowFile() {
 					} //else continue;
 				}
 
-				if (s->getA().getX() == x1s && s->getA().getY() == y1s && s->getB().getX() == x2s && s->getB().getY() == y2s) continue;
+				if (s->getA().getX() == x1s && s->getA().getY() == y1s && s->getB().getX() == x2s && s->getB().getY() == y2s) return;
 
 				//Horizontal:
 				windowFile->adiciona(s);
@@ -235,10 +320,6 @@ void updateWindowFile() {
 			//std::cout << "csz" << std::endl;
 			std::cout << code1[0] << " " << code1[1] << " " << code1[2] << " " << code1[3] << " " << std::endl;
 			std::cout << code2[0] << " " << code2[1] << " " << code2[2] << " " << code2[3] << " " << std::endl;
-		}
-
-		//windowFile->adiciona(w->transformToWindow(*o, description));
-	}
 }
 
 void redraw() {
