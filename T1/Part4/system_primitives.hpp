@@ -123,8 +123,8 @@ void updateWindowFile() {
 			q[2] = y0 - YBOTTOM;
 			q[3] = YTOP - y0;
 			
-			
-			
+
+
 			for(count = 0; count < 4; count++) {
 			    if(p[count] == 0) {
 			        printf("\nLine is parallel\n");
@@ -135,20 +135,20 @@ void updateWindowFile() {
 			                } 
 			                if(y1 > YTOP) {
 			                    y1 = YTOP;
-			                } 
-			                //line(x0, y0, x1, y1);
-			            }
+			                }
+			        	}
 			           	if(count > 1) {
 			                if(x0 < XLEFT){
 			                    x0 = XLEFT;
 			                }
 			                if(x1 > XRIGHT) {
 			                    x1 = XRIGHT;
-			                } 
 			                }
 			            }
+			        }
 			    }
 			}
+
 			tmin = 0;
 			tmax = 1;
 			for(count = 0; count < 4; count++) {
@@ -168,10 +168,12 @@ void updateWindowFile() {
 			    t_x1 = x0 + tmax * p[1];
 			    t_y0 = y0 + tmin * p[3];
 			    t_y1 = y0 + tmax * p[3];
-			    //line(t_x0, t_y0, t_x1, t_y1);
+			    
+			    s->setA(Coordinate(t_x0, t_y0));
+			    s->setB(Coordinate(t_x1, t_y1));
 			}
+			windowFile->adiciona(s);
 		}
-
 		//windowFile->adiciona(w->transformToWindow(*o, description));
 	}
 }
