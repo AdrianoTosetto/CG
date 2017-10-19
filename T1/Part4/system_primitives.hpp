@@ -99,61 +99,77 @@ void updateWindowFile() {
 
 			Straight *s = dynamic_cast<Straight*>(o1);
 			double u = 1;
-			double xinitial = s->getA().getX();
-			double yinitial = s->getA().getY();
+			double x0 = s->getA().getX();
+			double y0 = s->getA().getY();
 
-			double xend     = s->getB().getX();
-			double yend     = s->getB().getY();
+			double x1     = s->getB().getX();
+			double y1     = s->getB().getY();
 
 			// parametric form
 
-			double dx = xend - xinitial;
-			double dy = yend - yinitial;
+			double dx = x1 - x0;
+			double dy = y1 - y0;
 
-			double p1 = -dx;
-			double p2 = dx;
-			double p3 = -dy;
-			double p4 = dy;
+		    int t_x0, t_x1, t_y0, t_y1, count;
+		    double tmin, tmax, p[4], q[4], t;
 
-			double q1 = xinitial- XLEFT;
-			double q2 = XRIGHT - xinitial;
-			double q3 = yinitial - YBOTTOM;
-			double q4 = YTOP - yinitial;
 
-			double r1 = p1 / q1;
-			double r2 = p2 / q2;
-			double r3 = p3 / q3;
-			double r4 = p4 / q4;
-
-			bool entering = false;
-			bool exiting  = false;
-			double t1 = 0;
-			double t2 = 1;
-
-			std::array<double, 4> ps{p1,p2,p3,p4};
-			std::array<double, 4> qs{q1,q2,q3,q4};
-
-			for (int i = 0; i < 4; i++)
-			{
-				if(ps[i] < 0) {
-					//t1 = max({0, p[i] / q[i]});
-				}
-				if(ps[i] > 0) {
-					//t2 = min({1, p[i] / q[i]});
-				}
+			p[0] = -dx;
+			p[1] = dx;
+			p[2] = -dy;
+			p[3] = dy;
+			q[0] = x0 - XLEFT;
+			q[1] = XRIGHT - x0;
+			q[2] = y0 - YBOTTOM;
+			q[3] = YTOP - y0;
+			
+			
+			
+			for(count = 0; count < 4; count++) {
+			    if(p[count] == 0) {
+			        printf("\nLine is parallel\n");
+			        if(q[count] >= 0) {
+			            if(count < 2) {
+			            	if(y0 < YBOTTOM) {
+			                 	y0 = YBOTTOM;
+			                } 
+			                if(y1 > YTOP) {
+			                    y1 = YTOP;
+			                } 
+			                //line(x0, y0, x1, y1);
+			            }
+			           	if(count > 1) {
+			                if(x0 < XLEFT){
+			                    x0 = XLEFT;
+			                }
+			                if(x1 > XRIGHT) {
+			                    x1 = XRIGHT;
+			                } 
+			                }
+			            }
+			    }
 			}
-			if(t1 > t2) continue;
-
-			//double newX = xinitial + t*dx;
-			//double newY = yinitial + t*dy;
-
-			for(auto& e : {p1,p2,p3,p4}) {
-
+			tmin = 0;
+			tmax = 1;
+			for(count = 0; count < 4; count++) {
+			    t = q[count] / p[count]; 
+			    if(p[count] < 0) {
+			        if(tmin <= t) {
+			            tmin = t;
+			        }
+			    } else {
+			        if(tmax > t) {
+			            tmax = t;
+			        }
+			    }
 			}
-
-			//Coordinate newCoord(newX, newY);
-
-			//s->setB(newCoord);
+			if(tmin < tmax) {
+			    t_x0 = x0 + tmin * p[1];
+			    t_x1 = x0 + tmax * p[1];
+			    t_y0 = y0 + tmin * p[3];
+			    t_y1 = y0 + tmax * p[3];
+			    //line(t_x0, t_y0, t_x1, t_y1);
+			}
 		}
 
 		//windowFile->adiciona(w->transformToWindow(*o, description));
