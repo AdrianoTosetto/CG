@@ -99,11 +99,11 @@ void updateWindowFile() {
 
 			Straight *s = dynamic_cast<Straight*>(o1);
 			Coordinate newA, newB;
-			double u = 1;
+			//double u = 1;
 			double x[2], y[2];
 			double x0 = s->getA().getX();
 			double y0 = s->getA().getY();
-			int changed[2] = {0,0};
+			//int changed[2] = {0,0};
 
 			double x1     = s->getB().getX();
 			double y1     = s->getB().getY();
@@ -116,7 +116,7 @@ void updateWindowFile() {
 			double dy = y1 - y0;
 
 		  int count;
-		  double tmin, tmax, p[4], q[4], t[2];
+		  double p[4], q[4], t[2];
 			t[INDEX(2)] = 1;
 			t[INDEX(1)] = 0;
 
@@ -140,6 +140,12 @@ void updateWindowFile() {
 								  if(y1 > YTOP) {
 								  	y1 = YTOP;
 								  }
+									if(y1 < YBOTTOM) {
+									  y1 = YBOTTOM;
+								  }
+								  if(y0 > YTOP) {
+								  	y0 = YTOP;
+								  }
 								//}
 								//if(count > 1) {
 									if(x0 < XLEFT){
@@ -147,6 +153,12 @@ void updateWindowFile() {
 								  }
 								  if(x1 > XRIGHT) {
 								    x1 = XRIGHT;
+								  }
+									if(x1 < XLEFT){
+								  	x1 = XLEFT;
+								  }
+								  if(x0 > XRIGHT) {
+								    x0 = XRIGHT;
 								  }
 								//}
 								newA = Coordinate(x0, y0);
@@ -160,14 +172,14 @@ void updateWindowFile() {
 				if(p[count] < 0) {
 					if(q[count]/p[count] >= t[0]) {
 						t[INDEX(1)] = q[count]/p[count];
-						changed[INDEX(1)] = 1;
+						//changed[INDEX(1)] = 1;
 						std::cout << "mudou 1" << std::endl;
 					}
 				}
 				if(p[count] > 0) {
 					if(q[count]/p[count] <= t[1]) {
 						t[INDEX(2)] = q[count]/p[count];
-						changed[INDEX(2)] = 1;
+						//changed[INDEX(2)] = 1;
 						std::cout << "mudou 2" << std::endl;
 					}
 				}
