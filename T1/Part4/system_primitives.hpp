@@ -95,23 +95,30 @@ void updateWindowFile() {
 		}
 
 		if(o->getType() == TSTRAIGHT) {
-			
+
 
 			Straight *s = dynamic_cast<Straight*>(o1);
+			Coordinate newA, newB;
 			double u = 1;
+			double x[2], y[2];
 			double x0 = s->getA().getX();
 			double y0 = s->getA().getY();
+			int changed[2] = {0,0};
 
 			double x1     = s->getB().getX();
 			double y1     = s->getB().getY();
 
 			// parametric form
 
+			double nx, ny;
+
 			double dx = x1 - x0;
 			double dy = y1 - y0;
 
-		    int t_x0, t_x1, t_y0, t_y1, count;
-		    double tmin, tmax, p[4], q[4], t;
+		  int count;
+		  double tmin, tmax, p[4], q[4], t[2];
+			t[INDEX(2)] = 1;
+			t[INDEX(1)] = 0;
 
 
 			p[0] = -dx;
@@ -122,57 +129,62 @@ void updateWindowFile() {
 			q[1] = XRIGHT - x0;
 			q[2] = y0 - YBOTTOM;
 			q[3] = YTOP - y0;
-			
-
 
 			for(count = 0; count < 4; count++) {
 			    if(p[count] == 0) {
-			        printf("\nLine is parallel\n");
 			        if(q[count] >= 0) {
-			            if(count < 2) {
-			            	if(y0 < YBOTTOM) {
-			                 	y0 = YBOTTOM;
-			                } 
-			                if(y1 > YTOP) {
-			                    y1 = YTOP;
-			                }
-			        	}
-			           	if(count > 1) {
-			                if(x0 < XLEFT){
-			                    x0 = XLEFT;
-			                }
-			                if(x1 > XRIGHT) {
-			                    x1 = XRIGHT;
-			                }
-			            }
+								//if(count < 2) {
+									if(y0 < YBOTTOM) {
+									  y0 = YBOTTOM;
+								  }
+								  if(y1 > YTOP) {
+								  	y1 = YTOP;
+								  }
+								//}
+								//if(count > 1) {
+									if(x0 < XLEFT){
+								  	x0 = XLEFT;
+								  }
+								  if(x1 > XRIGHT) {
+								    x1 = XRIGHT;
+								  }
+								//}
+								newA = Coordinate(x0, y0);
+								newB = Coordinate(x1, y1);
+								goto parallel;
 			        }
+							goto outside;
 			    }
 			}
-
-			tmin = 0;
-			tmax = 1;
 			for(count = 0; count < 4; count++) {
-			    t = q[count] / p[count]; 
-			    if(p[count] < 0) {
-			        if(tmin <= t) {
-			            tmin = t;
-			        }
-			    } else {
-			        if(tmax > t) {
-			            tmax = t;
-			        }
-			    }
+				if(p[count] < 0) {
+					if(q[count]/p[count] >= t[0]) {
+						t[INDEX(1)] = q[count]/p[count];
+						changed[INDEX(1)] = 1;
+						std::cout << "mudou 1" << std::endl;
+					}
+				}
+				if(p[count] > 0) {
+					if(q[count]/p[count] <= t[1]) {
+						t[INDEX(2)] = q[count]/p[count];
+						changed[INDEX(2)] = 1;
+						std::cout << "mudou 2" << std::endl;
+					}
+				}
 			}
-			if(tmin < tmax) {
-			    t_x0 = x0 + tmin * p[1];
-			    t_x1 = x0 + tmax * p[1];
-			    t_y0 = y0 + tmin * p[3];
-			    t_y1 = y0 + tmax * p[3];
-			    
-			    s->setA(Coordinate(t_x0, t_y0));
-			    s->setB(Coordinate(t_x1, t_y1));
-			}
-			windowFile->adiciona(s);
+			if (t[INDEX(1)] > t[INDEX(2)]) goto outside;
+			nx = x0 + t[INDEX(1)]*dx;
+			ny = y0 + t[INDEX(1)]*dy;
+			newA = Coordinate(nx, ny);
+			nx = x0 + t[INDEX(2)]*dx;
+			ny = y0 + t[INDEX(2)]*dy;
+			newB = Coordinate(nx, ny);
+			parallel:
+				s->setA(newA);
+				s->setB(newB);
+				windowFile->adiciona(s);
+			outside:
+				continue;
 		}
 		//windowFile->adiciona(w->transformToWindow(*o, description));
 	}
