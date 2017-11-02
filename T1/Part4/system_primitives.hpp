@@ -9,9 +9,12 @@
 #include <float.h>
 #include <array>
 
-void cohenSutherland(Object *o1);
-void liangBarsky(Object *o1);
-void weilerAtherton(Object *o1);
+bool cohenSutherland(Straight *s);
+bool liangBarsky(Straight *s);
+bool sutherlandHodgmanBottom(Polygon *p);
+bool sutherlandHodgmanTop(Polygon *p);
+bool sutherlandHodgmanRight(Polygon *p);
+bool sutherlandHodgmanLeft(Polygon *p);
 double max(std::array<double, 4> list, int size) {
 	double max = list[0];
 	for(int i = 1; i < size; i++)
@@ -95,18 +98,22 @@ void updateWindowFile() {
 		}
 
 		if(o->getType() == TSTRAIGHT) {
-			liangBarsky(o1);
+			Straight *s = dynamic_cast<Straight*>(o1);
+			if (liangBarsky(s))
+				windowFile->adiciona(s);
 		}
 		if(o->getType() == TPOLYGON) {
-			//Polygon* po = dynamic_cast<Polygon*>(o1);
-			//windowFile->adiciona(po);
-			weilerAtherton(o1);
+			Polygon *p = dynamic_cast<Polygon*>(o1);
+			sutherlandHodgmanBottom(p);
+			sutherlandHodgmanTop(p);
+			sutherlandHodgmanRight(p);
+			if (sutherlandHodgmanLeft(p))
+				windowFile->adiciona(p);
 		}
 	}
 }
 
-void liangBarsky(Object *o1) {
-	Straight *s = dynamic_cast<Straight*>(o1);
+bool liangBarsky(Straight *s) {
 	Coordinate newA, newB;
 	//double u = 1;
 	double x[2], y[2];
@@ -199,15 +206,320 @@ void liangBarsky(Object *o1) {
 	parallel:
 		s->setA(newA);
 		s->setB(newB);
-		windowFile->adiciona(s);
+		return true;
+		//windowFile->adiciona(s);
 	outside:
-		return;
+		return false;
 }
 
-void cohenSutherland(Object *o1) {
+bool liangBarskyBottom(Straight *s) {
+	Coordinate newA, newB;
+	//double u = 1;
+	double x[2], y[2];
+	double x0 = s->getA().getX();
+	double y0 = s->getA().getY();
+	//int changed[2] = {0,0};
+
+	double x1     = s->getB().getX();
+	double y1     = s->getB().getY();
+
+	// parametric form
+
+	double nx, ny;
+
+	double dx = x1 - x0;
+	double dy = y1 - y0;
+
+	int count;
+	double p[4], q[4], t[2];
+	t[INDEX(2)] = 1;
+	t[INDEX(1)] = 0;
+
+
+	p[0] = -dx;
+	p[1] = dx;
+	p[2] = -dy;
+	p[3] = dy;
+	q[0] = x0 - XLEFT;
+	q[1] = XRIGHT - x0;
+	q[2] = y0 - YBOTTOM;
+	q[3] = YTOP - y0;
+
+	for(count = 0; count < 4; count++) {
+			if(p[count] == 0) {
+					if(q[count] >= 0) {
+							if(y0 <= YBOTTOM) {
+								y0 = YBOTTOM;
+							}
+							if(y1 <= YBOTTOM) {
+								y1 = YBOTTOM;
+							}
+						newA = Coordinate(x0, y0);
+						newB = Coordinate(x1, y1);
+						goto parallel;
+					}
+					goto outside;
+			}
+	}
+	for(count = 2; count < 3; count++) {
+		if(p[count] < 0) {
+			if(q[count]/p[count] >= t[0]) {
+				t[INDEX(1)] = q[count]/p[count];
+			}
+		}
+		if(p[count] > 0) {
+			if(q[count]/p[count] <= t[1]) {
+				t[INDEX(2)] = q[count]/p[count];
+			}
+		}
+	}
+	if (t[INDEX(1)] > t[INDEX(2)]) goto outside;
+	nx = x0 + t[INDEX(1)]*dx;
+	ny = y0 + t[INDEX(1)]*dy;
+	newA = Coordinate(nx, ny);
+	nx = x0 + t[INDEX(2)]*dx;
+	ny = y0 + t[INDEX(2)]*dy;
+	newB = Coordinate(nx, ny);
+	parallel:
+		s->setA(newA);
+		s->setB(newB);
+		return true;
+	outside:
+		return false;
+}
+
+bool liangBarskyTop(Straight *s) {
+	Coordinate newA, newB;
+	//double u = 1;
+	double x[2], y[2];
+	double x0 = s->getA().getX();
+	double y0 = s->getA().getY();
+	//int changed[2] = {0,0};
+
+	double x1     = s->getB().getX();
+	double y1     = s->getB().getY();
+
+	// parametric form
+
+	double nx, ny;
+
+	double dx = x1 - x0;
+	double dy = y1 - y0;
+
+	int count;
+	double p[4], q[4], t[2];
+	t[INDEX(2)] = 1;
+	t[INDEX(1)] = 0;
+
+
+	p[0] = -dx;
+	p[1] = dx;
+	p[2] = -dy;
+	p[3] = dy;
+	q[0] = x0 - XLEFT;
+	q[1] = XRIGHT - x0;
+	q[2] = y0 - YBOTTOM;
+	q[3] = YTOP - y0;
+
+	for(count = 0; count < 4; count++) {
+			if(p[count] == 0) {
+					if(q[count] >= 0) {
+							if(y1 >= YTOP) {
+								y1 = YTOP;
+							}
+							if(y0 >= YTOP) {
+								y0 = YTOP;
+							}
+						newA = Coordinate(x0, y0);
+						newB = Coordinate(x1, y1);
+						goto parallel;
+					}
+					goto outside;
+			}
+	}
+	for(count = 3; count < 4; count++) {
+		if(p[count] < 0) {
+			if(q[count]/p[count] >= t[0]) {
+				t[INDEX(1)] = q[count]/p[count];
+			}
+		}
+		if(p[count] > 0) {
+			if(q[count]/p[count] <= t[1]) {
+				t[INDEX(2)] = q[count]/p[count];
+			}
+		}
+	}
+	if (t[INDEX(1)] > t[INDEX(2)]) goto outside;
+	nx = x0 + t[INDEX(1)]*dx;
+	ny = y0 + t[INDEX(1)]*dy;
+	newA = Coordinate(nx, ny);
+	nx = x0 + t[INDEX(2)]*dx;
+	ny = y0 + t[INDEX(2)]*dy;
+	newB = Coordinate(nx, ny);
+	parallel:
+		s->setA(newA);
+		s->setB(newB);
+		return true;
+	outside:
+		return false;
+}
+
+bool liangBarskyRight(Straight *s) {
+	Coordinate newA, newB;
+	//double u = 1;
+	double x[2], y[2];
+	double x0 = s->getA().getX();
+	double y0 = s->getA().getY();
+	//int changed[2] = {0,0};
+
+	double x1     = s->getB().getX();
+	double y1     = s->getB().getY();
+
+	// parametric form
+
+	double nx, ny;
+
+	double dx = x1 - x0;
+	double dy = y1 - y0;
+
+	int count;
+	double p[4], q[4], t[2];
+	t[INDEX(2)] = 1;
+	t[INDEX(1)] = 0;
+
+
+	p[0] = -dx;
+	p[1] = dx;
+	p[2] = -dy;
+	p[3] = dy;
+	q[0] = x0 - XLEFT;
+	q[1] = XRIGHT - x0;
+	q[2] = y0 - YBOTTOM;
+	q[3] = YTOP - y0;
+
+	for(count = 0; count < 4; count++) {
+			if(p[count] == 0) {
+					if(q[count] >= 0) {
+							if(x1 >= XRIGHT) {
+								x1 = XRIGHT;
+							}
+							if(x0 >= XRIGHT) {
+								x0 = XRIGHT;
+							}
+						newA = Coordinate(x0, y0);
+						newB = Coordinate(x1, y1);
+						goto parallel;
+					}
+					goto outside;
+			}
+	}
+	for(count = 1; count < 2; count++) {
+		if(p[count] < 0) {
+			if(q[count]/p[count] >= t[0]) {
+				t[INDEX(1)] = q[count]/p[count];
+			}
+		}
+		if(p[count] > 0) {
+			if(q[count]/p[count] <= t[1]) {
+				t[INDEX(2)] = q[count]/p[count];
+			}
+		}
+	}
+	if (t[INDEX(1)] > t[INDEX(2)]) goto outside;
+	nx = x0 + t[INDEX(1)]*dx;
+	ny = y0 + t[INDEX(1)]*dy;
+	newA = Coordinate(nx, ny);
+	nx = x0 + t[INDEX(2)]*dx;
+	ny = y0 + t[INDEX(2)]*dy;
+	newB = Coordinate(nx, ny);
+	parallel:
+		s->setA(newA);
+		s->setB(newB);
+		return true;
+	outside:
+		return false;
+}
+
+bool liangBarskyLeft(Straight *s) {
+	Coordinate newA, newB;
+	//double u = 1;
+	double x[2], y[2];
+	double x0 = s->getA().getX();
+	double y0 = s->getA().getY();
+	//int changed[2] = {0,0};
+
+	double x1     = s->getB().getX();
+	double y1     = s->getB().getY();
+
+	// parametric form
+
+	double nx, ny;
+
+	double dx = x1 - x0;
+	double dy = y1 - y0;
+
+	int count;
+	double p[4], q[4], t[2];
+	t[INDEX(2)] = 1;
+	t[INDEX(1)] = 0;
+
+
+	p[0] = -dx;
+	p[1] = dx;
+	p[2] = -dy;
+	p[3] = dy;
+	q[0] = x0 - XLEFT;
+	q[1] = XRIGHT - x0;
+	q[2] = y0 - YBOTTOM;
+	q[3] = YTOP - y0;
+
+	for(count = 0; count < 4; count++) {
+			if(p[count] == 0) {
+					if(q[count] >= 0) {
+							if(x0 <= XLEFT){
+								x0 = XLEFT;
+							}
+							if(x1 <= XLEFT){
+								x1 = XLEFT;
+							}
+						newA = Coordinate(x0, y0);
+						newB = Coordinate(x1, y1);
+						goto parallel;
+					}
+					goto outside;
+			}
+	}
+	for(count = 0; count < 1; count++) {
+		if(p[count] < 0) {
+			if(q[count]/p[count] >= t[0]) {
+				t[INDEX(1)] = q[count]/p[count];
+			}
+		}
+		if(p[count] > 0) {
+			if(q[count]/p[count] <= t[1]) {
+				t[INDEX(2)] = q[count]/p[count];
+			}
+		}
+	}
+	if (t[INDEX(1)] > t[INDEX(2)]) goto outside;
+	nx = x0 + t[INDEX(1)]*dx;
+	ny = y0 + t[INDEX(1)]*dy;
+	newA = Coordinate(nx, ny);
+	nx = x0 + t[INDEX(2)]*dx;
+	ny = y0 + t[INDEX(2)]*dy;
+	newB = Coordinate(nx, ny);
+	parallel:
+		s->setA(newA);
+		s->setB(newB);
+		return true;
+		//windowFile->adiciona(s);
+	outside:
+		return false;
+}
+
+bool cohenSutherland(Straight *s) {
 	int code1[4] = {0,0,0,0};
 	int code2[4] = {0,0,0,0};
-			Straight *s = dynamic_cast<Straight*>(o1);
 			double x1s = s->getA().getX();
 			double x2s = s->getB().getX();
 
@@ -261,12 +573,12 @@ void cohenSutherland(Object *o1) {
 			int r2 = IS_DIFFERENT(code1, code2);
 			/* reta está totalmente dentro da window */
 			if(IS_ZERO(code1) && IS_ZERO(code2)) {
-				windowFile->adiciona(s);
-				return;
+				//windowFile->adiciona(s);
+				return true;
 			}
 
 			if(r1) {
-				return;
+				return false;
 			}
 			if(!r1 && r2) {
 				double m = (y2s - y1s) / (x2s - x1s);
@@ -332,178 +644,75 @@ void cohenSutherland(Object *o1) {
 					}
 				}
 
-				if (s->getA().getX() == x1s && s->getA().getY() == y1s && s->getB().getX() == x2s && s->getB().getY() == y2s) return;
+				if (s->getA().getX() == x1s && s->getA().getY() == y1s && s->getB().getX() == x2s && s->getB().getY() == y2s) return false;
 
-				//Horizontal:
-				windowFile->adiciona(s);
+				return true;
+				//windowFile->adiciona(s);
 			}
 }
 
-void weilerAtherton(Object *o1) {
-	Polygon *p = dynamic_cast<Polygon*>(o1);
-	int codeSide[4] = {0,0,0,0};
-	std::vector<Coordinate> oldCoords = p->getCoordinates();
-	std::vector<Coordinate> newCoords;
-	auto it = oldCoords.begin();
+bool sutherlandHodgmanBottom(Polygon *p) {
+    std::vector<Coordinate> oldCoords = p->getCoordinates();
+    std::vector<Coordinate> newCoords;
+    for(int i = 0; i < oldCoords.size(); i++) {
+        Coordinate tempA(oldCoords[i].getX(), oldCoords[i].getY());
+        Coordinate tempB(oldCoords[(i+1) % oldCoords.size()].getX(), oldCoords[(i+1) % oldCoords.size()].getY());
+        Straight *temp = new Straight(tempA, tempB);
+        if(liangBarskyBottom(temp)) {
+            newCoords.push_back(temp->getA());
+            newCoords.push_back(temp->getB());
+        }
+    }
+    p->setCoordinates(newCoords);
+    return (!newCoords.empty());
+}
 
-	for(; it != oldCoords.end(); ++it) {
-		Coordinate tempCoord = *it;
-		if(IS_POINT_INSIDE(tempCoord))
-			newCoords.push_back(tempCoord);
-			Coordinate clipped;
-			if(!IS_ZERO(codeSide)) {
-				double y1s = (it-1)->getY();
-				double y2s = it->getY();
-				double x1s = (it-1)->getX();
-				double x2s = it->getX();
-				double m = (y2s - y1s) / (x2s - x1s);
-				double intersection;
+bool sutherlandHodgmanTop(Polygon *p) {
+    std::vector<Coordinate> oldCoords = p->getCoordinates();
+    std::vector<Coordinate> newCoords;
+    for(int i = 0; i < oldCoords.size(); i++) {
+        Coordinate tempA(oldCoords[i].getX(), oldCoords[i].getY());
+        Coordinate tempB(oldCoords[(i+1) % oldCoords.size()].getX(), oldCoords[(i+1) % oldCoords.size()].getY());
+        Straight *temp = new Straight(tempA, tempB);
+        if(liangBarskyTop(temp)) {
+            newCoords.push_back(temp->getA());
+            newCoords.push_back(temp->getB());
+        }
+    }
+    p->setCoordinates(newCoords);
+    return (!newCoords.empty());
+}
 
-				if((it-1)->getX() >= XRIGHT) {
-					intersection = m*(XRIGHT - x1s) + y1s;
-					if ((intersection > -0.8) && (intersection < 0.8)) {
-						Coordinate clipped(XRIGHT, intersection);
-					}
-				}
-				if(it->getX() >= XRIGHT) {
-					intersection = m*(XRIGHT - x2s) + y2s;
-					if ((intersection > -0.8) && (intersection < 0.8)) {
-						Coordinate clipped(XRIGHT, intersection);
-					}
-				}
+bool sutherlandHodgmanRight(Polygon *p) {
+    std::vector<Coordinate> oldCoords = p->getCoordinates();
+    std::vector<Coordinate> newCoords;
+    for(int i = 0; i < oldCoords.size(); i++) {
+        Coordinate tempA(oldCoords[i].getX(), oldCoords[i].getY());
+        Coordinate tempB(oldCoords[(i+1) % oldCoords.size()].getX(), oldCoords[(i+1) % oldCoords.size()].getY());
+        Straight *temp = new Straight(tempA, tempB);
+        if(liangBarskyRight(temp)) {
+            newCoords.push_back(temp->getA());
+            newCoords.push_back(temp->getB());
+        }
+    }
+    p->setCoordinates(newCoords);
+    return (!newCoords.empty());
+}
 
-				if((it-1)->getX() <= XLEFT) {
-					intersection = m*(XLEFT - x1s) + y1s;
-					if ((intersection > -0.8) && (intersection < 0.8)) {
-						Coordinate clipped(XLEFT, intersection);
-					}
-				}
-				if(it->getX() <= XLEFT) {
-					intersection = m*(XLEFT - x2s) + y2s;
-					if ((intersection >= -0.8) && (intersection <= 0.8)) {
-						Coordinate clipped(XLEFT, intersection);
-					}
-				}
-				if((it-1)->getY() >= YTOP) {
-					intersection = x1s + (1/m) * (YTOP-y1s);
-					if ((intersection >= -0.8) && (intersection <= 0.8)) {
-						Coordinate clipped(intersection, YTOP);
-					}
-				}
-
-				if(it->getY() >= YTOP) {
-					intersection = x2s + (1/m) * (YTOP-y2s);
-					if ((intersection >= -0.8) && (intersection <= 0.8)) {
-						Coordinate clipped(intersection, YTOP);
-					}
-				}
-
-				if((it-1)->getY() <= YBOTTOM) {
-					intersection = x1s + (1/m) * (YBOTTOM-y1s);
-					if ((intersection >= -0.8) && (intersection <= 0.8)) {
-						Coordinate clipped(intersection, YBOTTOM);
-					}
-				}
-				if(it->getX() <= YBOTTOM) {
-					intersection = x2s + (1/m) * (YBOTTOM-y2s);
-					if ((intersection >= -0.8) && (intersection <= 0.8)) {
-						Coordinate clipped(intersection, YBOTTOM);
-					}
-				}
-				newCoords.push_back(clipped);
-				codeSide[0] = 0;
-				codeSide[1] = 0;
-				codeSide[2] = 0;
-				codeSide[3] = 0;
-			}
-		else {
-			double y1s = (it-1)->getY();
-			double y2s = it->getY();
-			double x1s = (it-1)->getX();
-			double x2s = it->getX();
-			double m = (y2s - y1s) / (x2s - x1s);
-			double intersection;
-
-			if((it-1)->getX() >= XRIGHT) {
-				intersection = m*(XRIGHT - x1s) + y1s;
-				if ((intersection > -0.8) && (intersection < 0.8)) {
-					Coordinate clipped(XRIGHT, intersection);
-				}
-				codeSide[2] = 1;
-			}
-			if(it->getX() >= XRIGHT) {
-				intersection = m*(XRIGHT - x2s) + y2s;
-				if ((intersection > -0.8) && (intersection < 0.8)) {
-					Coordinate clipped(XRIGHT, intersection);
-				}
-				codeSide[2] = 1;
-			}
-
-			if((it-1)->getX() <= XLEFT) {
-				intersection = m*(XLEFT - x1s) + y1s;
-				if ((intersection > -0.8) && (intersection < 0.8)) {
-					Coordinate clipped(XLEFT, intersection);
-				}
-				codeSide[3] = 1;
-			}
-			if(it->getX() <= XLEFT) {
-				intersection = m*(XLEFT - x2s) + y2s;
-				if ((intersection >= -0.8) && (intersection <= 0.8)) {
-					Coordinate clipped(XLEFT, intersection);
-				}
-				codeSide[3] = 1;
-			}
-			if((it-1)->getY() >= YTOP) {
-				intersection = x1s + (1/m) * (YTOP-y1s);
-				if ((intersection >= -0.8) && (intersection <= 0.8)) {
-					Coordinate clipped(intersection, YTOP);
-				}
-				codeSide[0] = 1;
-			}
-
-			if(it->getY() >= YTOP) {
-				intersection = x2s + (1/m) * (YTOP-y2s);
-				if ((intersection >= -0.8) && (intersection <= 0.8)) {
-					Coordinate clipped(intersection, YTOP);
-				}
-				codeSide[0] = 1;
-			}
-
-			if((it-1)->getY() <= YBOTTOM) {
-				intersection = x1s + (1/m) * (YBOTTOM-y1s);
-				if ((intersection >= -0.8) && (intersection <= 0.8)) {
-					Coordinate clipped(intersection, YBOTTOM);
-				}
-				codeSide[1] = 1;
-			}
-			if(it->getX() <= YBOTTOM) {
-				intersection = x2s + (1/m) * (YBOTTOM-y2s);
-				if ((intersection >= -0.8) && (intersection <= 0.8)) {
-					Coordinate clipped(intersection, YBOTTOM);
-				}
-				codeSide[1] = 1;
-			}
-			newCoords.push_back(clipped);
-			if (codeSide[1] && codeSide[3]) {
-				Coordinate corner(XLEFT, YBOTTOM);
-				newCoords.push_back(corner);
-			}
-			if (codeSide[1] && codeSide[2]) {
-				Coordinate corner(XRIGHT, YBOTTOM);
-				newCoords.push_back(corner);
-			}
-			if (codeSide[0] && codeSide[3]) {
-				Coordinate corner(XLEFT, YTOP);
-				newCoords.push_back(corner);
-			}
-			if (codeSide[0] && codeSide[2]) {
-				Coordinate corner(XRIGHT, YTOP);
-				newCoords.push_back(corner);
-			}
-		}
-	}
-	Polygon *np = new Polygon(p->getName(), p->getId(), newCoords, p->getFill());
-	windowFile->adiciona(np);
+bool sutherlandHodgmanLeft(Polygon *p) {
+    std::vector<Coordinate> oldCoords = p->getCoordinates();
+    std::vector<Coordinate> newCoords;
+    for(int i = 0; i < oldCoords.size(); i++) {
+        Coordinate tempA(oldCoords[i].getX(), oldCoords[i].getY());
+        Coordinate tempB(oldCoords[(i+1) % oldCoords.size()].getX(), oldCoords[(i+1) % oldCoords.size()].getY());
+        Straight *temp = new Straight(tempA, tempB);
+        if(liangBarskyLeft(temp)) {
+            newCoords.push_back(temp->getA());
+            newCoords.push_back(temp->getB());
+        }
+    }
+    p->setCoordinates(newCoords);
+    return (!newCoords.empty());
 }
 
 void redraw() {
