@@ -81,10 +81,9 @@ void updateWindowFile() {
 	//bool toAdd = true;
 	//int codeZERO[4] = {0,0,0,0};
 
-	for(int i = 0; i < displayFile->getSize(); i++) {
-		Object *o = displayFile->consultaDaPosicao(i);
-		Object *o1 = w->transformToWindow(*o, description);
-		if(o->getType() == TPOINT) {
+	for(Elemento<Object*> *o = displayFile->getHead(); o != NULL; o = o->getProximo()) {
+		Object *o1 = w->transformToWindow(*o->getInfo(), description);
+		if(o->getInfo()->getType() == TPOINT) {
 
 			Point2D* po = dynamic_cast<Point2D*>(o1);
 
@@ -94,7 +93,7 @@ void updateWindowFile() {
 			}
 		}
 
-		if(o->getType() == TSTRAIGHT) {
+		if(o->getInfo()->getType() == TSTRAIGHT) {
 
 
 			Straight *s = dynamic_cast<Straight*>(o1);
@@ -197,6 +196,8 @@ void updateWindowFile() {
 				windowFile->adiciona(s);
 			outside:
 				continue;
+
+			o = o->getProximo();
 		}
 
 
