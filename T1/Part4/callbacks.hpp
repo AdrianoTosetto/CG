@@ -53,8 +53,6 @@ void c_addStraight() {
 	Straight *toAdd = new Straight(straightCoordA, straightCoordB, objectID, nameEntry);
 	Straight *toAddW = dynamic_cast<Straight*>(w->transformToWindow(*toAdd, description));
 
-	//std::cout << toAddW->getType() << std::endl;
-
 	displayFile->adiciona(toAdd);
 	windowFile->adiciona(toAddW);
 	redraw();
@@ -70,24 +68,22 @@ void c_addPolygonName() {
 	if (nameEntry == "") return;
 
 	pollyName = nameEntry;
-	std::cout << pollyName << std::endl;
 
 	gtk_widget_hide(GET_OBJ(builder, ADD_POLYGON_NAME_DIALOG));
 	gtk_dialog_run(GTK_DIALOG(GET_OBJ(builder, ADD_POLYGON_COORDINATE_DIALOG)));
 }
 void c_addPolygonCoordinate() {
 	double coordX = SPIN_GET_VALUE(builder, POLYGON_X_SPIN);
-	double coordY = SPIN_GET_VALUE(builder, POLYGON_X_SPIN);
+	double coordY = SPIN_GET_VALUE(builder, POLYGON_Y_SPIN);
 
 	Coordinate *newCoord = new Coordinate(coordX, coordY);
 
 	pollyVector.push_back(*newCoord);
-	std::cout << pollyVector.size() << std::endl;
 }
 void c_finishPolygon() {
-	Polygon *p = new Polygon(pollyName, objectID, pollyVector);
+	Polygon *p = new Polygon(pollyName, objectID, pollyVector, CHECK_GET_VALUE(builder, POLYGON_FILL_BOOL));
+	//std::cout << CHECK_GET_VALUE(builder, POLYGON_FILL_BOOL) << std::endl;
 	Polygon *pw = dynamic_cast<Polygon*>(w->transformToWindow(*p, description));
-
 	if(p->getCoordinates().begin() == p->getCoordinates().end()) return;
 
 	displayFile->adiciona(dynamic_cast<Object*>(p));
