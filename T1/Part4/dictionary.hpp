@@ -1,9 +1,10 @@
 #ifndef DICTIONARY_HPP
 #define DICTIONARY_HPP
 
-#define GET_OBJ(builder, name) GTK_WIDGET(gtk_builder_get_object(builder, name))
+#define GET_OBJ(BUILDER, NAME) GTK_WIDGET(gtk_builder_get_object(BUILDER, NAME))
 #define SPIN_GET_VALUE(BUILDER, ID) gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(BUILDER, ID))))
 #define ENTRY_GET_TEXT(BUILDER, ID) gtk_entry_get_text(GTK_ENTRY(GTK_WIDGET(gtk_builder_get_object(BUILDER, ID))))
+#define CHECK_GET_VALUE(BUILDER, ID) gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(GTK_WIDGET(gtk_builder_get_object(BUILDER, ID))))
 
 #define ADD_OBJECT_DIALOG "dialog3"
 #define ADD_POINT_DIALOG "dialog1"
@@ -25,6 +26,7 @@
 #define STRAIGHT_B_Y_SPIN "spinbutton11"
 #define POLYGON_X_SPIN "spinbutton12"
 #define POLYGON_Y_SPIN "spinbutton13"
+#define POLYGON_FILL_BOOL "checkbutton1"
 #define REMOVE_ID_SPIN "spinbutton14"
 #define ROTATE_ID_SPIN "spinIDRotate"
 #define ROTATE_DEGREES_SPIN "spinDegreesRotate"

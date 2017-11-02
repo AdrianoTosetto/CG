@@ -73,6 +73,7 @@ class Viewport {
         int thisX = it->getX();
         int thisY = it->getY();
         c = cairo_create(surface);
+        cairo_set_source_rgb(c, 0, 0, 0);
         cairo_move_to(c,thisX, thisY);
 
         for(; it != coordsVec.end(); ++it) {
@@ -82,7 +83,7 @@ class Viewport {
         }
 
         cairo_close_path (c);
-
+        if (polygon->getFill()) cairo_fill (c);
         cairo_stroke(c);
     }
 };
