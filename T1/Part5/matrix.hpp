@@ -46,6 +46,15 @@ public:
 		}
 		return *this = m;
 	}
+	Matrix& operator*=(double scalar) {
+		Matrix m{this->rows, this->cols};
+		for (int i = 0; i < this->rows; ++i) {
+			for (int j = 0; j < this->cols; ++j) {
+				double res = this->getValue(i, j) * scalar;
+			}
+		}
+		return *this = m;
+	}
 	static Matrix identidade(int n) {
 		Matrix m(n,n);
 		for(int i = 0; i < n;i++) {
@@ -69,6 +78,11 @@ private:
 inline Matrix operator*(Matrix a, const Matrix& b) {
  	return a *= b;
 }
+
+inline Matrix operator*(Matrix a, double v) {
+ 	return a *= v;
+}
+
 
 #endif
 
