@@ -12,11 +12,11 @@ Window::Window(Coordinate _origin, Coordinate _limit, Vector _vaxis, Vector _uax
 
 }
 Window::Window (GtkBuilder* builder, Coordinate _origin, Coordinate _limit, Vector _vaxis,Vector _uaxis,
-	              GtkWidget* window_widget, GtkWidget* drawing_area) : origin(_origin), limit(_limit), vaxis(_vaxis), uaxis(_uaxis), 
+	              GtkWidget* window_widget, GtkWidget* drawing_area) : origin(_origin), limit(_limit), vaxis(_vaxis), uaxis(_uaxis),
 																	   worigin(-1,-1), wlimit(1,1) {
 }
 Window::~Window() {
-	
+
 }
 
 Coordinate Window::getOrigin() {
@@ -127,7 +127,7 @@ Matrix Window::generateDescription() {
 }
 Object* Window::transformToWindow(Object& o, Matrix result){
 	Matrix oldC(1,3);
-	Matrix newC(1,3); 
+	Matrix newC(1,3);
 	Coordinate coorda, coordb;
 	oldC.setValue(0,2,1);
 
@@ -136,7 +136,7 @@ Object* Window::transformToWindow(Object& o, Matrix result){
 			Point2D &p = dynamic_cast<Point2D&>(o);
 			oldC.setValue(0,0, p.getCoordinate().getX());
 			oldC.setValue(0,1, p.getCoordinate().getY());
-			
+
 			newC = oldC * result;
 
 			coorda.setX(newC.getValue(0,0));
@@ -170,7 +170,7 @@ Object* Window::transformToWindow(Object& o, Matrix result){
 		case TPOLYGON: {
 			Polygon &p = dynamic_cast<Polygon&>(o);
 			std::vector<Coordinate> pcoords = p.getCoordinates();
-			std::vector<Coordinate> newPCoords;	
+			std::vector<Coordinate> newPCoords;
 			oldC.setValue(0,2,1);
 			for(auto it = pcoords.begin(); it != pcoords.end(); it++) {
 				oldC.setValue(0,0, it->getX());
@@ -183,7 +183,7 @@ Object* Window::transformToWindow(Object& o, Matrix result){
 
 				newPCoords.push_back(coorda);
 			}
-			Polygon* newP = new Polygon(o.getName(), o.getId(), newPCoords);
+			Polygon* newP = new Polygon(o.getName(), o.getId(), newPCoords, p.getFill());
 			return dynamic_cast<Object*>(newP);
 		}
 		default:

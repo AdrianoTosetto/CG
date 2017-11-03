@@ -106,6 +106,9 @@ extern "C" {
 	void addPolygonDialog() {
     dialogOpenAndClose(ADD_POLYGON_NAME_DIALOG, ADD_OBJECT_DIALOG);
 	}
+  void addBSplineDialog() {
+    dialogOpenAndClose(ADD_BSPLINE_NAME_DIALOG, ADD_OBJECT_DIALOG);
+	}
 
 	void addPoint() {
 		c_addPoint();
@@ -121,6 +124,15 @@ extern "C" {
 	}
 	void finishPolygon() {
 		c_finishPolygon();
+	}
+  void addBSplineName() {
+		c_addBSplineName();
+	}
+	void addBSplineCoordinate() {
+		c_addBSplineCoordinate();
+	}
+	void finishBSpline() {
+		c_finishBSpline();
 	}
 
 	void removeObjectDialog() {

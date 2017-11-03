@@ -4,8 +4,9 @@
 #include "Object.h"
 #include "matrix.hpp"
 #include <vector>
+//#include "globals.hpp"
 
-matrix Mbs(4,4);
+Matrix Mbs(4,4);
 
 void initMbs() {
 	Mbs.setValue(0,0, 0);
@@ -37,38 +38,52 @@ class BSpline : public Object{
  		initMbs();
  	}
 
- 	Matrix getGBS(int i) {
- 		if(i < 3)
- 			#error vai tomar no cu mano
+	std::vector<Coordinate> getCoordinates() {
+ 		return this->ctrlCoordinates;
+ 	}
+ 	void setCoordinates(std::vector<Coordinate> coordinates) {
+ 		this->ctrlCoordinates = coordinates;
+ 	}
+
+ 	Matrix getGBSX(int i) {
 
  		Matrix ret(4, 1);
 
- 		ret.setValue(0,0, ctrlCoordinates[i]);
- 		ret.setValue(1,0, ctrlCoordinates[i+1]);
- 		ret.setValue(2,0, ctrlCoordinates[i+2]);
- 		ret.setValue(3,0, ctrlCoordinates[i+3]);
+ 		ret.setValue(0,0, ctrlCoordinates[i].getX());
+ 		ret.setValue(1,0, ctrlCoordinates[i+1].getX());
+ 		ret.setValue(2,0, ctrlCoordinates[i+2].getX());
+ 		ret.setValue(3,0, ctrlCoordinates[i+3].getX());
 
  		return ret;
  	}
- 	Matrix coefs(int i) {
+	Matrix getGBSY(int i) {
 
- 		return Mbs * getGBS(i);
+ 		Matrix ret(4, 1);
+
+ 		ret.setValue(0,0, ctrlCoordinates[i].getY());
+ 		ret.setValue(1,0, ctrlCoordinates[i+1].getY());
+ 		ret.setValue(2,0, ctrlCoordinates[i+2].getY());
+ 		ret.setValue(3,0, ctrlCoordinates[i+3].getY());
+
+ 		return ret;
  	}
-	Polygon* transformToViewport(Coordinate wor, Coordinate wli, Coordinate vpor, Coordinate vpli) {
+ 	Matrix coefsX(int i) {
+ 		return Mbs * getGBSX(i);
+ 	}
+	Matrix coefsY(int i) {
+ 		return Mbs * getGBSY(i);
+ 	}
+	BSpline* transformToViewport(Coordinate wor, Coordinate wli, Coordinate vpor, Coordinate vpli) {
 		std::vector<Coordinate> newCoords;
-		for(auto it = coordinates.begin(); it != coordinates.end(); it++) {
+		for(auto it = ctrlCoordinates.begin(); it != ctrlCoordinates.end(); it++) {
 			Coordinate *c = it->transformCoordinate(wor, wli, vpor, vpli);
 			newCoords.push_back(*c);
 		}
 
-		return new Polygon(this->name, this->id, newCoords);
-	}
-	
-	Matrix getDeltas(Matrix coefs) {
-
+		return new BSpline(this->name, this->id, newCoords);
 	}
 
-	int getGetNPoints() {
+	int getNPoints() {
 		return this->nPoints;
 	}
 
