@@ -4,31 +4,31 @@
 #include "Object.h"
 #include "matrix.hpp"
 #include <vector>
-//#include "globals.hpp"
 
-Matrix Mbs(4,4);
+algebra::Matrix Mbs(4,4);
 
 void initMbs() {
-	Mbs.setValue(0,0, 0);
-	Mbs.setValue(0,1,  2/3);
-	Mbs.setValue(0,2, -1);
-	Mbs.setValue(0,3, 1);
+	Mbs.setValue(0,0, 0.0);
+	Mbs.setValue(0,1, (double)2/3);
+	Mbs.setValue(0,2, -1.0);
+	Mbs.setValue(0,3, 1.0);
 
-	Mbs.setValue(1,0, 0);
-	Mbs.setValue(1,1, -1/3);
-	Mbs.setValue(1,2, 0);
-	Mbs.setValue(1,3, 1);
+	Mbs.setValue(1,0, 0.0);
+	Mbs.setValue(1,1, (double)-1/3);
+	Mbs.setValue(1,2, 0.0);
+	Mbs.setValue(1,3, 1.0);
 
-	Mbs.setValue(2,0, 0);
-	Mbs.setValue(2,1, 2/3);
-	Mbs.setValue(2,2, 1);
-	Mbs.setValue(2,3, 1);
+	Mbs.setValue(2,0, 0.0);
+	Mbs.setValue(2,1, (double)2/3);
+	Mbs.setValue(2,2, 1.0);
+	Mbs.setValue(2,3, 1.0);
 
-	Mbs.setValue(3,0, 2);
-	Mbs.setValue(3,1, 11/9);
-	Mbs.setValue(3,2,2/3);
-	Mbs.setValue(3,3,1/3);
+	Mbs.setValue(3,0, 2.0);
+	Mbs.setValue(3,1, (double)11/9);
+	Mbs.setValue(3,2,(double)2/3);
+	Mbs.setValue(3,3,(double)1/3);
 }
+
 
 class BSpline : public Object{
  public:
@@ -38,14 +38,9 @@ class BSpline : public Object{
  		initMbs();
  	}
 
-	std::vector<Coordinate> getCoordinates() {
- 		return this->ctrlCoordinates;
- 	}
- 	void setCoordinates(std::vector<Coordinate> coordinates) {
- 		this->ctrlCoordinates = coordinates;
- 	}
-
- 	Matrix getGBSX(int i) {
+ 	Matrix getGBS(int i) {
+ 		//if(i < 3)
+ 			//#error vai tomar no cu mano
 
  		Matrix ret(4, 1);
 
@@ -56,34 +51,21 @@ class BSpline : public Object{
 
  		return ret;
  	}
-	Matrix getGBSY(int i) {
+ 	Matrix coefs(int i) {
 
- 		Matrix ret(4, 1);
-
- 		ret.setValue(0,0, ctrlCoordinates[i].getY());
- 		ret.setValue(1,0, ctrlCoordinates[i+1].getY());
- 		ret.setValue(2,0, ctrlCoordinates[i+2].getY());
- 		ret.setValue(3,0, ctrlCoordinates[i+3].getY());
-
- 		return ret;
- 	}
- 	Matrix coefsX(int i) {
- 		return Mbs * getGBSX(i);
- 	}
-	Matrix coefsY(int i) {
- 		return Mbs * getGBSY(i);
+ 		return Mbs * getGBS(i);
  	}
 	BSpline* transformToViewport(Coordinate wor, Coordinate wli, Coordinate vpor, Coordinate vpli) {
 		std::vector<Coordinate> newCoords;
-		for(auto it = ctrlCoordinates.begin(); it != ctrlCoordinates.end(); it++) {
-			Coordinate *c = it->transformCoordinate(wor, wli, vpor, vpli);
-			newCoords.push_back(*c);
-		}
+		//for(auto it = coordinates.begin(); it != coordinates.end(); it++) {
+		//	Coordinate *c = it->transformCoordinate(wor, wli, vpor, vpli);
+		//	newCoords.push_back(*c);
+		//}
 
 		return new BSpline(this->name, this->id, newCoords);
 	}
-
-	int getNPoints() {
+	
+	int getGetNPoints() {
 		return this->nPoints;
 	}
 
