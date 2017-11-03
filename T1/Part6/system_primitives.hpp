@@ -395,8 +395,12 @@ void redraw() {
 				gtk_widget_queue_draw (window_widget);
 				break;
 			}
-			case TCURVE_BEZIER: {
+			case TCURVE_BSPLINE: {
+				BSpline* bscToDraw = dynamic_cast<BSpline*>(objToDraw);
+				int limit = bscToDraw->getNPoints() - 2;
+				for (int i = 0; i < limit; ++i) {
 
+				}
 			}
 			default:
 				std::cout << "¯|_(ツ)_|¯" << std::endl;
