@@ -4,9 +4,35 @@
 #include "Object.h"
 #include <vector>
 
+inline Matrix initMb() {
+	Matrix Mb(4,4);
+
+	Mb.setValue(0,0, -1.0);
+	Mb.setValue(0,1, 3.0);
+	Mb.setValue(0,2, -3.0);
+	Mb.setValue(0,3, 1.0);
+
+	Mb.setValue(1,0, 3.0);
+	Mb.setValue(1,1, -6.0);
+	Mb.setValue(1,2, 3.0);
+	Mb.setValue(1,3, 0.0);
+
+	Mb.setValue(2,0, -3.0);
+	Mb.setValue(2,1, 3.0);
+	Mb.setValue(2,2, 0.0);
+	Mb.setValue(2,3, 0.0);
+
+	Mb.setValue(3,0, 1.0);
+	Mb.setValue(3,1, 0.0);
+	Mb.setValue(3,2, 0.0);
+	Mb.setValue(3,3, 0.0);
+
+	return Mb;
+}
 class BezierCurve : public Object{
  public:
- 	BezierCurve(std::string name, int id, Coordinate _p1, Coordinate _p2, Coordinate _p3, Coordinate _p4) : Object(name, id), {
+ 	BezierCurve(std::string name, int id, Coordinate _p1, Coordinate _p2, Coordinate _p3, Coordinate _p4) : Object(name, id),
+ 		p1(_p1),p2(_p2),p3(_p3),p4(_p4) {
  		this->type = TCURVE_BEZIER;
  	}
  	Coordinate getP1() {
@@ -31,17 +57,9 @@ class BezierCurve : public Object{
  		this->p3 = _p3;
  	}
  	void setP4(Coordinate _p4) {
- 		this->p4 = _p14;
+ 		this->p4 = _p4;
  	}
-	Polygon* transformToViewport(Coordinate wor, Coordinate wli, Coordinate vpor, Coordinate vpli) {
-		std::vector<Coordinate> newCoords;
-		for(auto it = coordinates.begin(); it != coordinates.end(); it++) {
-			Coordinate *c = it->transformCoordinate(wor, wli, vpor, vpli);
-			newCoords.push_back(*c);
-		}
 
-		return new Polygon(this->name, this->id, newCoords);
-	}
  private:
  	Coordinate p1, p2, p3, p4;
 };

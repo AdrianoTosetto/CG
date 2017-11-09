@@ -6,7 +6,8 @@
 #include "Polygon.hpp"
 #include "vector.hpp"
 #include <math.h>
-#include "matrix.hpp"
+#include "BSpline.hpp"
+#include "bezierCurve.hpp"
 
 using namespace algebra;
 

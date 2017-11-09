@@ -1,7 +1,7 @@
 #include "Window.h"
 #include <gtk/gtk.h>
 #include <iostream>
-#include "matrix.hpp"
+//#include "matrix.hpp"
 #include <vector>
 #include <assert.h>
 
@@ -12,11 +12,11 @@ Window::Window(Coordinate _origin, Coordinate _limit, Vector _vaxis, Vector _uax
 
 }
 Window::Window (GtkBuilder* builder, Coordinate _origin, Coordinate _limit, Vector _vaxis,Vector _uaxis,
-	              GtkWidget* window_widget, GtkWidget* drawing_area) : origin(_origin), limit(_limit), vaxis(_vaxis), uaxis(_uaxis), 
+	              GtkWidget* window_widget, GtkWidget* drawing_area) : origin(_origin), limit(_limit), vaxis(_vaxis), uaxis(_uaxis),
 																	   worigin(-1,-1), wlimit(1,1) {
 }
 Window::~Window() {
-	
+
 }
 
 Coordinate Window::getOrigin() {
@@ -127,7 +127,7 @@ Matrix Window::generateDescription() {
 }
 Object* Window::transformToWindow(Object& o, Matrix result){
 	Matrix oldC(1,3);
-	Matrix newC(1,3); 
+	Matrix newC(1,3);
 	Coordinate coorda, coordb;
 	oldC.setValue(0,2,1);
 
@@ -136,7 +136,7 @@ Object* Window::transformToWindow(Object& o, Matrix result){
 			Point2D &p = dynamic_cast<Point2D&>(o);
 			oldC.setValue(0,0, p.getCoordinate().getX());
 			oldC.setValue(0,1, p.getCoordinate().getY());
-			
+
 			newC = oldC * result;
 
 			coorda.setX(newC.getValue(0,0));
@@ -170,7 +170,7 @@ Object* Window::transformToWindow(Object& o, Matrix result){
 		case TPOLYGON: {
 			Polygon &p = dynamic_cast<Polygon&>(o);
 			std::vector<Coordinate> pcoords = p.getCoordinates();
-			std::vector<Coordinate> newPCoords;	
+			std::vector<Coordinate> newPCoords;
 			oldC.setValue(0,2,1);
 			for(auto it = pcoords.begin(); it != pcoords.end(); it++) {
 				oldC.setValue(0,0, it->getX());
@@ -183,8 +183,52 @@ Object* Window::transformToWindow(Object& o, Matrix result){
 
 				newPCoords.push_back(coorda);
 			}
-			Polygon* newP = new Polygon(o.getName(), o.getId(), newPCoords);
+			Polygon* newP = new Polygon(o.getName(), o.getId(), newPCoords, p.getFill());
 			return dynamic_cast<Object*>(newP);
+		}
+		case TCURVE_BEZIER: {
+			std::vector<Coordinate> newSCoords;
+			BezierCurve &bzs = dynamic_cast<BezierCurve&>(o);
+			Coordinate p1 = bzs.getP1();
+			Coordinate p2 = bzs.getP2();
+			Coordinate p3 = bzs.getP3();
+			Coordinate p4 = bzs.getP4();
+
+			std::vector<Coordinate> coords{p1,p2,p3,p4};
+
+			oldC.setValue(0,2,1);
+
+			for(auto it = coords.begin(); it != coords.end(); it++) {
+				oldC.setValue(0,0, it->getX());
+				oldC.setValue(0,1, it->getY());
+				newC = oldC * result;
+
+				coorda.setX(newC.getValue(0,0));
+				coorda.setY(newC.getValue(0,1));
+
+				newSCoords.push_back(coorda);
+			}
+			BezierCurve* newB = new BezierCurve(o.getName(), o.getId(), newSCoords[0], newSCoords[1], newSCoords[2], newSCoords[3]);
+			return dynamic_cast<Object*>(newB);
+		}
+		case TCURVE_BSPLINE: {
+			BSpline &s = dynamic_cast<BSpline&>(o);
+			std::vector<Coordinate> scoords = s.getCoordinates();
+			std::vector<Coordinate> newSCoords;
+			oldC.setValue(0,2,1);
+			for(auto it = scoords.begin(); it != scoords.end(); it++) {
+				oldC.setValue(0,0, it->getX());
+				oldC.setValue(0,1, it->getY());
+
+				newC = oldC * result;
+
+				coorda.setX(newC.getValue(0,0));
+				coorda.setY(newC.getValue(0,1));
+
+				newSCoords.push_back(coorda);
+			}
+			BSpline* newS = new BSpline(o.getName(), o.getId(), newSCoords);
+			return dynamic_cast<Object*>(newS);
 		}
 		default:
 			std::cout << "¯|_(ツ)_|¯" << std::endl;

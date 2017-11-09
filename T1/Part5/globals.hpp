@@ -20,6 +20,8 @@
 #define YBOTTOM -YTOP
 #define INDEX(I) I - 1
 
+Matrix deltinhas = Matrix::identidade(4) * (1/1000);
+
 Coordinate a(0, 0);
 Coordinate b(1000, 1000);
 Coordinate c(500, 500);

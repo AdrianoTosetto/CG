@@ -13,7 +13,6 @@
 #include <math.h>
 #include "vector.hpp"
 #include "dictionary.hpp"
-#include "BSpline.hpp"
 
 #define XLEFT -0.8
 #define XRIGHT -XLEFT
@@ -21,7 +20,7 @@
 #define YBOTTOM -YTOP
 #define INDEX(I) I - 1
 
-Matrix deltinhas = Matrix::identidade(4);
+Matrix deltinhas = Matrix::identidade(4) * (1/1000);
 
 Coordinate a(0, 0);
 Coordinate b(1000, 1000);

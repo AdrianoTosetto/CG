@@ -18,6 +18,9 @@ void dialogOpenAndClose(const gchar* widgetToOpen, const gchar* widgetToClose) {
 	gtk_dialog_run(GTK_DIALOG(GET_OBJ(builder, widgetToOpen)));
 }
 
+
+
+
 void c_addPoint() {
 	std::string nameEntry = ENTRY_GET_TEXT(builder, POINT_NAME_ENTRY);
 	if (nameEntry == "") return;
@@ -27,10 +30,8 @@ void c_addPoint() {
 
 	Coordinate pointCoord(pointX, pointY);
 	Point2D *toAdd = new Point2D(pointCoord, objectID, nameEntry);
-	Point2D *toAddW = dynamic_cast<Point2D*>(w->transformToWindow(*toAdd, description));
 
 	displayFile->adiciona(toAdd);
-	windowFile->adiciona(toAddW);
 	redraw();
 
 	gtk_widget_hide(GET_OBJ(builder, ADD_POINT_DIALOG));
@@ -39,6 +40,9 @@ void c_addPoint() {
 	objectID += 0x1;
 	_log->_log("Novo ponto adicionado!\n");
 }
+
+
+
 void c_addStraight() {
 	std::string nameEntry = ENTRY_GET_TEXT(builder, STRAIGHT_NAME_ENTRY);
 	if (nameEntry == "") return;
@@ -51,12 +55,10 @@ void c_addStraight() {
 	Coordinate straightCoordA(straightXA, straightYA);
 	Coordinate straightCoordB(straightXB, straightYB);
 	Straight *toAdd = new Straight(straightCoordA, straightCoordB, objectID, nameEntry);
-	Straight *toAddW = dynamic_cast<Straight*>(w->transformToWindow(*toAdd, description));
 
 	//std::cout << toAddW->getType() << std::endl;
 
 	displayFile->adiciona(toAdd);
-	windowFile->adiciona(toAddW);
 	redraw();
 
 	gtk_widget_hide(GET_OBJ(builder, ADD_STRAIGHT_DIALOG));
@@ -65,33 +67,36 @@ void c_addStraight() {
 	objectID += 0x1;
 	_log->_log("Nova reta adicionada!\n");
 }
+
+
+
 void c_addPolygonName() {
 	std::string nameEntry = ENTRY_GET_TEXT(builder, POLYGON_NAME_ENTRY);
 	if (nameEntry == "") return;
 
 	pollyName = nameEntry;
-	std::cout << pollyName << std::endl;
+	//std::cout << pollyName << std::endl;
 
 	gtk_widget_hide(GET_OBJ(builder, ADD_POLYGON_NAME_DIALOG));
 	gtk_dialog_run(GTK_DIALOG(GET_OBJ(builder, ADD_POLYGON_COORDINATE_DIALOG)));
 }
+
 void c_addPolygonCoordinate() {
 	double coordX = SPIN_GET_VALUE(builder, POLYGON_X_SPIN);
-	double coordY = SPIN_GET_VALUE(builder, POLYGON_X_SPIN);
+	double coordY = SPIN_GET_VALUE(builder, POLYGON_Y_SPIN);
 
 	Coordinate *newCoord = new Coordinate(coordX, coordY);
 
 	pollyVector.push_back(*newCoord);
 	std::cout << pollyVector.size() << std::endl;
 }
+
 void c_finishPolygon() {
-	Polygon *p = new Polygon(pollyName, objectID, pollyVector);
-	Polygon *pw = dynamic_cast<Polygon*>(w->transformToWindow(*p, description));
+	Polygon *p = new Polygon(pollyName, objectID, pollyVector, CHECK_GET_VALUE(builder, POLYGON_FILL_BOOL));
 
 	if(p->getCoordinates().begin() == p->getCoordinates().end()) return;
 
 	displayFile->adiciona(dynamic_cast<Object*>(p));
-	windowFile->adiciona(dynamic_cast<Object*>(pw));
 
 	redraw();
 
@@ -102,6 +107,81 @@ void c_finishPolygon() {
 	pollyVector.clear();
 	_log->_log("Novo polígono adicionado!\n");
 }
+
+
+
+void c_addBezier() {
+	std::string nameEntry = ENTRY_GET_TEXT(builder, BEZIER_NAME_ENTRY);
+	if (nameEntry == "") return;
+
+	double bezierX1 = SPIN_GET_VALUE(builder, BEZIER_1_X_SPIN);
+	double bezierY1 = SPIN_GET_VALUE(builder, BEZIER_1_Y_SPIN);
+	double bezierX2 = SPIN_GET_VALUE(builder, BEZIER_2_X_SPIN);
+	double bezierY2 = SPIN_GET_VALUE(builder, BEZIER_2_Y_SPIN);
+	double bezierX3 = SPIN_GET_VALUE(builder, BEZIER_3_X_SPIN);
+	double bezierY3 = SPIN_GET_VALUE(builder, BEZIER_3_Y_SPIN);
+	double bezierX4 = SPIN_GET_VALUE(builder, BEZIER_4_X_SPIN);
+	double bezierY4 = SPIN_GET_VALUE(builder, BEZIER_4_Y_SPIN);
+
+	Coordinate bezierCoord1(bezierX1, bezierY1);
+	Coordinate bezierCoord2(bezierX2, bezierY2);
+	Coordinate bezierCoord3(bezierX3, bezierY3);
+	Coordinate bezierCoord4(bezierX4, bezierY4);
+	BezierCurve *toAdd = new BezierCurve(nameEntry, objectID, bezierCoord1, bezierCoord2, bezierCoord3, bezierCoord4);
+
+	displayFile->adiciona(toAdd);
+	redraw();
+
+	gtk_widget_hide(GET_OBJ(builder, ADD_BEZIER_DIALOG));
+
+	addList(nameEntry, "Bezier Curve", objectID);
+	objectID += 0x1;
+	_log->_log("Nova curva de Bézier adicionada!\n");
+}
+
+
+
+void c_addBSplineName() {
+	std::string nameEntry = ENTRY_GET_TEXT(builder, BSPLINE_NAME_ENTRY);
+	if (nameEntry == "") return;
+
+	pollyName = nameEntry;
+	//std::cout << pollyName << std::endl;
+
+	gtk_widget_hide(GET_OBJ(builder, ADD_BSPLINE_NAME_DIALOG));
+	gtk_dialog_run(GTK_DIALOG(GET_OBJ(builder, ADD_BSPLINE_COORDINATE_DIALOG)));
+}
+
+void c_addBSplineCoordinate() {
+	double coordX = SPIN_GET_VALUE(builder, BSPLINE_X_SPIN);
+	double coordY = SPIN_GET_VALUE(builder, BSPLINE_Y_SPIN);
+
+	Coordinate *newCoord = new Coordinate(coordX, coordY);
+
+	pollyVector.push_back(*newCoord);
+	//std::cout << pollyVector.size() << std::endl;
+}
+
+void c_finishBSpline() {
+	BSpline *s = new BSpline(pollyName, objectID, pollyVector);
+
+	if(s->getCoordinates().size() < 4) return;
+
+	displayFile->adiciona(dynamic_cast<Object*>(s));
+
+	redraw();
+
+	gtk_widget_hide(GET_OBJ(builder, ADD_BSPLINE_COORDINATE_DIALOG));
+
+	addList(s->getName(), "BSpline Curve", objectID);
+	objectID += 0x1;
+	pollyVector.clear();
+	_log->_log("Nova curva bspline adicionada!\n");
+}
+
+
+
+
 
 void c_removeObject() {
 	GtkWidget *objDialog;
