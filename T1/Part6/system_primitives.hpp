@@ -221,10 +221,11 @@ void updateWindowFile() {
 		if(o->getType() == TCURVE_BSPLINE) {
 			//BSpline* bs = dynamic_cast<BSpline*>(o1);
 			//windowFile->adiciona(bs);
+			double stepT = deltinhas(1,2);
 
 			BSpline* bs = dynamic_cast<BSpline*>(o1);
 			int limit = bs->getNPoints() - 2;
-			for (int i = 0; i < limit; ++i) {
+			for (int i = 1; i <= limit; ++i) {
 				Matrix deltasX = deltinhas * bs->coefsX(i);
 	        	Matrix deltasY = deltinhas * bs->coefsY(i);
 
@@ -241,8 +242,7 @@ void updateWindowFile() {
 		        d3Y = deltasY(3,0);
 		        oldX = x;
 		        oldY = y;
-
-	        	for(int j = 1; j < 1/deltinhas(1,2); j++) {
+				for(double t = 0; t <=1; t+=stepT)  {
 	            	x = x + dX; dX = dX + d2X; d2X = d2X + d3X;
 	            	y = y + dY; dY = dY + d2Y; d2Y = d2Y + d3Y;
 	            	Coordinate A(oldX, oldY);

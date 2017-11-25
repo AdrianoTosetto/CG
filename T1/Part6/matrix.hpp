@@ -51,6 +51,7 @@ public:
 		for (int i = 0; i < this->rows; ++i) {
 			for (int j = 0; j < this->cols; ++j) {
 				double res = this->getValue(i, j) * scalar;
+				m.setValue(i,j,res);
 			}
 		}
 		return *this = m;

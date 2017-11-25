@@ -30,25 +30,27 @@ inline Matrix initMbs() {
 	Mbs.setValue(3,2,2.0/3.0);
 	Mbs.setValue(3,3,1.0/3.0);*/
 
-	Mbs.setValue(0,0, -1.0/6.0);
-	Mbs.setValue(0,1,  0.5);
-	Mbs.setValue(0,2, -0.5);
-	Mbs.setValue(0,3, 1.0/6.0);
+	Mbs.setValue(0,0, -1.0);
+	Mbs.setValue(0,1,  3.0);
+	Mbs.setValue(0,2, -3.0);
+	Mbs.setValue(0,3, 1.0);
 
-	Mbs.setValue(1,0, 0.5);
-	Mbs.setValue(1,1, -1.0);
-	Mbs.setValue(1,2, 0.5);
-	Mbs.setValue(1,3, 0);
+	Mbs.setValue(1,0, 3.0);
+	Mbs.setValue(1,1, -6.0);
+	Mbs.setValue(1,2, 3.0);
+	Mbs.setValue(1,3, -0.0);
 
-	Mbs.setValue(2,0, -0.5);
-	Mbs.setValue(2,1, 5);
-	Mbs.setValue(2,2, 0.5);
-	Mbs.setValue(2,3, 0);
+	Mbs.setValue(2,0, -3.0);
+	Mbs.setValue(2,1, 3.0);
+	Mbs.setValue(2,2, 0.0);
+	Mbs.setValue(2,3, 0.0);
 
-	Mbs.setValue(3,0, 1.0/6.0);
-	Mbs.setValue(3,1, 2.0/3.0);
-	Mbs.setValue(3,2, 1.0/6.0);
-	Mbs.setValue(3,3, 0);
+	Mbs.setValue(3,0, 1.0);
+	Mbs.setValue(3,1, 0.0);
+	Mbs.setValue(3,2, 0.0);
+	Mbs.setValue(3,3, 0.0);
+
+	Mbs = Mbs * (1.0/6.0);
 
 	return Mbs;
 }
@@ -72,10 +74,10 @@ class BSpline : public Object{
 
  		Matrix ret(4, 1);
 
- 		ret.setValue(0,0, ctrlCoordinates[i].getX());
- 		ret.setValue(1,0, ctrlCoordinates[i+1].getX());
- 		ret.setValue(2,0, ctrlCoordinates[i+2].getX());
- 		ret.setValue(3,0, ctrlCoordinates[i+3].getX());
+ 		ret.setValue(0,0, ctrlCoordinates[i-1].getX());
+ 		ret.setValue(1,0, ctrlCoordinates[i].getX());
+ 		ret.setValue(2,0, ctrlCoordinates[i+1].getX());
+ 		ret.setValue(3,0, ctrlCoordinates[i+2].getX());
 
  		return ret;
  	}
@@ -83,10 +85,10 @@ class BSpline : public Object{
 
  		Matrix ret(4, 1);
 
- 		ret.setValue(0,0, ctrlCoordinates[i].getY());
- 		ret.setValue(1,0, ctrlCoordinates[i+1].getY());
- 		ret.setValue(2,0, ctrlCoordinates[i+2].getY());
- 		ret.setValue(3,0, ctrlCoordinates[i+3].getY());
+ 		ret.setValue(0,0, ctrlCoordinates[i-1].getY());
+ 		ret.setValue(1,0, ctrlCoordinates[i].getY());
+ 		ret.setValue(2,0, ctrlCoordinates[i+1].getY());
+ 		ret.setValue(3,0, ctrlCoordinates[i+2].getY());
 
  		return ret;
  	}
