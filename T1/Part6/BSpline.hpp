@@ -74,10 +74,12 @@ class BSpline : public Object{
 
  		Matrix ret(4, 1);
 
- 		ret.setValue(0,0, ctrlCoordinates[i-1].getX());
- 		ret.setValue(1,0, ctrlCoordinates[i].getX());
- 		ret.setValue(2,0, ctrlCoordinates[i+1].getX());
- 		ret.setValue(3,0, ctrlCoordinates[i+2].getX());
+ 		ret.setValue(0,0, ctrlCoordinates[i].getX());
+ 		ret.setValue(1,0, ctrlCoordinates[i+1].getX());
+ 		ret.setValue(2,0, ctrlCoordinates[i+2].getX());
+ 		ret.setValue(3,0, ctrlCoordinates[i+3].getX());
+
+ 		std::cout << "Xs = " << ret(0,0) << " " << ret(1,0) << " " << ret(2,0) << " " << ret(3,0) << std::endl;
 
  		return ret;
  	}
@@ -85,10 +87,12 @@ class BSpline : public Object{
 
  		Matrix ret(4, 1);
 
- 		ret.setValue(0,0, ctrlCoordinates[i-1].getY());
- 		ret.setValue(1,0, ctrlCoordinates[i].getY());
- 		ret.setValue(2,0, ctrlCoordinates[i+1].getY());
- 		ret.setValue(3,0, ctrlCoordinates[i+2].getY());
+ 		ret.setValue(0,0, ctrlCoordinates[i].getY());
+ 		ret.setValue(1,0, ctrlCoordinates[i+1].getY());
+ 		ret.setValue(2,0, ctrlCoordinates[i+2].getY());
+ 		ret.setValue(3,0, ctrlCoordinates[i+3].getY());
+
+ 		std::cout << "Xs = " << ret(0,0) << " " << ret(1,0) << " " << ret(2,0) << " " << ret(3,0) << std::endl;
 
  		return ret;
  	}

@@ -18,24 +18,24 @@ bool sutherlandHodgmanRight(Polygon *p);
 bool sutherlandHodgmanLeft(Polygon *p);
 
 void setDeltinhas() {
-	double delta = w->getVUp().getNorm() / 1000000.0;
+	double delta = w->getVUp().getNorm() / 10000.0;
 
 	deltinhas.setValue(0,0,0);
 	deltinhas.setValue(0,1,0);
 	deltinhas.setValue(0,2,0);
 	deltinhas.setValue(0,3,1);
 
-	deltinhas.setValue(1,0,pow(delta,3));
-	deltinhas.setValue(1,1,pow(delta,2));
+	deltinhas.setValue(1,0,delta*delta*delta);
+	deltinhas.setValue(1,1,delta*delta);
 	deltinhas.setValue(1,2,delta);
 	deltinhas.setValue(1,3,0);
 
-	deltinhas.setValue(2,0,6*pow(delta,3));
-	deltinhas.setValue(2,1,2*pow(delta,2));
+	deltinhas.setValue(2,0,6*delta*delta*delta);
+	deltinhas.setValue(2,1,2*delta*delta);
 	deltinhas.setValue(2,2,0);
 	deltinhas.setValue(2,3,0);
 
-	deltinhas.setValue(3,0,6*pow(delta,3));
+	deltinhas.setValue(3,0,6*delta*delta*delta);
 	deltinhas.setValue(3,1,0);
 	deltinhas.setValue(3,2,0);
 	deltinhas.setValue(3,3,0);
@@ -201,6 +201,7 @@ void updateWindowFile() {
 			double oldY = bs->getP1().getY();
 			double newX = 0.0;
 			double newY = 0.0;
+			std::cout << "bezier" << std::endl;
 
 			for(double t = 0; t <=1; t+=stepT) {
 				setTMatrix(T, t);
@@ -224,8 +225,9 @@ void updateWindowFile() {
 			double stepT = deltinhas(1,2);
 
 			BSpline* bs = dynamic_cast<BSpline*>(o1);
-			int limit = bs->getNPoints() - 2;
-			for (int i = 1; i <= limit; ++i) {
+			int limit = bs->getNPoints() - 3;
+			std::cout << "bspline" << std::endl;
+			for (int i = 0; i < limit; ++i) {
 				Matrix deltasX = deltinhas * bs->coefsX(i);
 	        	Matrix deltasY = deltinhas * bs->coefsY(i);
 
@@ -243,6 +245,8 @@ void updateWindowFile() {
 		        oldX = x;
 		        oldY = y;
 				for(double t = 0; t <=1; t+=stepT)  {
+					std::cout << "X = " << x << "; " << dX << "; " << d2X << "; " << d3X << std::endl;
+					std::cout << "Y = " << y << "; " << dY << "; " << d2Y << "; " << d3Y << std::endl;
 	            	x = x + dX; dX = dX + d2X; d2X = d2X + d3X;
 	            	y = y + dY; dY = dY + d2Y; d2Y = d2Y + d3Y;
 	            	Coordinate A(oldX, oldY);
