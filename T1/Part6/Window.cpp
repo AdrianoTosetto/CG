@@ -70,6 +70,13 @@ void Window::setRotatedAngle(double angle) {
 double Window::getRotatedAngle() {
 	return this->rotatedAngle;
 }
+
+
+/*
+	gera a matriz de transformação dos objetos para coordenadas de window
+*/
+
+
 Matrix Window::generateDescription() {
 
 	Matrix trans(3,3);
@@ -125,6 +132,12 @@ Matrix Window::generateDescription() {
 
 	return result;
 }
+
+/*
+	aplica a transformação result às coordenadas do objeto o
+	@param Object o a ser transformado
+*/
+
 Object* Window::transformToWindow(Object& o, Matrix result){
 	Matrix oldC(1,3);
 	Matrix newC(1,3);

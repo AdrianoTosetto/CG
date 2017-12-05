@@ -4,6 +4,11 @@
 #include "Object.h"
 #include <vector>
 
+/*
+	gera matriz base da curva de bezier
+*/
+
+
 inline Matrix initMb() {
 	Matrix Mb(4,4);
 

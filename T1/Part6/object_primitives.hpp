@@ -10,6 +10,11 @@
 #include "system_primitives.hpp"
 #include "calculations.hpp"
 
+
+/*
+	Rotaciona um Object o em torno de (x, y) rad radianos
+*/
+
 void rotate(double x, double y, Object* o, double rad) {
 	Matrix result = getRotationMatrix(x, y, rad);
 	switch (o->getType()) {
@@ -78,6 +83,12 @@ void rotate(double x, double y, Object* o, double rad) {
 	redraw();
 	gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(builder, "dialogScale")));
 }
+
+
+/*
+	Escalona um Object o em torno de (x,y) com uma escala scl 
+*/
+
 
 void scale(double x, double y, Object* o, double scl) {
 	Matrix result = getScalingMatrix(x, y, scl);

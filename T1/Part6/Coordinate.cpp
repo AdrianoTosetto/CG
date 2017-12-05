@@ -26,6 +26,10 @@ void Coordinate::setY(double yToSet) {
 	this->y = yToSet;
 }
 
+/*
+	transforma coordenadas de mundo para coordenadas de viewport
+*/
+
 Coordinate* Coordinate::transformCoordinate(Coordinate wor, Coordinate wli, Coordinate vpor, Coordinate vpli) {
 	double xwmin = wor.getX();
 	double xwmax = wli.getX();

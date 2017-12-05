@@ -1,0 +1,970 @@
+fileFormatVersion: 2
+guid: 24f79e4e055a9d94fa339cb411716d32
+timeCreated: 1511131956
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Empty
+    100002: Lucas
+    100004: Lucas_Solving
+    100006: Lucas_Solving_Head
+    100008: Lucas_Solving_Head_End
+    100010: Lucas_Solving_Head_End_001
+    100012: Lucas_Solving_Head_End_002
+    100014: Lucas_Solving_Head_End_003
+    100016: Lucas_Solving_Head_End_004
+    100018: Lucas_Solving_Hips
+    100020: Lucas_Solving_LeftArm
+    100022: Lucas_Solving_LeftFoot
+    100024: Lucas_Solving_LeftForeArm
+    100026: Lucas_Solving_LeftHand
+    100028: Lucas_Solving_LeftHandEnd
+    100030: Lucas_Solving_LeftHandThumb1
+    100032: Lucas_Solving_LeftHandThumb2
+    100034: Lucas_Solving_LeftLeg
+    100036: Lucas_Solving_LeftShoulder
+    100038: Lucas_Solving_LeftToeBase
+    100040: Lucas_Solving_LeftToeEnd
+    100042: Lucas_Solving_LeftUpLeg
+    100044: Lucas_Solving_RightArm
+    100046: Lucas_Solving_RightFoot
+    100048: Lucas_Solving_RightForeArm
+    100050: Lucas_Solving_RightHand
+    100052: Lucas_Solving_RightHandEnd
+    100054: Lucas_Solving_RightHandThumb1
+    100056: Lucas_Solving_RightHandThumb2
+    100058: Lucas_Solving_RightLeg
+    100060: Lucas_Solving_RightShoulder
+    100062: Lucas_Solving_RightToeBase
+    100064: Lucas_Solving_RightToeEnd
+    100066: Lucas_Solving_RightUpLeg
+    100068: Lucas_Solving_Spine
+    100070: Lucas_Solving_Spine_001
+    100072: Lucas_Solving_Spine_002
+    100074: //RootNode
+    100076: moukazaru
+    400000: Empty
+    400002: Lucas
+    400004: Lucas_Solving
+    400006: Lucas_Solving_Head
+    400008: Lucas_Solving_Head_End
+    400010: Lucas_Solving_Head_End_001
+    400012: Lucas_Solving_Head_End_002
+    400014: Lucas_Solving_Head_End_003
+    400016: Lucas_Solving_Head_End_004
+    400018: Lucas_Solving_Hips
+    400020: Lucas_Solving_LeftArm
+    400022: Lucas_Solving_LeftFoot
+    400024: Lucas_Solving_LeftForeArm
+    400026: Lucas_Solving_LeftHand
+    400028: Lucas_Solving_LeftHandEnd
+    400030: Lucas_Solving_LeftHandThumb1
+    400032: Lucas_Solving_LeftHandThumb2
+    400034: Lucas_Solving_LeftLeg
+    400036: Lucas_Solving_LeftShoulder
+    400038: Lucas_Solving_LeftToeBase
+    400040: Lucas_Solving_LeftToeEnd
+    400042: Lucas_Solving_LeftUpLeg
+    400044: Lucas_Solving_RightArm
+    400046: Lucas_Solving_RightFoot
+    400048: Lucas_Solving_RightForeArm
+    400050: Lucas_Solving_RightHand
+    400052: Lucas_Solving_RightHandEnd
+    400054: Lucas_Solving_RightHandThumb1
+    400056: Lucas_Solving_RightHandThumb2
+    400058: Lucas_Solving_RightLeg
+    400060: Lucas_Solving_RightShoulder
+    400062: Lucas_Solving_RightToeBase
+    400064: Lucas_Solving_RightToeEnd
+    400066: Lucas_Solving_RightUpLeg
+    400068: Lucas_Solving_Spine
+    400070: Lucas_Solving_Spine_001
+    400072: Lucas_Solving_Spine_002
+    400074: //RootNode
+    400076: moukazaru
+    4300000: moukazaru
+    7400000: Idle
+    7400002: Run
+    7400004: Turn
+    7400006: Back
+    9500000: //RootNode
+    13700000: moukazaru
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: "\nClip 'Default Take' has import animation warnings
+      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'Lucas_Solving_Spine' has translation animation
+      that will be discarded.\n\t'Lucas_Solving_Head' has translation animation that
+      will be discarded.\n\t'Lucas_Solving_LeftShoulder' has translation animation
+      that will be discarded.\n\t'Lucas_Solving_LeftArm' has translation animation
+      that will be discarded.\n\t'Lucas_Solving_LeftForeArm' has translation animation
+      that will be discarded.\n\t'Lucas_Solving_LeftHand' has translation animation
+      that will be discarded.\n\t'Lucas_Solving_RightShoulder' has translation animation
+      that will be discarded.\n\t'Lucas_Solving_RightArm' has translation animation
+      that will be discarded.\n\t'Lucas_Solving_RightForeArm' has translation animation
+      that will be discarded.\n\t'Lucas_Solving_RightHand' has translation animation
+      that will be discarded.\n\t'Lucas_Solving_LeftUpLeg' has translation animation
+      that will be discarded.\n\t'Lucas_Solving_LeftLeg' has translation animation
+      that will be discarded.\n\t'Lucas_Solving_LeftFoot' has translation animation
+      that will be discarded.\n\t'Lucas_Solving_LeftToeBase' has translation animation
+      that will be discarded.\n\t'Lucas_Solving_RightUpLeg' has translation animation
+      that will be discarded.\n\nClip 'Lucas_Solving_Lucas_corrida_x2d_Lucas_corrida_x2d_BaseAnimation'
+      has import animation warnings that might lower retargeting quality:\nNote: Activate
+      translation DOF on avatar to improve retargeting quality.\n\t'Lucas_Solving_Spine'
+      has translation animation that will be discarded.\n\t'Lucas_Solving_Head' has
+      translation animation that will be discarded.\n\t'Lucas_Solving_LeftShoulder'
+      has translation animation that will be discarded.\n\t'Lucas_Solving_LeftArm'
+      has translation animation that will be discarded.\n\t'Lucas_Solving_LeftForeArm'
+      has translation animation that will be discarded.\n\t'Lucas_Solving_LeftHand'
+      has translation animation that will be discarded.\n\t'Lucas_Solving_RightShoulder'
+      has translation animation that will be discarded.\n\t'Lucas_Solving_RightArm'
+      has translation animation that will be discarded.\n\t'Lucas_Solving_RightForeArm'
+      has translation animation that will be discarded.\n\t'Lucas_Solving_RightHand'
+      has translation animation that will be discarded.\n\t'Lucas_Solving_LeftUpLeg'
+      has translation animation that will be discarded.\n\t'Lucas_Solving_LeftLeg'
+      has translation animation that will be discarded.\n\t'Lucas_Solving_LeftFoot'
+      has translation animation that will be discarded.\n\t'Lucas_Solving_LeftToeBase'
+      has translation animation that will be discarded.\n\t'Lucas_Solving_RightUpLeg'
+      has translation animation that will be discarded.\n"
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Idle
+      takeName: Default Take
+      firstFrame: 147
+      lastFrame: 165
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 1
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Empty
+        weight: 0
+      - path: Lucas
+        weight: 1
+      - path: Lucas/Lucas_Solving
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_LeftUpLeg
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_LeftUpLeg/Lucas_Solving_LeftLeg
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_LeftUpLeg/Lucas_Solving_LeftLeg/Lucas_Solving_LeftFoot
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_LeftUpLeg/Lucas_Solving_LeftLeg/Lucas_Solving_LeftFoot/Lucas_Solving_LeftToeBase
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_LeftUpLeg/Lucas_Solving_LeftLeg/Lucas_Solving_LeftFoot/Lucas_Solving_LeftToeBase/Lucas_Solving_LeftToeEnd
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_RightUpLeg
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_RightUpLeg/Lucas_Solving_RightLeg
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_RightUpLeg/Lucas_Solving_RightLeg/Lucas_Solving_RightFoot
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_RightUpLeg/Lucas_Solving_RightLeg/Lucas_Solving_RightFoot/Lucas_Solving_RightToeBase
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_RightUpLeg/Lucas_Solving_RightLeg/Lucas_Solving_RightFoot/Lucas_Solving_RightToeBase/Lucas_Solving_RightToeEnd
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Head
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Head/Lucas_Solving_Head_End
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Head/Lucas_Solving_Head_End/Lucas_Solving_Head_End_001
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Head/Lucas_Solving_Head_End/Lucas_Solving_Head_End_002
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Head/Lucas_Solving_Head_End/Lucas_Solving_Head_End_003
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Head/Lucas_Solving_Head_End/Lucas_Solving_Head_End_004
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder/Lucas_Solving_LeftArm
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder/Lucas_Solving_LeftArm/Lucas_Solving_LeftForeArm
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder/Lucas_Solving_LeftArm/Lucas_Solving_LeftForeArm/Lucas_Solving_LeftHand
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder/Lucas_Solving_LeftArm/Lucas_Solving_LeftForeArm/Lucas_Solving_LeftHand/Lucas_Solving_LeftHandEnd
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder/Lucas_Solving_LeftArm/Lucas_Solving_LeftForeArm/Lucas_Solving_LeftHand/Lucas_Solving_LeftHandThumb1
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder/Lucas_Solving_LeftArm/Lucas_Solving_LeftForeArm/Lucas_Solving_LeftHand/Lucas_Solving_LeftHandThumb1/Lucas_Solving_LeftHandThumb2
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder/Lucas_Solving_RightArm
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder/Lucas_Solving_RightArm/Lucas_Solving_RightForeArm
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder/Lucas_Solving_RightArm/Lucas_Solving_RightForeArm/Lucas_Solving_RightHand
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder/Lucas_Solving_RightArm/Lucas_Solving_RightForeArm/Lucas_Solving_RightHand/Lucas_Solving_RightHandEnd
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder/Lucas_Solving_RightArm/Lucas_Solving_RightForeArm/Lucas_Solving_RightHand/Lucas_Solving_RightHandThumb1
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder/Lucas_Solving_RightArm/Lucas_Solving_RightForeArm/Lucas_Solving_RightHand/Lucas_Solving_RightHandThumb1/Lucas_Solving_RightHandThumb2
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Spine_001
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Spine_002
+        weight: 0
+      - path: moukazaru
+        weight: 0
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Run
+      takeName: Lucas_Solving_Lucas_corrida_x2d_Lucas_corrida_x2d_BaseAnimation
+      firstFrame: 176
+      lastFrame: 218
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 5
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 1
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Empty
+        weight: 0
+      - path: Lucas
+        weight: 1
+      - path: Lucas/Lucas_Solving
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_LeftUpLeg
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_LeftUpLeg/Lucas_Solving_LeftLeg
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_LeftUpLeg/Lucas_Solving_LeftLeg/Lucas_Solving_LeftFoot
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_LeftUpLeg/Lucas_Solving_LeftLeg/Lucas_Solving_LeftFoot/Lucas_Solving_LeftToeBase
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_LeftUpLeg/Lucas_Solving_LeftLeg/Lucas_Solving_LeftFoot/Lucas_Solving_LeftToeBase/Lucas_Solving_LeftToeEnd
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_RightUpLeg
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_RightUpLeg/Lucas_Solving_RightLeg
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_RightUpLeg/Lucas_Solving_RightLeg/Lucas_Solving_RightFoot
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_RightUpLeg/Lucas_Solving_RightLeg/Lucas_Solving_RightFoot/Lucas_Solving_RightToeBase
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_RightUpLeg/Lucas_Solving_RightLeg/Lucas_Solving_RightFoot/Lucas_Solving_RightToeBase/Lucas_Solving_RightToeEnd
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Head
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Head/Lucas_Solving_Head_End
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Head/Lucas_Solving_Head_End/Lucas_Solving_Head_End_001
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Head/Lucas_Solving_Head_End/Lucas_Solving_Head_End_002
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Head/Lucas_Solving_Head_End/Lucas_Solving_Head_End_003
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Head/Lucas_Solving_Head_End/Lucas_Solving_Head_End_004
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder/Lucas_Solving_LeftArm
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder/Lucas_Solving_LeftArm/Lucas_Solving_LeftForeArm
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder/Lucas_Solving_LeftArm/Lucas_Solving_LeftForeArm/Lucas_Solving_LeftHand
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder/Lucas_Solving_LeftArm/Lucas_Solving_LeftForeArm/Lucas_Solving_LeftHand/Lucas_Solving_LeftHandEnd
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder/Lucas_Solving_LeftArm/Lucas_Solving_LeftForeArm/Lucas_Solving_LeftHand/Lucas_Solving_LeftHandThumb1
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder/Lucas_Solving_LeftArm/Lucas_Solving_LeftForeArm/Lucas_Solving_LeftHand/Lucas_Solving_LeftHandThumb1/Lucas_Solving_LeftHandThumb2
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder/Lucas_Solving_RightArm
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder/Lucas_Solving_RightArm/Lucas_Solving_RightForeArm
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder/Lucas_Solving_RightArm/Lucas_Solving_RightForeArm/Lucas_Solving_RightHand
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder/Lucas_Solving_RightArm/Lucas_Solving_RightForeArm/Lucas_Solving_RightHand/Lucas_Solving_RightHandEnd
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder/Lucas_Solving_RightArm/Lucas_Solving_RightForeArm/Lucas_Solving_RightHand/Lucas_Solving_RightHandThumb1
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder/Lucas_Solving_RightArm/Lucas_Solving_RightForeArm/Lucas_Solving_RightHand/Lucas_Solving_RightHandThumb1/Lucas_Solving_RightHandThumb2
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Spine_001
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Spine_002
+        weight: 0
+      - path: moukazaru
+        weight: 0
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Turn
+      takeName: Default Take
+      firstFrame: 114
+      lastFrame: 131
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 1
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Empty
+        weight: 0
+      - path: Lucas
+        weight: 1
+      - path: Lucas/Lucas_Solving
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_LeftUpLeg
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_LeftUpLeg/Lucas_Solving_LeftLeg
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_LeftUpLeg/Lucas_Solving_LeftLeg/Lucas_Solving_LeftFoot
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_LeftUpLeg/Lucas_Solving_LeftLeg/Lucas_Solving_LeftFoot/Lucas_Solving_LeftToeBase
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_LeftUpLeg/Lucas_Solving_LeftLeg/Lucas_Solving_LeftFoot/Lucas_Solving_LeftToeBase/Lucas_Solving_LeftToeEnd
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_RightUpLeg
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_RightUpLeg/Lucas_Solving_RightLeg
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_RightUpLeg/Lucas_Solving_RightLeg/Lucas_Solving_RightFoot
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_RightUpLeg/Lucas_Solving_RightLeg/Lucas_Solving_RightFoot/Lucas_Solving_RightToeBase
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_RightUpLeg/Lucas_Solving_RightLeg/Lucas_Solving_RightFoot/Lucas_Solving_RightToeBase/Lucas_Solving_RightToeEnd
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Head
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Head/Lucas_Solving_Head_End
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Head/Lucas_Solving_Head_End/Lucas_Solving_Head_End_001
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Head/Lucas_Solving_Head_End/Lucas_Solving_Head_End_002
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Head/Lucas_Solving_Head_End/Lucas_Solving_Head_End_003
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Head/Lucas_Solving_Head_End/Lucas_Solving_Head_End_004
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder/Lucas_Solving_LeftArm
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder/Lucas_Solving_LeftArm/Lucas_Solving_LeftForeArm
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder/Lucas_Solving_LeftArm/Lucas_Solving_LeftForeArm/Lucas_Solving_LeftHand
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder/Lucas_Solving_LeftArm/Lucas_Solving_LeftForeArm/Lucas_Solving_LeftHand/Lucas_Solving_LeftHandEnd
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder/Lucas_Solving_LeftArm/Lucas_Solving_LeftForeArm/Lucas_Solving_LeftHand/Lucas_Solving_LeftHandThumb1
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder/Lucas_Solving_LeftArm/Lucas_Solving_LeftForeArm/Lucas_Solving_LeftHand/Lucas_Solving_LeftHandThumb1/Lucas_Solving_LeftHandThumb2
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder/Lucas_Solving_RightArm
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder/Lucas_Solving_RightArm/Lucas_Solving_RightForeArm
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder/Lucas_Solving_RightArm/Lucas_Solving_RightForeArm/Lucas_Solving_RightHand
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder/Lucas_Solving_RightArm/Lucas_Solving_RightForeArm/Lucas_Solving_RightHand/Lucas_Solving_RightHandEnd
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder/Lucas_Solving_RightArm/Lucas_Solving_RightForeArm/Lucas_Solving_RightHand/Lucas_Solving_RightHandThumb1
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder/Lucas_Solving_RightArm/Lucas_Solving_RightForeArm/Lucas_Solving_RightHand/Lucas_Solving_RightHandThumb1/Lucas_Solving_RightHandThumb2
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Spine_001
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Spine_002
+        weight: 0
+      - path: moukazaru
+        weight: 0
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Back
+      takeName: Lucas_Solving_Lucas_corrida_x2d_Lucas_corrida_x2d_BaseAnimation
+      firstFrame: 250
+      lastFrame: 293
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 1
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Empty
+        weight: 0
+      - path: Lucas
+        weight: 1
+      - path: Lucas/Lucas_Solving
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_LeftUpLeg
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_LeftUpLeg/Lucas_Solving_LeftLeg
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_LeftUpLeg/Lucas_Solving_LeftLeg/Lucas_Solving_LeftFoot
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_LeftUpLeg/Lucas_Solving_LeftLeg/Lucas_Solving_LeftFoot/Lucas_Solving_LeftToeBase
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_LeftUpLeg/Lucas_Solving_LeftLeg/Lucas_Solving_LeftFoot/Lucas_Solving_LeftToeBase/Lucas_Solving_LeftToeEnd
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_RightUpLeg
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_RightUpLeg/Lucas_Solving_RightLeg
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_RightUpLeg/Lucas_Solving_RightLeg/Lucas_Solving_RightFoot
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_RightUpLeg/Lucas_Solving_RightLeg/Lucas_Solving_RightFoot/Lucas_Solving_RightToeBase
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_RightUpLeg/Lucas_Solving_RightLeg/Lucas_Solving_RightFoot/Lucas_Solving_RightToeBase/Lucas_Solving_RightToeEnd
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Head
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Head/Lucas_Solving_Head_End
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Head/Lucas_Solving_Head_End/Lucas_Solving_Head_End_001
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Head/Lucas_Solving_Head_End/Lucas_Solving_Head_End_002
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Head/Lucas_Solving_Head_End/Lucas_Solving_Head_End_003
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Head/Lucas_Solving_Head_End/Lucas_Solving_Head_End_004
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder/Lucas_Solving_LeftArm
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder/Lucas_Solving_LeftArm/Lucas_Solving_LeftForeArm
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder/Lucas_Solving_LeftArm/Lucas_Solving_LeftForeArm/Lucas_Solving_LeftHand
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder/Lucas_Solving_LeftArm/Lucas_Solving_LeftForeArm/Lucas_Solving_LeftHand/Lucas_Solving_LeftHandEnd
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder/Lucas_Solving_LeftArm/Lucas_Solving_LeftForeArm/Lucas_Solving_LeftHand/Lucas_Solving_LeftHandThumb1
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_LeftShoulder/Lucas_Solving_LeftArm/Lucas_Solving_LeftForeArm/Lucas_Solving_LeftHand/Lucas_Solving_LeftHandThumb1/Lucas_Solving_LeftHandThumb2
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder/Lucas_Solving_RightArm
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder/Lucas_Solving_RightArm/Lucas_Solving_RightForeArm
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder/Lucas_Solving_RightArm/Lucas_Solving_RightForeArm/Lucas_Solving_RightHand
+        weight: 1
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder/Lucas_Solving_RightArm/Lucas_Solving_RightForeArm/Lucas_Solving_RightHand/Lucas_Solving_RightHandEnd
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder/Lucas_Solving_RightArm/Lucas_Solving_RightForeArm/Lucas_Solving_RightHand/Lucas_Solving_RightHandThumb1
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_RightShoulder/Lucas_Solving_RightArm/Lucas_Solving_RightForeArm/Lucas_Solving_RightHand/Lucas_Solving_RightHandThumb1/Lucas_Solving_RightHandThumb2
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Spine_001
+        weight: 0
+      - path: Lucas/Lucas_Solving/Lucas_Solving_Hips/Lucas_Solving_Spine/Lucas_Solving_Spine_002
+        weight: 0
+      - path: moukazaru
+        weight: 0
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0.59999996
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human:
+    - boneName: Lucas_Solving_Hips
+      humanName: Hips
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Lucas_Solving_LeftUpLeg
+      humanName: LeftUpperLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Lucas_Solving_RightUpLeg
+      humanName: RightUpperLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Lucas_Solving_LeftLeg
+      humanName: LeftLowerLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Lucas_Solving_RightLeg
+      humanName: RightLowerLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Lucas_Solving_LeftFoot
+      humanName: LeftFoot
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Lucas_Solving_RightFoot
+      humanName: RightFoot
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Lucas_Solving_Spine
+      humanName: Spine
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Lucas_Solving_Head
+      humanName: Head
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Lucas_Solving_LeftShoulder
+      humanName: LeftShoulder
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Lucas_Solving_RightShoulder
+      humanName: RightShoulder
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Lucas_Solving_LeftArm
+      humanName: LeftUpperArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Lucas_Solving_RightArm
+      humanName: RightUpperArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Lucas_Solving_LeftForeArm
+      humanName: LeftLowerArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Lucas_Solving_RightForeArm
+      humanName: RightLowerArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Lucas_Solving_LeftHand
+      humanName: LeftHand
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Lucas_Solving_RightHand
+      humanName: RightHand
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Lucas_Solving_LeftToeBase
+      humanName: LeftToes
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Lucas_Solving_RightToeBase
+      humanName: RightToes
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    skeleton:
+    - name: monfernorun(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Empty
+      parentName: monfernorun(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071068}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Lucas
+      parentName: monfernorun(Clone)
+      position: {x: 0.08291702, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 0.01, y: 0.01, z: 0.01}
+    - name: Lucas_Solving
+      parentName: Lucas
+      position: {x: 0.0000009536743, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Lucas_Solving_Hips
+      parentName: Lucas_Solving
+      position: {x: -11.290729, y: 41.000587, z: -0.0000017921925}
+      rotation: {x: -0.05357967, y: -0.111504264, z: -0.7497138, w: 0.6500964}
+      scale: {x: 1.0000005, y: 1.0000006, z: 0.99999994}
+    - name: Lucas_Solving_Spine
+      parentName: Lucas_Solving_Hips
+      position: {x: -25.68303, y: -1.1685652, z: 2.1310186}
+      rotation: {x: -0.0023206547, y: 0.24786493, z: 0.06639676, w: 0.96651393}
+      scale: {x: 1.0000001, y: 1.0000005, z: 1.0000001}
+    - name: Lucas_Solving_Head
+      parentName: Lucas_Solving_Spine
+      position: {x: -36.730515, y: -0.004328264, z: 0.41718093}
+      rotation: {x: -0.058515236, y: -0.10979664, z: -0.089423046, w: 0.98819244}
+      scale: {x: 1.0000004, y: 1.0000007, z: 1}
+    - name: Lucas_Solving_Head_End
+      parentName: Lucas_Solving_Head
+      position: {x: -11.499991, y: 0.0000019669533, z: 0.00000008940697}
+      rotation: {x: -0, y: -0.000000014901159, z: -0, w: 1}
+      scale: {x: 1.0000004, y: 1.0000006, z: 0.9999999}
+    - name: Lucas_Solving_Head_End_001
+      parentName: Lucas_Solving_Head_End
+      position: {x: -11.499991, y: 0.0000009536743, z: -0.0000006556511}
+      rotation: {x: 0.0026503454, y: -0.032253757, z: 0.68651253, w: 0.72639745}
+      scale: {x: 0.99999976, y: 0.9999997, z: 1.0000002}
+    - name: Lucas_Solving_Head_End_002
+      parentName: Lucas_Solving_Head_End
+      position: {x: -11.499991, y: 0.0000009536743, z: -0.0000006556511}
+      rotation: {x: -0.032065734, y: 0.0043725767, z: 0.56112903, w: -0.8270955}
+      scale: {x: 1.0000008, y: 1.0000008, z: 1.0000002}
+    - name: Lucas_Solving_Head_End_003
+      parentName: Lucas_Solving_Head_End
+      position: {x: -11.499991, y: 0.0000009536743, z: -0.0000006556511}
+      rotation: {x: -0.34793606, y: -0.11532278, z: 0.8894837, w: -0.2728733}
+      scale: {x: 0.99999976, y: 0.99999964, z: 1.0000001}
+    - name: Lucas_Solving_Head_End_004
+      parentName: Lucas_Solving_Head_End
+      position: {x: -11.499991, y: 0.0000009536743, z: -0.0000006556511}
+      rotation: {x: -0.3442313, y: 0.043814097, z: 0.91497755, w: 0.20591533}
+      scale: {x: 1.0000005, y: 1.0000002, z: 1.0000004}
+    - name: Lucas_Solving_LeftShoulder
+      parentName: Lucas_Solving_Spine
+      position: {x: -23.946054, y: -17.570225, z: -13.28078}
+      rotation: {x: -0.05391434, y: -0.08872189, z: 0.58314407, w: 0.80570763}
+      scale: {x: 1.0000001, y: 1.0000004, z: 1.0000002}
+    - name: Lucas_Solving_LeftArm
+      parentName: Lucas_Solving_LeftShoulder
+      position: {x: -12.99137, y: -0.00000166893, z: -0.000000834465}
+      rotation: {x: -0.1605744, y: 0.03835164, z: 0.19359635, w: 0.9670913}
+      scale: {x: 1.0000001, y: 1.0000005, z: 0.9999999}
+    - name: Lucas_Solving_LeftForeArm
+      parentName: Lucas_Solving_LeftArm
+      position: {x: -27.374977, y: -0.0000014305115, z: 0.0000019073486}
+      rotation: {x: 0.11501623, y: -0.041903745, z: -0.05265254, w: 0.9910818}
+      scale: {x: 0.99999994, y: 0.99999976, z: 1.0000002}
+    - name: Lucas_Solving_LeftHand
+      parentName: Lucas_Solving_LeftForeArm
+      position: {x: -35.484707, y: 0.0000089224195, z: -0.0000010728836}
+      rotation: {x: -0.00026365367, y: 0.07727608, z: 0.018674439, w: 0.9968348}
+      scale: {x: 1.0000002, y: 1.0000001, z: 1}
+    - name: Lucas_Solving_LeftHandThumb1
+      parentName: Lucas_Solving_LeftHand
+      position: {x: -0.0000056922436, y: 0.0000010794029, z: -0.00000023841858}
+      rotation: {x: 0.2777961, y: -0.21767221, z: -0.06478235, w: 0.9334085}
+      scale: {x: 0.9999997, y: 1.0000002, z: 0.99999964}
+    - name: Lucas_Solving_LeftHandThumb2
+      parentName: Lucas_Solving_LeftHandThumb1
+      position: {x: 0.00000166893, y: -0.000002026558, z: 10.000006}
+      rotation: {x: 0.00000008940694, y: -0.00000008940694, z: -0.00000013411041,
+        w: 1}
+      scale: {x: 1.0000001, y: 1.0000001, z: 1.0000001}
+    - name: Lucas_Solving_LeftHandEnd
+      parentName: Lucas_Solving_LeftHand
+      position: {x: -10.000002, y: -0.000004922971, z: -0.0000017881393}
+      rotation: {x: -0.00000008495406, y: -0.0000003874301, z: 0.000000041389274,
+        w: 1}
+      scale: {x: 0.99999976, y: 1, z: 0.9999996}
+    - name: Lucas_Solving_RightShoulder
+      parentName: Lucas_Solving_Spine
+      position: {x: -21.584, y: 8.897551, z: -18.61915}
+      rotation: {x: -0.14585641, y: 0.21684526, z: 0.5573843, w: -0.7880525}
+      scale: {x: 1.0000006, y: 1.0000006, z: 1.0000001}
+    - name: Lucas_Solving_RightArm
+      parentName: Lucas_Solving_RightShoulder
+      position: {x: -13.2214985, y: 0.0000009536743, z: -0.0000024810433}
+      rotation: {x: -0.035149097, y: -0.032895215, z: -0.19714887, w: 0.9791909}
+      scale: {x: 1.0000014, y: 1.0000017, z: 0.9999997}
+    - name: Lucas_Solving_RightForeArm
+      parentName: Lucas_Solving_RightArm
+      position: {x: -27.374983, y: 0.000022411346, z: -0.0000009536743}
+      rotation: {x: 0.111547805, y: -0.02110397, z: 0.059345238, w: 0.99176097}
+      scale: {x: 1.0000002, y: 1.0000001, z: 1.0000006}
+    - name: Lucas_Solving_RightHand
+      parentName: Lucas_Solving_RightForeArm
+      position: {x: -37.413116, y: 0.26187944, z: 0.36326694}
+      rotation: {x: -0.002455584, y: 0.10350938, z: -0.07788519, w: 0.9915713}
+      scale: {x: 1.0000002, y: 1.0000006, z: 1}
+    - name: Lucas_Solving_RightHandThumb1
+      parentName: Lucas_Solving_RightHand
+      position: {x: 0.21267295, y: -0.61418724, z: -0.106343746}
+      rotation: {x: -0.27651298, y: -0.20209666, z: 0.059599847, w: 0.93762755}
+      scale: {x: 1.0000017, y: 1.0000013, z: 1.0000008}
+    - name: Lucas_Solving_RightHandThumb2
+      parentName: Lucas_Solving_RightHandThumb1
+      position: {x: -0.0000047683716, y: 0, z: 10.000002}
+      rotation: {x: 0.00000017881388, y: -0.00000004470347, z: -0.000000063329914,
+        w: 1}
+      scale: {x: 1.0000013, y: 1.0000011, z: 0.99999964}
+    - name: Lucas_Solving_RightHandEnd
+      parentName: Lucas_Solving_RightHand
+      position: {x: -9.787332, y: -0.61418056, z: -0.10634136}
+      rotation: {x: 0.000000021420414, y: -0.000000044703473, z: 0.000000036641715,
+        w: 1}
+      scale: {x: 1.0000014, y: 1.0000019, z: 1.0000002}
+    - name: Lucas_Solving_Spine_001
+      parentName: Lucas_Solving_Spine
+      position: {x: -28.152346, y: 0.0000024586916, z: -0.00000092200935}
+      rotation: {x: 0.18300687, y: -0.28050154, z: 0.7654583, w: 0.5494551}
+      scale: {x: 0.99999994, y: 1.0000001, z: 0.99999994}
+    - name: Lucas_Solving_Spine_002
+      parentName: Lucas_Solving_Spine
+      position: {x: -28.152346, y: 0.0000024586916, z: -0.00000092200935}
+      rotation: {x: 0.18947296, y: 0.2879997, z: 0.79916245, w: -0.49243844}
+      scale: {x: 1.0000011, y: 1.0000007, z: 1}
+    - name: Lucas_Solving_LeftUpLeg
+      parentName: Lucas_Solving_Hips
+      position: {x: 2.4681711, y: -13.44977, z: -0.10708094}
+      rotation: {x: 0.053769205, y: -0.007253282, z: 0.07495233, w: 0.9957101}
+      scale: {x: 1.000001, y: 1.0000007, z: 1}
+    - name: Lucas_Solving_LeftLeg
+      parentName: Lucas_Solving_LeftUpLeg
+      position: {x: 20.445112, y: -5.6225357, z: -2.049364}
+      rotation: {x: -0.003578994, y: 0.13645393, z: -0.031195663, w: 0.9901487}
+      scale: {x: 0.99999994, y: 1, z: 0.99999994}
+    - name: Lucas_Solving_LeftFoot
+      parentName: Lucas_Solving_LeftLeg
+      position: {x: 14.137713, y: -1.246588, z: -6.73758}
+      rotation: {x: -0.051287267, y: 0.11262261, z: -0.023991391, w: 0.9920233}
+      scale: {x: 1.0000004, y: 0.99999964, z: 1}
+    - name: Lucas_Solving_LeftToeBase
+      parentName: Lucas_Solving_LeftFoot
+      position: {x: -0.0000021457672, y: 0.00000044703484, z: 18.419767}
+      rotation: {x: 0.00000001117587, y: -0.16431522, z: -0.0000000912696, w: 0.98640794}
+      scale: {x: 0.9999997, y: 1.0000001, z: 1}
+    - name: Lucas_Solving_LeftToeEnd
+      parentName: Lucas_Solving_LeftToeBase
+      position: {x: 0.00000023841858, y: 0.0000021606684, z: 7.5000052}
+      rotation: {x: 0.000000012068242, y: -0.00000010430811, z: 0.000000321835, w: 1}
+      scale: {x: 1.0000001, y: 1.0000005, z: 1}
+    - name: Lucas_Solving_RightUpLeg
+      parentName: Lucas_Solving_Hips
+      position: {x: 0.40076342, y: 19.875748, z: -1.2062522}
+      rotation: {x: -0.1943461, y: -0.025557302, z: 0.077696, w: 0.97751725}
+      scale: {x: 1.0000001, y: 1.0000005, z: 0.99999976}
+    - name: Lucas_Solving_RightLeg
+      parentName: Lucas_Solving_RightUpLeg
+      position: {x: 16.564781, y: 4.8367987, z: -2.6495132}
+      rotation: {x: 0.0016815808, y: 0.21275143, z: 0.083197646, w: 0.9735565}
+      scale: {x: 0.9999999, y: 0.9999999, z: 0.99999994}
+    - name: Lucas_Solving_RightFoot
+      parentName: Lucas_Solving_RightLeg
+      position: {x: 18.38793, y: 2.4092128, z: -4.7324686}
+      rotation: {x: 0.12002342, y: -0.020515447, z: -0.03661689, w: 0.9918834}
+      scale: {x: 1.0000004, y: 1, z: 1.0000002}
+    - name: Lucas_Solving_RightToeBase
+      parentName: Lucas_Solving_RightFoot
+      position: {x: 0.0000033974648, y: 0.0000014044344, z: 18.419764}
+      rotation: {x: -0.000000014901156, y: -0.228677, z: 0.000000003725289, w: 0.97350234}
+      scale: {x: 0.99999994, y: 1.0000007, z: 1.0000004}
+    - name: Lucas_Solving_RightToeEnd
+      parentName: Lucas_Solving_RightToeBase
+      position: {x: -0.0000029802322, y: -0.00000018626451, z: 7.5000024}
+      rotation: {x: -0.0000000072531554, y: -0.00000007450578, z: 0.000000001703775,
+        w: 1}
+      scale: {x: 1.0000002, y: 1.0000002, z: 1.0000001}
+    - name: moukazaru
+      parentName: monfernorun(Clone)
+      position: {x: -8.291701, y: 0, z: 0}
+      rotation: {x: 0.7071068, y: 0, z: -0, w: 0.7071067}
+      scale: {x: 20, y: 20, z: 20}
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 1
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 3
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

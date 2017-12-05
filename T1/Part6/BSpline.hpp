@@ -8,6 +8,10 @@
 
 using namespace algebra;
 
+/*
+	cria matriz-b-spline base
+*/
+
 inline Matrix initMbs() {
 	Matrix Mbs(4,4);
 	/*Mbs.setValue(0,0, 0);
@@ -69,7 +73,9 @@ class BSpline : public Object{
  	void setCoordinates(std::vector<Coordinate> coordinates) {
  		this->ctrlCoordinates = coordinates;
  	}
-
+ 	/*
+		retorna o vetor de geometria projetado em x
+ 	*/
  	Matrix getGBSX(int i) {
 
  		Matrix ret(4, 1);
@@ -83,6 +89,9 @@ class BSpline : public Object{
 
  		return ret;
  	}
+ 	/*
+		retorna o vetor de geometria projetado em y
+ 	*/
 	Matrix getGBSY(int i) {
 
  		Matrix ret(4, 1);
@@ -96,11 +105,19 @@ class BSpline : public Object{
 
  		return ret;
  	}
+
+ 	/*
+		retorna projeção em x dos coeficientes do segmento i da curva
+ 	*/
  	Matrix coefsX(int i) {
  		Matrix Mbs = initMbs();
  		//std::cout << Mbs.getValue(3,1) << std::endl;
  		return Mbs * getGBSX(i);
  	}
+
+ 	/*
+		retorna projeção em y dos coeficientes do segmento i da curva
+ 	*/
 	Matrix coefsY(int i) {
 		Matrix Mbs = initMbs();
  		return Mbs * getGBSY(i);
@@ -114,6 +131,10 @@ class BSpline : public Object{
 
 		return new BSpline(this->name, this->id, newCoords);
 	}
+
+	/*
+		retorna o numero de pontos de controle
+	*/
 
 	int getNPoints() {
 		return this->nPoints;

@@ -34,6 +34,11 @@ public:
 	double operator()(int i, int j) const {
 	    return rawMatrix[i*cols + j];
 	}
+
+	/*
+		multiplica duas matrizes
+	*/
+
 	Matrix& operator*=(const Matrix& rhs) {
 		Matrix m{this->rows, rhs.cols};
 		for (int i = 0; i < this->rows; ++i) {
@@ -46,6 +51,9 @@ public:
 		}
 		return *this = m;
 	}
+	/*
+		multiplica a matriz por um escalar
+	*/
 	Matrix& operator*=(double scalar) {
 		Matrix m{this->rows, this->cols};
 		for (int i = 0; i < this->rows; ++i) {

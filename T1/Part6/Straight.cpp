@@ -24,6 +24,10 @@ Straight::~Straight() {
 
 }
 
+/*
+	transforma as coordenadas do ponto para coordenadas de viewport
+*/
+
 Straight* Straight::transformToViewport(Coordinate wor, Coordinate wli, Coordinate vpor, Coordinate vpli) {
 
 	Coordinate* newA = this->a.transformCoordinate(wor, wli, vpor, vpli);

@@ -97,11 +97,19 @@ void init_border() {
 	border = new Polygon("broder", -1, borderCoordinates, 0);
 }
 
+/*
+	remove um objeto da gtk tree
+*/
+
 void removeNthList(int row) {
     if (gtk_tree_model_iter_nth_child(GTK_TREE_MODEL(list_store), &iter, NULL, row)) {
        	gtk_list_store_remove(list_store, &iter);
     }
 }
+
+/*
+	limpa a tela
+*/
 
 void erase() {
 	cr = cairo_create (surface);
@@ -110,12 +118,18 @@ void erase() {
 	gtk_widget_queue_draw(window_widget);
 }
 
+
+
 inline void setTMatrix(Matrix& m, double arg) {
 	m.setValue(0,0, pow(arg,3));
 	m.setValue(0,1, pow(arg,2));
 	m.setValue(0,2, arg);
 	m.setValue(0,3, 1.0);	
 }
+
+/*
+	inicializa uma matriz de pntos em x 
+*/
 
 inline Matrix initPx(Coordinate p1, Coordinate p2,Coordinate p3,Coordinate p4) {
 	Matrix Px(4,1);
@@ -127,6 +141,11 @@ inline Matrix initPx(Coordinate p1, Coordinate p2,Coordinate p3,Coordinate p4) {
 	return Px;
 }
 
+/*
+	inicializa uma matriz de pntos em y
+*/
+
+
 inline Matrix initPy(Coordinate p1, Coordinate p2,Coordinate p3,Coordinate p4) {
 	Matrix Py(4,1);
 	Py.setValue(0,0, p1.getY());
@@ -136,6 +155,11 @@ inline Matrix initPy(Coordinate p1, Coordinate p2,Coordinate p3,Coordinate p4) {
 
 	return Py;
 }
+
+/*
+	atualiza a lista de objetos que serão desenhados
+*/
+
 
 void updateWindowFile() {
 	windowFile->destroiLista();
@@ -261,6 +285,10 @@ void updateWindowFile() {
 	}
 }
 
+/*
+ implementa liang barsky 
+*/
+
 bool liangBarsky(Straight *s) {
 	Coordinate newA, newB;
 	//double u = 1;
@@ -360,6 +388,11 @@ bool liangBarsky(Straight *s) {
 		return false;
 }
 
+/*
+	liang barsky só para borda de baixo
+*/
+
+
 bool liangBarskyBottom(Straight *s) {
 	Coordinate newA, newB;
 	//double u = 1;
@@ -435,6 +468,12 @@ bool liangBarskyBottom(Straight *s) {
 	outside:
 		return false;
 }
+
+
+/*
+	liang barsky só para borda do topo
+*/
+
 
 bool liangBarskyTop(Straight *s) {
 	Coordinate newA, newB;
@@ -512,6 +551,12 @@ bool liangBarskyTop(Straight *s) {
 		return false;
 }
 
+
+/*
+	liang barsky só para borda dd direita
+*/
+
+
 bool liangBarskyRight(Straight *s) {
 	Coordinate newA, newB;
 	//double u = 1;
@@ -587,6 +632,12 @@ bool liangBarskyRight(Straight *s) {
 	outside:
 		return false;
 }
+
+
+/*
+	liang barsky só para borda da esquerda
+*/
+
 
 bool liangBarskyLeft(Straight *s) {
 	Coordinate newA, newB;
@@ -664,6 +715,12 @@ bool liangBarskyLeft(Straight *s) {
 	outside:
 		return false;
 }
+
+
+/*
+	implementa cohen sutherland
+*/
+
 
 bool cohenSutherland(Straight *s) {
 	int code1[4] = {0,0,0,0};
@@ -799,6 +856,10 @@ bool cohenSutherland(Straight *s) {
 			}
 }
 
+/*
+	implementa sutherland hodgman na borda inferior 
+*/
+
 bool sutherlandHodgmanBottom(Polygon *p) {
     std::vector<Coordinate> oldCoords = p->getCoordinates();
     std::vector<Coordinate> newCoords;
@@ -814,6 +875,10 @@ bool sutherlandHodgmanBottom(Polygon *p) {
     p->setCoordinates(newCoords);
     return (!newCoords.empty());
 }
+
+/*
+	implementa sutherland hodgman na borda superior 
+*/
 
 bool sutherlandHodgmanTop(Polygon *p) {
     std::vector<Coordinate> oldCoords = p->getCoordinates();
@@ -831,6 +896,10 @@ bool sutherlandHodgmanTop(Polygon *p) {
     return (!newCoords.empty());
 }
 
+/*
+	implementa sutherland hodgman na borda direita 
+*/
+
 bool sutherlandHodgmanRight(Polygon *p) {
     std::vector<Coordinate> oldCoords = p->getCoordinates();
     std::vector<Coordinate> newCoords;
@@ -847,6 +916,10 @@ bool sutherlandHodgmanRight(Polygon *p) {
     return (!newCoords.empty());
 }
 
+/*
+	implementa sutherland hodgman na borda esquerda 
+*/
+
 bool sutherlandHodgmanLeft(Polygon *p) {
     std::vector<Coordinate> oldCoords = p->getCoordinates();
     std::vector<Coordinate> newCoords;
@@ -862,6 +935,10 @@ bool sutherlandHodgmanLeft(Polygon *p) {
     p->setCoordinates(newCoords);
     return (!newCoords.empty());
 }
+
+/*
+	limpa e redesenha os objetos
+*/
 
 void redraw() {
 	updateWindowFile();
@@ -910,10 +987,18 @@ void redraw() {
 	}
 }
 
+/*
+	adiciona um objetos na gtk tree
+*/
+
 void addList(std::string name, std::string type, int objID) {
    	gtk_list_store_append(list_store, &iter);
 	gtk_list_store_set(list_store, &iter, 0, name.c_str(), 1, type.c_str(), 2, objID,-1);
 }
+
+/*
+	retorna um objeto da display file de acordo com o id
+*/
 
 Object* getObject(int id) {
 	for(auto t = displayFile->getHead(); t != nullptr; t = t->getProximo()) {

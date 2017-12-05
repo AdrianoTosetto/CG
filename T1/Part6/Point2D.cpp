@@ -13,6 +13,11 @@ Coordinate Point2D::getCoordinate() {
 void Point2D::setCoordinate(Coordinate _coord) {
 	this->coord = _coord;
 }
+
+/*
+	transforma as coordenadas do ponto para coordenadas de viewport
+*/
+
 Point2D* Point2D::transformToViewport(Coordinate wor, Coordinate wli, Coordinate vpor, Coordinate vpli) {
 
 	Coordinate *newCoord = this->coord.transformCoordinate(wor, wli, vpor, vpli);

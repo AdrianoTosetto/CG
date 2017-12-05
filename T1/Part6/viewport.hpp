@@ -31,7 +31,9 @@ class Viewport {
     Viewport(Coordinate _origin, Coordinate _limit) : origin(_origin), limit(_limit) {
 
     }
-
+    /*
+        desenha um linha
+    */
 
     void drawStraight(Straight* straight, cairo_t *c, cairo_surface_t *surface, Window* window) {
             Straight toDraw = *straight->transformToViewport(window->getWOrigin(), window->getWLimit(), this->origin, this->limit);
@@ -46,7 +48,9 @@ class Viewport {
         cairo_line_to(c, bx, by);
         cairo_stroke(c);
     }
-
+    /*
+       desenha um ponto
+    */
     void drawPoint(Point2D* point, cairo_t *c, cairo_surface_t *surface, Window* window) {
         Point2D toDraw = *point->transformToViewport(window->getWOrigin(), window->getWLimit(), this->origin, this->limit);
         cairo_set_line_cap(c, CAIRO_LINE_CAP_ROUND);
@@ -59,6 +63,10 @@ class Viewport {
         cairo_fill (c);
         cairo_stroke(c);
     }
+
+    /*
+        desenha poligono
+    */
     void drawPolygon(Polygon* polygon, cairo_t *c, cairo_surface_t *surface, Window* window) {
 
         Polygon newPoly = *polygon->transformToViewport(window->getWOrigin(), window->getWLimit(), this->origin, this->limit);
@@ -81,6 +89,11 @@ class Viewport {
 
         cairo_stroke(c);
     }
+
+    /*
+        desenha um BSpline
+        função não usada
+    */
     void drawBSpline(BSpline* bspline, cairo_t *c, cairo_surface_t *surface, Window* window, int n, int i, Matrix deltinhas) {
 
         BSpline newBSpline = *bspline->transformToViewport(window->getWOrigin(), window->getWLimit(), this->origin, this->limit);

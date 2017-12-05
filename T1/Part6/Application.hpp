@@ -1,3 +1,4 @@
+// nao usado
 #ifndef APPLICATION
 #define APPLICATION
 

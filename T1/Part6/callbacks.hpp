@@ -43,6 +43,10 @@ void c_addPoint() {
 
 
 
+/*
+	adiciona uma reta
+*/
+
 void c_addStraight() {
 	std::string nameEntry = ENTRY_GET_TEXT(builder, STRAIGHT_NAME_ENTRY);
 	if (nameEntry == "") return;
@@ -70,6 +74,10 @@ void c_addStraight() {
 
 
 
+/*
+	adiciona um poligono
+*/
+
 void c_addPolygonName() {
 	std::string nameEntry = ENTRY_GET_TEXT(builder, POLYGON_NAME_ENTRY);
 	if (nameEntry == "") return;
@@ -81,6 +89,10 @@ void c_addPolygonName() {
 	gtk_dialog_run(GTK_DIALOG(GET_OBJ(builder, ADD_POLYGON_COORDINATE_DIALOG)));
 }
 
+/*
+	adiciona uma nova coordenada ao poligono
+*/
+
 void c_addPolygonCoordinate() {
 	double coordX = SPIN_GET_VALUE(builder, POLYGON_X_SPIN);
 	double coordY = SPIN_GET_VALUE(builder, POLYGON_Y_SPIN);
@@ -90,7 +102,9 @@ void c_addPolygonCoordinate() {
 	pollyVector.push_back(*newCoord);
 	std::cout << pollyVector.size() << std::endl;
 }
-
+/*
+	pega todas as coordenadas inseridas pelo usuário e transforma em um objeto Polygon
+*/
 void c_finishPolygon() {
 	Polygon *p = new Polygon(pollyName, objectID, pollyVector, CHECK_GET_VALUE(builder, POLYGON_FILL_BOOL));
 
@@ -109,6 +123,9 @@ void c_finishPolygon() {
 }
 
 
+/*
+	adiciona uma curva de bezier
+*/
 
 void c_addBezier() {
 	std::string nameEntry = ENTRY_GET_TEXT(builder, BEZIER_NAME_ENTRY);
@@ -141,6 +158,10 @@ void c_addBezier() {
 
 
 
+/*
+	adiciona uma curva BSpline
+*/
+
 void c_addBSplineName() {
 	std::string nameEntry = ENTRY_GET_TEXT(builder, BSPLINE_NAME_ENTRY);
 	if (nameEntry == "") return;
@@ -152,6 +173,10 @@ void c_addBSplineName() {
 	gtk_dialog_run(GTK_DIALOG(GET_OBJ(builder, ADD_BSPLINE_COORDINATE_DIALOG)));
 }
 
+/*
+	adiciona uma coordenada na curva BSpline
+*/
+
 void c_addBSplineCoordinate() {
 	double coordX = SPIN_GET_VALUE(builder, BSPLINE_X_SPIN);
 	double coordY = SPIN_GET_VALUE(builder, BSPLINE_Y_SPIN);
@@ -161,6 +186,10 @@ void c_addBSplineCoordinate() {
 	pollyVector.push_back(*newCoord);
 	//std::cout << pollyVector.size() << std::endl;
 }
+
+/*
+	Cria o objeto BSpline
+*/
 
 void c_finishBSpline() {
 	BSpline *s = new BSpline(pollyName, objectID, pollyVector);
@@ -179,8 +208,9 @@ void c_finishBSpline() {
 	_log->_log("Nova curva bspline adicionada!\n");
 }
 
-
-
+/*
+	remove um objeto da display file
+*/
 
 
 void c_removeObject() {
@@ -199,6 +229,10 @@ void c_removeObject() {
 		position++;
 	}
 }
+
+/*
+	rotaciona um objeto em torno do seu centro
+*/
 
 void c_rotateCenter() {
 	double id = SPIN_GET_VALUE(builder, ROTATE_ID_SPIN);
@@ -247,12 +281,18 @@ void c_rotateCenter() {
 		}
 	}
 }
+
+/*
+	rotciona um objeto em torno da origem
+*/
+
 void c_rotateOrigin() {
 	double id = SPIN_GET_VALUE(builder, ROTATE_ID_SPIN);
 	double radians = d2r(SPIN_GET_VALUE(builder, ROTATE_DEGREES_SPIN));
 	Object* o = getObject(id);
 	rotate(0, 0, o, radians);
 }
+
 void c_rotatePoint() {
 	double id = SPIN_GET_VALUE(builder, ROTATE_ID_SPIN);
 	double radians = d2r(SPIN_GET_VALUE(builder, ROTATE_DEGREES_SPIN));
@@ -261,6 +301,11 @@ void c_rotatePoint() {
 	Object* o = getObject(id);
 	rotate(pointx, pointy, o, radians);
 }
+
+/*
+	Translada um objeto
+*/
+
 void c_translateObject() {
 	double id = SPIN_GET_VALUE(builder, TRANSLATE_ID_SPIN);
 	double dx = SPIN_GET_VALUE(builder, TRANSLATE_X_SPIN);
@@ -315,6 +360,12 @@ void c_translateObject() {
 	}
 	std::cout << "not found!" << std::endl;
 }
+
+
+/*
+	escalona um objeto
+*/
+
 void c_scaleObject() {
 	double id = SPIN_GET_VALUE(builder, SCALE_ID_SPIN);
 	double scl = SPIN_GET_VALUE(builder, SCALE_STEP_SPIN);
@@ -354,6 +405,10 @@ void c_scaleObject() {
 			std::cout << "¯|_(ツ)_|¯" << std::endl;
 	}
 }
+
+/*
+	muda o tamanho da window
+*/
 
 void zoom(int in) {
 	double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
@@ -401,6 +456,10 @@ void zoom(int in) {
 	redraw();
 }
 
+/*
+	move a window
+*/
+
 void c_stepUp() {
 	double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
 	double combK = (step * w->getVUp().getNorm()) / (pow(w->getVUp().getA(), 2) + pow(w->getVUp().getB(), 2));
@@ -412,6 +471,11 @@ void c_stepUp() {
 
 	redraw();
 }
+
+/*
+	move a window
+*/
+
 void c_stepLeft() {
 	double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
 	double combK = (step * w->getU().getNorm()) / (pow(w->getU().getA(), 2) + pow(w->getU().getB(), 2));
@@ -423,6 +487,11 @@ void c_stepLeft() {
 
 	redraw();
 }
+
+/*
+	move a window
+*/
+
 void c_stepRight() {
 	double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
 	double combK = (step * w->getU().getNorm()) / (pow(w->getU().getA(), 2) + pow(w->getU().getB(), 2));
@@ -434,6 +503,11 @@ void c_stepRight() {
 
 	redraw();
 }
+
+/*
+	move a window
+*/
+
 void c_stepDown() {
 	double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton1"))));
 	double combK = (step * w->getVUp().getNorm()) / (pow(w->getVUp().getA(), 2) + pow(w->getVUp().getB(), 2));
@@ -445,6 +519,10 @@ void c_stepDown() {
 
 	redraw();
 }
+
+/*
+	rotaciona a window
+*/
 
 void rotateWindow(int anticlock) {
 	double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton15"))));
@@ -491,6 +569,11 @@ void rotateWindow(int anticlock) {
 
 	redraw();
 }
+
+/*
+	rotaciona a window
+*/
+
 void c_rotateClock() {
 	double step = gtk_spin_button_get_value(GTK_SPIN_BUTTON(GTK_WIDGET(gtk_builder_get_object(builder, "spinbutton15"))));
 	step = d2r(step);

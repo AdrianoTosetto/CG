@@ -1,3 +1,7 @@
+/*
+	representação de um vetor do conjunto R2
+*/
+
 namespace algebra {
 
 #ifndef VECTOR_HPP

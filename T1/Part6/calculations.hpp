@@ -7,6 +7,13 @@ double d2r(double d) {
   	return (d / 180.0) * ((double) M_PI);
 }
 
+/*
+	gera a matriz de rotação em torno de (x,y) por rad radianos
+	@param double x
+	@param double y
+	@param double rad
+*/
+
 Matrix getRotationMatrix(double x, double y, double rad) {
 	Matrix trans1 = Matrix::identidade(3);
 	Matrix rotating = Matrix::identidade(3);
@@ -27,6 +34,10 @@ Matrix getRotationMatrix(double x, double y, double rad) {
 
 	return result;
 }
+
+/*
+	gera a matriz de escalonamento centrada no ponto (x,y) pelo fator scale
+*/
 
 Matrix getScalingMatrix(double x, double y, double scale) {
 	Matrix trans1 = Matrix::identidade(3);

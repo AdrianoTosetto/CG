@@ -1,3 +1,7 @@
+/*
+	define nomes para objetos do glade
+*/
+
 #ifndef DICTIONARY_HPP
 #define DICTIONARY_HPP
 

@@ -18,6 +18,9 @@ class Polygon : public Object{
   bool getFill() {
     return this->fill;
   }
+/*
+	transforma as coordenadas do ponto para coordenadas de viewport
+*/
 	Polygon* transformToViewport(Coordinate wor, Coordinate wli, Coordinate vpor, Coordinate vpli) {
 		std::vector<Coordinate> newCoords;
 		for(auto it = coordinates.begin(); it != coordinates.end(); it++) {
